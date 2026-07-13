@@ -278,3 +278,21 @@ model Gallery {
 
   @@map("galleries")
 }
+
+/// ===========================
+/// PRAYER TIME
+/// ===========================
+
+model PrayerTime {
+  id String @id @default(uuid())
+  fajr String
+  dhuhr String
+  asr String
+  maghrib String
+  isha String
+  jummah String?
+  sunrise String?
+  updatedAt DateTime @updatedAt
+
+  @@map("prayer_times")
+}

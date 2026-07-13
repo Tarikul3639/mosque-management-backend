@@ -15,6 +15,7 @@ import {
 import { PrismaModule } from '@/common/prisma/prisma.module';
 import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
 import { MailModule } from '@/common/mail';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -45,6 +46,8 @@ import { MailModule } from '@/common/mail';
     MailModule,
     PrismaModule,
     CloudinaryModule,
+    // AuthModule is imported here to make its services available throughout the application
+    AuthModule,
   ],
   controllers: [],
   providers: [],

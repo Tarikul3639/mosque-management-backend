@@ -3,10 +3,27 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
+// Filter
+import { PrismaExceptionFilter } from '@/common/filters/prisma-exception.filter';
+import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
+
+// Pipe
+import { GlobalValidationPipe } from '@/common/pipes/validation.pipe';
+
+// Module
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Enable global filters for exception handling
+  app.useGlobalFilters(
+    new HttpExceptionFilter(),
+    new PrismaExceptionFilter(),
+  );
+
+  // Enable global validation pipe for request validation
+  app.useGlobalPipes(GlobalValidationPipe);
 
   const configService = app.get(ConfigService);
 
@@ -34,7 +51,7 @@ async function bootstrap() {
     credentials: configService.getOrThrow<boolean>('cors.credentials'),
   });
 
-  const swaggerEnabled = configService.getOrThrow<boolean>("swagger.enabled");
+  const swaggerEnabled = configService.getOrThrow<boolean>('swagger.enabled');
 
   if (swaggerEnabled) {
     const swaggerConfig = new DocumentBuilder()
