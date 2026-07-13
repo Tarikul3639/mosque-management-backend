@@ -1,6 +1,7 @@
 import { VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 // Filter
@@ -15,7 +16,8 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  // Enable cookie parser middleware for handling cookies
+  app.use(cookieParser());
   // Enable global filters for exception handling
   app.useGlobalFilters(
     new HttpExceptionFilter(),
