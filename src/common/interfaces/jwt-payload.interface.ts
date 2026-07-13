@@ -1,4 +1,4 @@
-import { Role } from "../../lib/prisma/client";
+import { Role } from "@/lib/prisma/client";
 
 export interface JwtPayload {
     sub: string;
