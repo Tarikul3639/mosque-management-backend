@@ -1,0 +1,280 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/lib/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// ===========================
+/// ENUMS
+/// ===========================
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum CommitteeRole {
+  PRESIDENT
+  VICE_PRESIDENT
+  SECRETARY
+  ASSISTANT_SECRETARY
+  TREASURER
+  MEMBER
+  IMAM
+  MUAZZIN
+}
+
+enum FamilyStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum CollectionStatus {
+  PAID
+  PARTIAL
+  UNPAID
+}
+
+enum ExpenseCategory {
+  IMAM_SALARY
+  MUAZZIN_SALARY
+  ELECTRICITY
+  WATER
+  CLEANING
+  MAINTENANCE
+  DEVELOPMENT
+  OTHER
+}
+
+enum ProjectStatus {
+  PLANNING
+  RUNNING
+  COMPLETED
+  CANCELLED
+}
+
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+/// ===========================
+/// ROLE
+/// ===========================
+
+model Role {
+  id          String   @id @default(uuid())
+  name        UserRole @unique
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("roles")
+}
+
+/// ===========================
+/// USER
+/// ===========================
+
+model User {
+  id          String     @id @default(uuid())
+  roleId      String
+  role        Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  fullName    String
+  email       String     @unique
+  phone       String     @unique
+  password    String
+  avatar      String?
+  status      UserStatus @default(ACTIVE)
+  lastLoginAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  collections Collection[]
+  expenses    Expense[]
+
+  @@index([roleId])
+  @@map("users")
+}
+
+/// ===========================
+/// COMMITTEE MEMBER
+/// ===========================
+
+model CommitteeMember {
+  id          String        @id @default(uuid())
+  fullName    String
+  designation CommitteeRole
+  phone       String?
+  email       String?
+  photo       String?
+  address     String?
+  joiningDate DateTime?
+  endDate     DateTime?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([designation])
+  @@map("committee_members")
+}
+
+/// ===========================
+/// FAMILY
+/// ===========================
+
+model Family {
+  id          String       @id @default(uuid())
+  familyCode  String       @unique
+  headName    String
+  phone       String?
+  address     String
+  monthlyFee  Decimal      @db.Decimal(10, 2)
+  memberCount Int          @default(1)
+  joiningDate DateTime?
+  status      FamilyStatus @default(ACTIVE)
+  remarks     String?
+  collections Collection[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([familyCode])
+  @@index([headName])
+  @@index([status])
+  @@map("families")
+}
+
+/// ===========================
+/// COLLECTION
+/// ===========================
+
+model Collection {
+  id            String           @id @default(uuid())
+  familyId      String
+  family        Family           @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  collectedById String
+  collectedBy   User             @relation(fields: [collectedById], references: [id], onDelete: Restrict)
+  year          Int
+  month         Month
+  amount        Decimal          @db.Decimal(10, 2)
+  due           Decimal          @default(0) @db.Decimal(10, 2)
+  status        CollectionStatus @default(PAID)
+  receiptNo     String?          @unique
+  note          String?
+  paidAt        DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([familyId, year, month])
+  @@index([familyId])
+  @@index([collectedById])
+  @@index([year, month])
+  @@index([status])
+  @@map("collections")
+}
+
+/// ===========================
+/// DONATION
+/// ===========================
+
+model Donation {
+  id          String   @id @default(uuid())
+  donorName   String
+  phone       String?
+  address     String?
+  amount      Decimal  @db.Decimal(10, 2)
+  purpose     String?
+  isAnonymous Boolean  @default(false)
+  receiptNo   String?  @unique
+  note        String?
+  donatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([donatedAt])
+  @@map("donations")
+}
+
+/// ===========================
+/// EXPENSE
+/// ===========================
+
+model Expense {
+  id          String          @id @default(uuid())
+  category    ExpenseCategory
+  title       String
+  amount      Decimal         @db.Decimal(10, 2)
+  note        String?
+  expenseDate DateTime
+  createdById String?
+  createdBy   User?           @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([category])
+  @@index([expenseDate])
+  @@index([createdById])
+  @@map("expenses")
+}
+
+/// ===========================
+/// DEVELOPMENT PROJECT
+/// ===========================
+
+model DevelopmentProject {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  budget      Decimal?      @db.Decimal(10, 2)
+  spent       Decimal?      @db.Decimal(10, 2)
+  progress    Int           @default(0)
+  image       String?
+  status      ProjectStatus @default(PLANNING)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+  @@map("development_projects")
+}
+
+/// ===========================
+/// GALLERY
+/// ===========================
+
+model Gallery {
+  id          String   @id @default(uuid())
+  title       String?
+  imageUrl    String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("galleries")
+}
