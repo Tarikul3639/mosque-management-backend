@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { MailOptions } from './interfaces/mail-options.interface';
+import { ResetPasswordContext } from './interfaces/reset-password-context.interface';
+import { WelcomeContext } from './interfaces/welcome-context.interface';
 
 @Injectable()
 export class MailService {
@@ -13,7 +15,9 @@ export class MailService {
         private readonly configService: ConfigService,
     ) { }
 
-    async sendMail(mailOptions: MailOptions): Promise<void> {
+    async sendMail<TContext extends Record<string, unknown>>(
+        mailOptions: MailOptions<TContext>,
+    ): Promise<void> {
         try {
             await this.mailerService.sendMail(mailOptions);
 
@@ -36,30 +40,54 @@ export class MailService {
         }
     }
 
-    async sendWelcomeEmail(email: string, fullName: string): Promise<void> {
-        await this.sendMail({
-            to: email,
-            subject: 'Welcome to Mosque Management System',
-            template: 'welcome',
-            context: {
-                fullName,
-            },
-        });
-    }
+    async sendWelcomeEmail(email: string, userName: string): Promise<void> {
+        const appName = this.configService.getOrThrow<string>('app.name');
 
-    async sendResetPasswordEmail(email: string, token: string): Promise<void> {
         const frontendUrl =
             this.configService.getOrThrow<string>('cors.origin');
 
-        const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+        const context: WelcomeContext = {
+            appName,
+            userName,
+            loginUrl: `${frontendUrl}/login`,
+            year: new Date().getFullYear(),
+        };
 
-        await this.sendMail({
+        await this.sendMail<WelcomeContext>({
             to: email,
-            subject: 'Reset Your Password',
+            subject: `Welcome to ${appName}`,
+            template: 'welcome',
+            context,
+        });
+    }
+
+    async sendResetPasswordEmail(
+        email: string,
+        userName: string,
+        token: string,
+    ): Promise<void> {
+        const appName = this.configService.getOrThrow<string>('app.name');
+
+        const frontendUrl =
+            this.configService.getOrThrow<string>('cors.origin');
+
+        const expireIn = this.configService.getOrThrow<string>(
+            'auth.resetPasswordExpiresIn',
+        );
+
+        const context: ResetPasswordContext = {
+            appName,
+            userName,
+            resetPasswordUrl: `${frontendUrl}/reset-password?token=${token}`,
+            expireIn,
+            year: new Date().getFullYear(),
+        };
+
+        await this.sendMail<ResetPasswordContext>({
+            to: email,
+            subject: `Reset your ${appName} password`,
             template: 'reset-password',
-            context: {
-                resetUrl,
-            },
+            context,
         });
     }
 

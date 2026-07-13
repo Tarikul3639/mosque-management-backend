@@ -20,7 +20,6 @@ import type { Response } from 'express';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { Public } from '@/common/decorators/public.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
 import { CookieUtil } from '@/common/utils/cookie.util';
 
 import { LoginRequestDto } from '../dto/requests/login-request.dto';

@@ -24,6 +24,7 @@ export class ForgotPasswordService {
       select: {
         id: true,
         email: true,
+        fullName: true,
         role: {
           select: {
             name: true,
@@ -44,7 +45,7 @@ export class ForgotPasswordService {
 
     const token = await this.tokenService.generateAccessToken(payload);
 
-    await this.mailService.sendResetPasswordEmail(user.email, token);
+    await this.mailService.sendResetPasswordEmail(user.email, user.fullName, token);
 
     this.logger.log(`Password reset link sent to ${user.email}`);
 
