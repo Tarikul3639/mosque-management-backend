@@ -1,0 +1,99 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { PrismaService } from '@/common/prisma/prisma.service';
+
+import { MONTHLY_CHARGE_MESSAGES } from '../constants/family.constants';
+
+import { UpdateMonthlyChargeDto } from '../dto/requests/update-monthly-charge.dto';
+import { MonthlyChargeResponseDto } from '../dto/responses/monthly-charge-response.dto';
+
+@Injectable()
+export class UpdateMonthlyChargeService {
+    constructor(private readonly prisma: PrismaService) { }
+
+    async execute(
+        id: string,
+        dto: UpdateMonthlyChargeDto,
+    ): Promise<MonthlyChargeResponseDto> {
+        const charge = await this.prisma.monthlyCharge.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                family: {
+                    select: {
+                        familyNo: true,
+                        headName: true,
+                    },
+                },
+            },
+        });
+
+        if (!charge) {
+            throw new NotFoundException(MONTHLY_CHARGE_MESSAGES.NOT_FOUND);
+        }
+
+        const updatedCharge = await this.prisma.monthlyCharge.update({
+            where: {
+                id,
+            },
+            data: {
+                ...(dto.amount !== undefined && {
+                    amount: dto.amount,
+                }),
+
+                ...(dto.paidAmount !== undefined && {
+                    paidAmount: dto.paidAmount,
+                }),
+
+                ...(dto.status !== undefined && {
+                    status: dto.status,
+                }),
+
+                ...(dto.paymentId !== undefined && {
+                    paymentId: dto.paymentId,
+                }),
+
+                ...(dto.dueDate !== undefined && {
+                    dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+                }),
+
+                ...(dto.paidAt !== undefined && {
+                    paidAt: dto.paidAt ? new Date(dto.paidAt) : null,
+                }),
+            },
+            include: {
+                family: {
+                    select: {
+                        familyNo: true,
+                        headName: true,
+                    },
+                },
+            },
+        });
+
+        return {
+            id: updatedCharge.id,
+
+            familyId: updatedCharge.familyId,
+            familyNo: updatedCharge.family.familyNo,
+            headName: updatedCharge.family.headName,
+
+            year: updatedCharge.year,
+            month: updatedCharge.month,
+
+            amount: Number(updatedCharge.amount),
+            paidAmount: Number(updatedCharge.paidAmount),
+
+            status: updatedCharge.status,
+
+            paymentId: updatedCharge.paymentId,
+
+            dueDate: updatedCharge.dueDate,
+            paidAt: updatedCharge.paidAt,
+
+            createdAt: updatedCharge.createdAt,
+            updatedAt: updatedCharge.updatedAt,
+        };
+    }
+}

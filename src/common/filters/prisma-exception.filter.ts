@@ -3,6 +3,7 @@ import {
     Catch,
     ExceptionFilter,
     HttpStatus,
+    Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -13,10 +14,24 @@ import { FieldError } from '@/common/interfaces/field-error.interface';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
+    private readonly logger = new Logger(PrismaExceptionFilter.name);
     catch(
         exception: Prisma.PrismaClientKnownRequestError,
         host: ArgumentsHost,
     ): void {
+
+        this.logger.error('================ Prisma Error ================');
+        this.logger.error(`Code: ${exception.code}`);
+        this.logger.error(`Message: ${exception.message}`);
+        this.logger.error(
+            `Meta: ${JSON.stringify(exception.meta, null, 2)}`,
+        );
+        console.dir(exception, {
+            depth: null,
+            colors: true,
+        });
+        this.logger.error('==============================================');
+
         const context = host.switchToHttp();
 
         const request = context.getRequest<Request>();

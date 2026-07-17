@@ -7,27 +7,32 @@ export async function seedFamilies(
 ): Promise<void> {
     console.log('🏠 Seeding families...');
 
-    for (let index = 1; index <= 100; index++) {
+    for (let index = 1; index <= 50; index++) {
+        const familyNo = `F-${index.toString().padStart(4, '0')}`;
+
         await prisma.family.upsert({
             where: {
-                familyCode: `F-${index.toString().padStart(4, '0')}`,
+                familyNo,
             },
             update: {},
             create: {
-                familyCode: `F-${index.toString().padStart(4, '0')}`,
+                familyNo,
                 headName: faker.person.fullName(),
-                phone: faker.phone.number(),
-                address: faker.location.streetAddress(),
-                monthlyFee: faker.number.float({
-                    min: 100,
-                    max: 1000,
-                    fractionDigits: 2,
+                phone: faker.helpers.maybe(
+                    () => faker.phone.number(),
+                    { probability: 0.9 },
+                ),
+                address: faker.helpers.maybe(
+                    () => faker.location.streetAddress(),
+                    { probability: 0.95 },
+                ),
+                avatar: faker.helpers.maybe(
+                    () => faker.image.avatar(),
+                    { probability: 0.5 },
+                ),
+                isActive: faker.datatype.boolean({
+                    probability: 0.9,
                 }),
-                memberCount: faker.number.int({
-                    min: 1,
-                    max: 8,
-                }),
-                joiningDate: faker.date.past(),
             },
         });
     }

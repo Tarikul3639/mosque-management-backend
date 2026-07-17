@@ -1,0 +1,53 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  Length,
+} from 'class-validator';
+
+export class UpdateFamilyDto {
+  @ApiPropertyOptional({
+    example: 'FAM-0001',
+    description: 'Unique family number',
+  })
+  @IsOptional()
+  @IsString()
+  @Length(1, 50)
+  familyNo?: string;
+
+  @ApiPropertyOptional({
+    example: 'Abdul Karim',
+    description: 'Head of the family',
+  })
+  @IsOptional()
+  @IsString()
+  @Length(2, 100)
+  headName?: string;
+
+  @ApiPropertyOptional({
+    example: '01712345678',
+    description: 'Family contact number',
+  })
+  @IsOptional()
+  @IsPhoneNumber('BD')
+  phone?: string;
+
+  @ApiPropertyOptional({
+    example: 'Village: Rathura, Kaliganj, Gazipur',
+    description: 'Family address',
+  })
+  @IsOptional()
+  @IsString()
+  @Length(2, 255)
+  address?: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Family active status',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}

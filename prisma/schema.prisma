@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/lib/prisma"
+  provider     = "prisma-client"
+  output       = "../src/lib/prisma"
   moduleFormat = "cjs"
 }
 
@@ -36,15 +36,15 @@ enum CommitteeRole {
   MUAZZIN
 }
 
-enum FamilyStatus {
-  ACTIVE
-  INACTIVE
-}
-
-enum CollectionStatus {
-  PAID
-  PARTIAL
-  UNPAID
+// Future-ready. Add BKASH/NAGAD/CARD/QR usage without breaking existing rows.
+enum PaymentMethod {
+  CASH
+  BKASH
+  NAGAD
+  BANK_TRANSFER
+  CARD
+  QR
+  OTHER
 }
 
 enum ExpenseCategory {
@@ -80,6 +80,12 @@ enum Month {
   DECEMBER
 }
 
+enum PaymentStatus {
+  DUE
+  PAID
+  PARTIAL
+}
+
 /// ===========================
 /// ROLE
 /// ===========================
@@ -100,23 +106,22 @@ model Role {
 /// ===========================
 
 model User {
-  id          String     @id @default(uuid())
-  roleId      String
-  role        Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  fullName    String
-  email       String     @unique
-  phone       String     @unique
-  password    String
-  avatar      String?
-  status      UserStatus @default(ACTIVE)
-  lastLoginAt DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String      @id @default(uuid())
+  roleId          String
+  role            Role        @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  fullName        String
+  email           String      @unique
+  phone           String      @unique
+  password        String
+  avatar          String?
+  status          UserStatus  @default(ACTIVE)
+  lastLoginAt     DateTime?
+  createdExpenses Expense[]   @relation("ExpenseCreatedBy")
+  updatedExpenses Expense[]   @relation("ExpenseUpdatedBy")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
-  // Relations
-  collections Collection[]
-  expenses    Expense[]
-
+  @@index([status])
   @@index([roleId])
   @@map("users")
 }
@@ -129,7 +134,7 @@ model CommitteeMember {
   id          String        @id @default(uuid())
   fullName    String
   designation CommitteeRole
-  phone       String?
+  phone       String
   email       String?
   photo       String?
   address     String?
@@ -140,6 +145,7 @@ model CommitteeMember {
   updatedAt   DateTime      @updatedAt
 
   @@index([designation])
+  @@index([isActive])
   @@map("committee_members")
 }
 
@@ -148,53 +154,82 @@ model CommitteeMember {
 /// ===========================
 
 model Family {
-  id          String       @id @default(uuid())
-  familyCode  String       @unique
-  headName    String
-  phone       String?
-  address     String
-  monthlyFee  Decimal      @db.Decimal(10, 2)
-  memberCount Int          @default(1)
-  joiningDate DateTime?
-  status      FamilyStatus @default(ACTIVE)
-  remarks     String?
-  collections Collection[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  @@index([familyCode])
-  @@index([headName])
-  @@index([status])
-  @@map("families")
+  id        String          @id @default(cuid())
+  familyNo  String          @unique
+  headName  String
+  avatar    String?
+  phone     String?
+  address   String?
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  feeHistory FamilyFee[]
+  payments  Payment[]
+  charges   MonthlyCharge[]
 }
 
-/// ===========================
-/// COLLECTION
-/// ===========================
+model FamilyFee {
+  id         String    @id @default(cuid())
+  familyId   String
+  family     Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  monthlyFee Decimal   @db.Decimal(10, 2)
+  startDate  DateTime
+  endDate    DateTime?
+  createdAt  DateTime  @default(now())
+}
 
-model Collection {
-  id            String           @id @default(uuid())
-  familyId      String
-  family        Family           @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  collectedById String
-  collectedBy   User             @relation(fields: [collectedById], references: [id], onDelete: Restrict)
-  year          Int
-  month         Month
-  amount        Decimal          @db.Decimal(10, 2)
-  due           Decimal          @default(0) @db.Decimal(10, 2)
-  status        CollectionStatus @default(PAID)
-  receiptNo     String?          @unique
-  note          String?
-  paidAt        DateTime?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+model Payment {
+  id        String          @id @default(cuid())
+  familyId  String
+  family    Family          @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  amount    Decimal         @db.Decimal(10, 2)
+  paidAt    DateTime        @default(now())
+  method    PaymentMethod   @default(CASH)
+  reference String? // Transaction ID
+  note      String?
+  charges   MonthlyCharge[]
+  createdAt DateTime        @default(now())
+}
+
+model MonthlyCharge {
+  id         String        @id @default(cuid())
+  familyId   String
+  family     Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  year       Int
+  month      Int
+  amount     Decimal       @db.Decimal(10, 2)
+  paidAmount Decimal       @default(0) @db.Decimal(10, 2)
+  status     PaymentStatus @default(DUE)
+  paymentId  String?
+  payment    Payment?      @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  dueDate    DateTime?
+  paidAt     DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
   @@unique([familyId, year, month])
   @@index([familyId])
-  @@index([collectedById])
   @@index([year, month])
-  @@index([status])
-  @@map("collections")
+}
+
+/// ===========================
+/// DONOR
+/// ===========================
+
+model Donor {
+  id        String     @id @default(uuid())
+  fullName  String
+  phone     String
+  address   String?
+  email     String?
+  donations Donation[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([fullName, phone])
+  @@index([phone])
+  @@index([fullName])
+  @@map("donors")
 }
 
 /// ===========================
@@ -202,20 +237,24 @@ model Collection {
 /// ===========================
 
 model Donation {
-  id          String   @id @default(uuid())
-  donorName   String
-  phone       String?
-  address     String?
-  amount      Decimal  @db.Decimal(10, 2)
-  purpose     String?
-  isAnonymous Boolean  @default(false)
-  receiptNo   String?  @unique
-  note        String?
-  donatedAt   DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                   String        @id @default(uuid())
+  donorId              String
+  donor                Donor         @relation(fields: [donorId], references: [id], onDelete: Restrict)
+  amount               Decimal       @db.Decimal(10, 2)
+  purpose              String?
+  isAnonymous          Boolean       @default(false)
+  receiptNo            String        @unique
+  paymentMethod        PaymentMethod @default(CASH)
+  transactionReference String?
+  note                 String?
+  donatedAt            DateTime      @default(now())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
 
+  @@index([donorId])
+  @@index([receiptNo])
   @@index([donatedAt])
+  @@index([paymentMethod])
   @@map("donations")
 }
 
@@ -231,13 +270,16 @@ model Expense {
   note        String?
   expenseDate DateTime
   createdById String?
-  createdBy   User?           @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?           @relation("ExpenseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedById String?
+  updatedBy   User?           @relation("ExpenseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
   @@index([category])
   @@index([expenseDate])
   @@index([createdById])
+  @@index([updatedById])
   @@map("expenses")
 }
 
@@ -259,6 +301,7 @@ model DevelopmentProject {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
+  @@index([startDate])
   @@index([status])
   @@map("development_projects")
 }
@@ -276,6 +319,7 @@ model Gallery {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([order])
   @@map("galleries")
 }
 
@@ -284,14 +328,14 @@ model Gallery {
 /// ===========================
 
 model PrayerTime {
-  id String @id @default(uuid())
-  fajr String
-  dhuhr String
-  asr String
-  maghrib String
-  isha String
-  jummah String?
-  sunrise String?
+  id        String   @id @default(uuid())
+  fajr      String
+  dhuhr     String
+  asr       String
+  maghrib   String
+  isha      String
+  jummah    String?
+  sunrise   String?
   updatedAt DateTime @updatedAt
 
   @@map("prayer_times")

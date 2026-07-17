@@ -17,6 +17,7 @@ export class ForgotPasswordService {
   ) {}
 
   async execute(email: string): Promise<void> {
+    this.logger.log(`Initiating password reset for email: ${email}`);
     const user = await this.prismaService.user.findUnique({
       where: {
         email,
