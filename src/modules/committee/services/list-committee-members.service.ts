@@ -1,0 +1,76 @@
+import { Injectable } from '@nestjs/common';
+
+import { Prisma } from '@/lib/prisma/client';
+import { PrismaService } from '@/common/prisma/prisma.service';
+
+import { CommitteeMemberQueryDto } from '../dto/requests/committee-member-query.dto';
+import { CommitteeMemberListResponseDto } from '../dto/responses/committee-member-list-response.dto';
+import { CommitteeMemberMapper } from '../mappers/committee-member.mapper';
+import {
+  COMMITTEE_DEFAULT_LIMIT,
+  COMMITTEE_DEFAULT_PAGE,
+  COMMITTEE_SEARCH_FIELDS,
+} from '../constants/committee.constants';
+
+@Injectable()
+export class ListCommitteeMembersService {
+  constructor(
+    private readonly prisma: PrismaService,
+  ) {}
+
+  async execute(
+    query: CommitteeMemberQueryDto,
+  ): Promise<CommitteeMemberListResponseDto> {
+    const page = query.page ?? COMMITTEE_DEFAULT_PAGE;
+    const limit = query.limit ?? COMMITTEE_DEFAULT_LIMIT;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.CommitteeMemberWhereInput = {};
+
+    if (query.search) {
+      where.OR = COMMITTEE_SEARCH_FIELDS.map((field) => ({
+        [field]: {
+          contains: query.search,
+          mode: 'insensitive',
+        },
+      })) as Prisma.CommitteeMemberWhereInput[];
+    }
+
+    if (query.designation) {
+      where.designation = query.designation;
+    }
+
+    if (query.isActive !== undefined) {
+      where.isActive = query.isActive;
+    }
+
+    const [members, total] = await this.prisma.$transaction([
+      this.prisma.committeeMember.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+
+      this.prisma.committeeMember.count({
+        where,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: CommitteeMemberMapper.toResponseList(
+        members,
+      ),
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+  }
+}

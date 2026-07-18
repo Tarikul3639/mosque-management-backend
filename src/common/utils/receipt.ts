@@ -1,7 +1,9 @@
 export class ReceiptNoGenerator {
-    static generate(prefix: string, serial: number): string {
-        const year = new Date().getFullYear();
-        const sequence = serial.toString().padStart(6, '0');
-        return `${prefix}-${year}-${sequence}`;
+    static generate(paymentId: string, paidAt: Date): string {
+        const year = paidAt.getFullYear();
+        const month = String(paidAt.getMonth() + 1).padStart(2, '0');
+        const unique = paymentId.replace(/-/g, '').slice(-6).toUpperCase();
+
+        return `MSJ-${year}${month}-${unique}`;
     }
 }

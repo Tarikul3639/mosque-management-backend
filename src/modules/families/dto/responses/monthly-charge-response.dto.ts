@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import { PaymentStatus } from '@/lib/prisma/client';
 
 export class MonthlyChargeResponseDto {
@@ -48,12 +47,6 @@ export class MonthlyChargeResponseDto {
     example: PaymentStatus.PARTIAL,
   })
   status!: PaymentStatus;
-
-  @ApiProperty({
-    example: 'cmf7payment123456',
-    nullable: true,
-  })
-  paymentId!: string | null;
 
   @ApiProperty({
     example: '2026-07-31T00:00:00.000Z',

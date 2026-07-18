@@ -106,20 +106,22 @@ model Role {
 /// ===========================
 
 model User {
-  id              String      @id @default(uuid())
-  roleId          String
-  role            Role        @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  fullName        String
-  email           String      @unique
-  phone           String      @unique
-  password        String
-  avatar          String?
-  status          UserStatus  @default(ACTIVE)
-  lastLoginAt     DateTime?
-  createdExpenses Expense[]   @relation("ExpenseCreatedBy")
-  updatedExpenses Expense[]   @relation("ExpenseUpdatedBy")
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id               String     @id @default(uuid())
+  roleId           String
+  role             Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  fullName         String
+  email            String     @unique
+  phone            String     @unique
+  password         String
+  avatar           String?
+  status           UserStatus @default(ACTIVE)
+  lastLoginAt      DateTime?
+  createdExpenses  Expense[]  @relation("ExpenseCreatedBy")
+  updatedExpenses  Expense[]  @relation("ExpenseUpdatedBy")
+  createdDonations Donation[] @relation("DonationCreatedBy")
+  updatedDonations Donation[] @relation("DonationUpdatedBy")
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
   @@index([status])
   @@index([roleId])
@@ -136,7 +138,7 @@ model CommitteeMember {
   designation CommitteeRole
   phone       String
   email       String?
-  photo       String?
+  avatar      String?
   address     String?
   joiningDate DateTime?
   endDate     DateTime?
@@ -154,18 +156,18 @@ model CommitteeMember {
 /// ===========================
 
 model Family {
-  id        String          @id @default(cuid())
-  familyNo  String          @unique
-  headName  String
-  avatar    String?
-  phone     String?
-  address   String?
-  isActive  Boolean         @default(true)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id         String          @id @default(cuid())
+  familyNo   String          @unique
+  headName   String
+  avatar     String?
+  phone      String?
+  address    String?
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
   feeHistory FamilyFee[]
-  payments  Payment[]
-  charges   MonthlyCharge[]
+  payments   Payment[]
+  charges    MonthlyCharge[]
 }
 
 model FamilyFee {
@@ -179,16 +181,21 @@ model FamilyFee {
 }
 
 model Payment {
-  id        String          @id @default(cuid())
-  familyId  String
-  family    Family          @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  amount    Decimal         @db.Decimal(10, 2)
-  paidAt    DateTime        @default(now())
-  method    PaymentMethod   @default(CASH)
-  reference String? // Transaction ID
-  note      String?
-  charges   MonthlyCharge[]
-  createdAt DateTime        @default(now())
+  id              String        @id @default(cuid())
+  familyId        String
+  family          Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  monthlyChargeId String
+  monthlyCharge   MonthlyCharge @relation(fields: [monthlyChargeId], references: [id], onDelete: Cascade)
+  amount          Decimal       @db.Decimal(10, 2)
+  paidAt          DateTime      @default(now())
+  method          PaymentMethod @default(CASH)
+  reference       String?
+  note            String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([familyId])
+  @@index([monthlyChargeId])
 }
 
 model MonthlyCharge {
@@ -200,8 +207,7 @@ model MonthlyCharge {
   amount     Decimal       @db.Decimal(10, 2)
   paidAmount Decimal       @default(0) @db.Decimal(10, 2)
   status     PaymentStatus @default(DUE)
-  paymentId  String?
-  payment    Payment?      @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  payments   Payment[]
   dueDate    DateTime?
   paidAt     DateTime?
   createdAt  DateTime      @default(now())
@@ -222,6 +228,8 @@ model Donor {
   phone     String
   address   String?
   email     String?
+  avatar    String?
+  isActive  Boolean    @default(true)
   donations Donation[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -237,10 +245,17 @@ model Donor {
 /// ===========================
 
 model Donation {
-  id                   String        @id @default(uuid())
-  donorId              String
-  donor                Donor         @relation(fields: [donorId], references: [id], onDelete: Restrict)
-  amount               Decimal       @db.Decimal(10, 2)
+  id      String  @id @default(uuid())
+  donorId String
+  donor   Donor   @relation(fields: [donorId], references: [id], onDelete: Restrict)
+  amount  Decimal @db.Decimal(10, 2)
+
+  createdById String?
+  createdBy   User?   @relation("DonationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  updatedById String?
+  updatedBy   User?   @relation("DonationUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
   purpose              String?
   isAnonymous          Boolean       @default(false)
   receiptNo            String        @unique
@@ -252,9 +267,10 @@ model Donation {
   updatedAt            DateTime      @updatedAt
 
   @@index([donorId])
-  @@index([receiptNo])
   @@index([donatedAt])
   @@index([paymentMethod])
+  @@index([createdById])
+  @@index([updatedById])
   @@map("donations")
 }
 

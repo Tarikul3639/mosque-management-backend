@@ -8,7 +8,9 @@ import { MonthlyChargeListResponseDto } from '../dto/responses/monthly-charge-li
 
 @Injectable()
 export class ListMonthlyChargesService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+    ) { }
 
     async execute(
         query: MonthlyChargeQueryDto,
@@ -112,8 +114,6 @@ export class ListMonthlyChargesService {
                 paidAmount: Number(charge.paidAmount),
 
                 status: charge.status,
-
-                paymentId: charge.paymentId,
 
                 dueDate: charge.dueDate,
                 paidAt: charge.paidAt,

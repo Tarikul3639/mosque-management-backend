@@ -17,6 +17,10 @@ import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
 import { MailModule } from '@/common/mail';
 import { AuthModule } from './modules/auth/auth.module';
 import { FamiliesModule } from './modules/families/families.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { DonationsModule } from './modules/donations/donations.module';
+import { DonorsModule } from './modules/donors/donors.module';
+import { CommitteeModule } from './modules/committee/committee.module'
 
 @Module({
   imports: [
@@ -50,6 +54,10 @@ import { FamiliesModule } from './modules/families/families.module';
     // AuthModule is imported here to make its services available throughout the application
     AuthModule,
     FamiliesModule,
+    PaymentsModule,
+    DonationsModule,
+    DonorsModule,
+    CommitteeModule,
   ],
   controllers: [],
   providers: [],
