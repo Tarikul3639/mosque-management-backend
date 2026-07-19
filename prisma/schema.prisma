@@ -50,11 +50,19 @@ enum PaymentMethod {
 enum ExpenseCategory {
   IMAM_SALARY
   MUAZZIN_SALARY
+
   ELECTRICITY
   WATER
-  CLEANING
+  INTERNET
+  GAS
+
   MAINTENANCE
+  CLEANING
   DEVELOPMENT
+
+  OFFICE
+  EVENT
+
   OTHER
 }
 
@@ -106,22 +114,27 @@ model Role {
 /// ===========================
 
 model User {
-  id               String     @id @default(uuid())
-  roleId           String
-  role             Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  fullName         String
-  email            String     @unique
-  phone            String     @unique
-  password         String
-  avatar           String?
-  status           UserStatus @default(ACTIVE)
-  lastLoginAt      DateTime?
-  createdExpenses  Expense[]  @relation("ExpenseCreatedBy")
-  updatedExpenses  Expense[]  @relation("ExpenseUpdatedBy")
-  createdDonations Donation[] @relation("DonationCreatedBy")
-  updatedDonations Donation[] @relation("DonationUpdatedBy")
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id                         String               @id @default(uuid())
+  roleId                     String
+  role                       Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  fullName                   String
+  email                      String               @unique
+  phone                      String               @unique
+  password                   String
+  avatar                     String?
+  status                     UserStatus           @default(ACTIVE)
+  lastLoginAt                DateTime?
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  
+  createdExpenses            Expense[]            @relation("ExpenseCreatedBy")
+  updatedExpenses            Expense[]            @relation("ExpenseUpdatedBy")
+  createdDonations           Donation[]           @relation("DonationCreatedBy")
+  updatedDonations           Donation[]           @relation("DonationUpdatedBy")
+  createdDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectCreatedBy")
+  updatedDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectUpdatedBy")
+  createdGalleries           Gallery[]            @relation("GalleryCreatedBy")
+  updatedGalleries           Gallery[]            @relation("GalleryUpdatedBy")
 
   @@index([status])
   @@index([roleId])
@@ -279,18 +292,25 @@ model Donation {
 /// ===========================
 
 model Expense {
-  id          String          @id @default(uuid())
-  category    ExpenseCategory
-  title       String
-  amount      Decimal         @db.Decimal(10, 2)
-  note        String?
+  id String @id @default(uuid())
+
+  category ExpenseCategory
+
+  title  String
+  amount Decimal @db.Decimal(10, 2)
+
+  note String?
+
   expenseDate DateTime
+
   createdById String?
-  createdBy   User?           @relation("ExpenseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("ExpenseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
   updatedById String?
-  updatedBy   User?           @relation("ExpenseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  updatedBy   User?   @relation("ExpenseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([category])
   @@index([expenseDate])
@@ -304,21 +324,36 @@ model Expense {
 /// ===========================
 
 model DevelopmentProject {
-  id          String        @id @default(uuid())
+  id String @id @default(uuid())
+
   title       String
   description String?
-  budget      Decimal?      @db.Decimal(10, 2)
-  spent       Decimal?      @db.Decimal(10, 2)
-  progress    Int           @default(0)
-  image       String?
-  status      ProjectStatus @default(PLANNING)
-  startDate   DateTime?
-  endDate     DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
 
-  @@index([startDate])
+  budget Decimal? @db.Decimal(10, 2)
+  spent  Decimal? @db.Decimal(10, 2)
+
+  progress Int @default(0)
+
+  image String?
+
+  status ProjectStatus @default(PLANNING)
+
+  startDate DateTime?
+  endDate   DateTime?
+
+  createdById String?
+  updatedById String?
+
+  createdBy User? @relation("DevelopmentProjectCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("DevelopmentProjectUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([status])
+  @@index([startDate])
+  @@index([createdById])
+  @@index([updatedById])
   @@map("development_projects")
 }
 
@@ -327,15 +362,27 @@ model DevelopmentProject {
 /// ===========================
 
 model Gallery {
-  id          String   @id @default(uuid())
+  id String @id @default(uuid())
+
   title       String?
   imageUrl    String
   description String?
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  order Int @default(0)
+
+  createdById String?
+  updatedById String?
+
+  createdBy User? @relation("GalleryCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  updatedBy User? @relation("GalleryUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([order])
+  @@index([createdById])
+  @@index([updatedById])
   @@map("galleries")
 }
 
@@ -344,14 +391,17 @@ model Gallery {
 /// ===========================
 
 model PrayerTime {
-  id        String   @id @default(uuid())
-  fajr      String
-  dhuhr     String
-  asr       String
-  maghrib   String
-  isha      String
-  jummah    String?
-  sunrise   String?
+  id String @id @default(uuid())
+
+  fajr    String
+  sunrise String?
+  dhuhr   String
+  asr     String
+  maghrib String
+  isha    String
+  jummah  String?
+
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("prayer_times")

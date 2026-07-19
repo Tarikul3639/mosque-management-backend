@@ -21,6 +21,10 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { DonationsModule } from './modules/donations/donations.module';
 import { DonorsModule } from './modules/donors/donors.module';
 import { CommitteeModule } from './modules/committee/committee.module'
+import { ExpensesModule } from './modules/expense/expenses.module';
+import { DevelopmentProjectsModule } from "./modules/development-project/development-projects.module"
+import { GalleriesModule } from './modules/gallery/galleries.module';
+import { PrayerTimesModule } from './modules/prayer-times/prayer-times.module';
 
 @Module({
   imports: [
@@ -58,6 +62,10 @@ import { CommitteeModule } from './modules/committee/committee.module'
     DonationsModule,
     DonorsModule,
     CommitteeModule,
+    ExpensesModule,
+    DevelopmentProjectsModule,
+    GalleriesModule,
+    PrayerTimesModule,
   ],
   controllers: [],
   providers: [],
