@@ -3,12 +3,13 @@ import { UploadApiOptions } from 'cloudinary';
 export type ResourceType = 'image' | 'raw' | 'video';
 
 export const CloudinaryFolder = Object.freeze({
-  PRODUCTS: 'products',
-  CATEGORIES: 'categories',
   USERS: 'users',
+  FAMILIES: 'families',
+  DONORS: 'donors',
+  GALLERY: 'gallery',
+  COMMITTEE: 'committee',
+  PROJECTS: 'projects',
   DOCUMENTS: 'documents',
-  SETTINGS: 'settings',
-  REPORTS: 'reports',
 });
 
 export type CloudinaryFolderType =

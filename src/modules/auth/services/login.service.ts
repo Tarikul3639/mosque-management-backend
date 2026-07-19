@@ -30,7 +30,11 @@ export class LoginService {
                 fullName: true,
                 email: true,
                 phone: true,
-                avatar: true,
+                avatar: {
+                    select: {
+                        url: true,
+                    },
+                },
                 password: true,
                 status: true,
                 role: {
@@ -81,7 +85,7 @@ export class LoginService {
                 fullName: user.fullName,
                 email: user.email,
                 phone: user.phone,
-                avatar: user.avatar,
+                avatar: user.avatar?.url || null,
                 role: user.role.name,
             },
         };

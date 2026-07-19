@@ -15,7 +15,7 @@ import { FamilyListResponseDto } from '../dto/responses/family-list-response.dto
 export class ListFamiliesService {
   constructor(
     private readonly prismaService: PrismaService,
-  ) {}
+  ) { }
 
   async execute(
     query: FamilyQueryDto,
@@ -68,6 +68,14 @@ export class ListFamiliesService {
         orderBy: {
           [query.sortBy ?? 'createdAt']:
             query.sortOrder ?? 'desc',
+        },
+        include: {
+          avatar: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       }),
 

@@ -28,6 +28,13 @@ export class GetDevelopmentProjectService {
                         fullName: true,
                     },
                 },
+
+                images: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
             },
         });
 

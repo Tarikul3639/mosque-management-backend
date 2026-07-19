@@ -83,15 +83,38 @@ export class UpdateCommitteeMemberService {
           designation: dto.designation,
           phone: dto.phone,
           email: dto.email,
-          avatar: dto.avatar,
           address: dto.address,
+
           joiningDate: dto.joiningDate
             ? new Date(dto.joiningDate)
             : undefined,
+
           endDate: dto.endDate
             ? new Date(dto.endDate)
             : undefined,
+
           isActive: dto.isActive,
+
+          ...(dto.avatarId !== undefined && {
+            avatar: dto.avatarId
+              ? {
+                  connect: {
+                    id: dto.avatarId,
+                  },
+                }
+              : {
+                  disconnect: true,
+                },
+          }),
+        },
+
+        include: {
+          avatar: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       });
 

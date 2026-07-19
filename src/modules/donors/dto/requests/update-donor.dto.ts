@@ -1,42 +1,20 @@
 import {
-    ApiPropertyOptional,
+  PartialType,
+  ApiPropertyOptional,
 } from '@nestjs/swagger';
 
 import {
-    IsBoolean,
-    IsEmail,
-    IsOptional,
-    IsString,
+  IsBoolean,
+  IsOptional,
 } from 'class-validator';
 
-export class UpdateDonorDto {
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString()
-    fullName!: string;
+import { CreateDonorDto } from './create-donor.dto';
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString()
-    phone!: string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsEmail()
-    email!: string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString()
-    address!: string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString()
-    avatar!: string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsBoolean()
-    isActive!: boolean;
+export class UpdateDonorDto extends PartialType(
+  CreateDonorDto,
+) {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

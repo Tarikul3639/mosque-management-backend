@@ -3,6 +3,12 @@ import { DevelopmentProjectResponseDto } from '../dto/responses/development-proj
 
 type DevelopmentProjectWithUsers = Prisma.DevelopmentProjectGetPayload<{
     include: {
+        images: {
+            select: {
+                id: true;
+                url: true;
+            };
+        };
         createdBy: {
             select: {
                 id: true;
@@ -24,22 +30,18 @@ export class DevelopmentProjectMapper {
     ): DevelopmentProjectResponseDto {
         return {
             id: project.id,
-
             title: project.title,
             description: project.description,
-
             budget: project.budget?.toString() ?? '0',
             spent: project.spent?.toString() ?? '0',
-
             progress: project.progress,
-
-            image: project.image,
-
+            images: project.images.map((image) => ({
+                id: image.id,
+                url: image.url,
+            })),
             status: project.status,
-
             startDate: project.startDate,
             endDate: project.endDate,
-
             createdBy: project.createdBy
                 ? {
                     id: project.createdBy.id,

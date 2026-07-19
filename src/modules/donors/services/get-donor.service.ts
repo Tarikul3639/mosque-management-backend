@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { DonorMapper } from '../mappers/donor.mapper';
+
 import { DONOR_MESSAGES } from '../constants/donor.constants';
+import { DonorMapper } from '../mappers/donor.mapper';
+
 import { DonorResponseDto } from '../dto/responses/donor-response.dto';
 
 @Injectable()
@@ -12,6 +15,14 @@ export class GetDonorService {
         const donor = await this.prismaService.donor.findUnique({
             where: {
                 id,
+            },
+            include: {
+                avatar: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
             },
         });
 

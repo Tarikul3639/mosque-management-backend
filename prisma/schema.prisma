@@ -114,30 +114,39 @@ model Role {
 /// ===========================
 
 model User {
-  id                         String               @id @default(uuid())
-  roleId                     String
-  role                       Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  fullName                   String
-  email                      String               @unique
-  phone                      String               @unique
-  password                   String
-  avatar                     String?
-  status                     UserStatus           @default(ACTIVE)
-  lastLoginAt                DateTime?
-  createdAt                  DateTime             @default(now())
-  updatedAt                  DateTime             @updatedAt
-  
-  createdExpenses            Expense[]            @relation("ExpenseCreatedBy")
-  updatedExpenses            Expense[]            @relation("ExpenseUpdatedBy")
+  id String @id @default(uuid())
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  fullName String
+  email    String @unique
+  phone    String @unique
+  password String
+
+  avatarId String? @unique
+  avatar   File?   @relation(fields: [avatarId], references: [id])
+
+  status      UserStatus @default(ACTIVE)
+  lastLoginAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdExpenses Expense[] @relation("ExpenseCreatedBy")
+  updatedExpenses Expense[] @relation("ExpenseUpdatedBy")
+
   createdDonations           Donation[]           @relation("DonationCreatedBy")
   updatedDonations           Donation[]           @relation("DonationUpdatedBy")
   createdDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectCreatedBy")
   updatedDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectUpdatedBy")
   createdGalleries           Gallery[]            @relation("GalleryCreatedBy")
   updatedGalleries           Gallery[]            @relation("GalleryUpdatedBy")
+  uploadedFiles              File[]               @relation("FileUploadedBy")
+  updatedFiles               File[]               @relation("FileUpdatedBy")
 
-  @@index([status])
   @@index([roleId])
+  @@index([status])
   @@map("users")
 }
 
@@ -146,18 +155,27 @@ model User {
 /// ===========================
 
 model CommitteeMember {
-  id          String        @id @default(uuid())
-  fullName    String
+  id String @id @default(uuid())
+
+  fullName String
+
   designation CommitteeRole
-  phone       String
-  email       String?
-  avatar      String?
-  address     String?
+
+  phone String
+  email String?
+
+  avatarId String? @unique
+  avatar   File?   @relation(fields: [avatarId], references: [id])
+
+  address String?
+
   joiningDate DateTime?
   endDate     DateTime?
-  isActive    Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([designation])
   @@index([isActive])
@@ -169,18 +187,29 @@ model CommitteeMember {
 /// ===========================
 
 model Family {
-  id         String          @id @default(cuid())
-  familyNo   String          @unique
-  headName   String
-  avatar     String?
-  phone      String?
-  address    String?
-  isActive   Boolean         @default(true)
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
+  id String @id @default(uuid())
+
+  familyNo String @unique
+
+  headName String
+
+  avatarId String? @unique
+  avatar   File?   @relation(fields: [avatarId], references: [id])
+
+  phone   String?
+  address String?
+
+  isActive Boolean @default(true)
+
   feeHistory FamilyFee[]
   payments   Payment[]
   charges    MonthlyCharge[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("families")
 }
 
 model FamilyFee {
@@ -236,20 +265,26 @@ model MonthlyCharge {
 /// ===========================
 
 model Donor {
-  id        String     @id @default(uuid())
-  fullName  String
-  phone     String
-  address   String?
-  email     String?
-  avatar    String?
-  isActive  Boolean    @default(true)
+  id String @id @default(uuid())
+
+  fullName String
+  phone    String
+  email    String?
+  address  String?
+
+  avatarId String? @unique
+  avatar   File?   @relation(fields: [avatarId], references: [id])
+
+  isActive Boolean @default(true)
+
   donations Donation[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([fullName, phone])
-  @@index([phone])
   @@index([fullName])
+  @@index([phone])
   @@map("donors")
 }
 
@@ -334,12 +369,12 @@ model DevelopmentProject {
 
   progress Int @default(0)
 
-  image String?
-
   status ProjectStatus @default(PLANNING)
 
   startDate DateTime?
   endDate   DateTime?
+
+  images File[]
 
   createdById String?
   updatedById String?
@@ -365,8 +400,9 @@ model Gallery {
   id String @id @default(uuid())
 
   title       String?
-  imageUrl    String
   description String?
+
+  images File[]
 
   order Int @default(0)
 
@@ -374,7 +410,6 @@ model Gallery {
   updatedById String?
 
   createdBy User? @relation("GalleryCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-
   updatedBy User? @relation("GalleryUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
@@ -405,4 +440,40 @@ model PrayerTime {
   updatedAt DateTime @updatedAt
 
   @@map("prayer_times")
+}
+
+model File {
+  id String @id @default(uuid())
+
+  url      String
+  publicId String @unique
+
+  originalName String?
+  mimeType     String?
+  extension    String?
+
+  size   Int
+  width  Int?
+  height Int?
+
+  uploadedById String?
+  uploadedBy   User?   @relation("FileUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  updatedById String?
+  updatedBy   User?   @relation("FileUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  userAvatar      User?
+  familyAvatar    Family?
+  donorAvatar     Donor?
+  committeeAvatar CommitteeMember?
+
+  galleries Gallery[]
+  projects  DevelopmentProject[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([uploadedById])
+  @@index([updatedById])
+  @@map("files")
 }

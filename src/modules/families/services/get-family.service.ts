@@ -20,6 +20,14 @@ export class GetFamilyService {
             where: {
                 id,
             },
+            include: {
+                avatar: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
+            },
         });
 
         if (!family) {

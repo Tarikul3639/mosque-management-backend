@@ -1,6 +1,18 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CommitteeRole } from '@/lib/prisma/client';
 
+class CommitteeMemberAvatarDto {
+  @ApiProperty({
+    example: '6b8b0d0b-0b7d-4d16-91c8-9b1d1d2e3f4a',
+  })
+  id!: string;
+
+  @ApiProperty({
+    example: 'https://example.com/photo.jpg',
+  })
+  url!: string;
+}
+
 export class CommitteeMemberResponseDto {
   @ApiProperty({
     example: '6b8b0d0b-0b7d-4d16-91c8-9b1d1d2e3f4a',
@@ -30,10 +42,10 @@ export class CommitteeMemberResponseDto {
   email!: string | null;
 
   @ApiPropertyOptional({
-    example: 'https://example.com/photo.jpg',
+    type: CommitteeMemberAvatarDto,
     nullable: true,
   })
-  avatar!: string | null;
+  avatar!: CommitteeMemberAvatarDto | null;
 
   @ApiPropertyOptional({
     example: 'Dhaka, Bangladesh',

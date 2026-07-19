@@ -1,4 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+class FamilyAvatarDto {
+  @ApiProperty({
+    example: 'cmf8x8x8x0001abcd1234',
+  })
+  id!: string;
+
+  @ApiProperty({
+    example: 'https://example.com/uploads/families/avatar.jpg',
+  })
+  url!: string;
+}
 
 export class FamilyResponseDto {
   @ApiProperty({
@@ -16,26 +28,23 @@ export class FamilyResponseDto {
   })
   headName!: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '01712345678',
-    required: false,
     nullable: true,
   })
-  phone?: string | null;
+  phone!: string | null;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'Village: Rathura, Kaliganj, Gazipur',
-    required: false,
     nullable: true,
   })
-  address?: string | null;
+  address!: string | null;
 
-  @ApiProperty({
-    example: 'https://example.com/uploads/families/avatar.jpg',
-    required: false,
+  @ApiPropertyOptional({
+    type: FamilyAvatarDto,
     nullable: true,
   })
-  avatar?: string | null;
+  avatar!: FamilyAvatarDto | null;
 
   @ApiProperty({
     example: true,

@@ -1,37 +1,48 @@
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
+
+class DonorAvatarDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  url!: string;
+}
 
 export class DonorResponseDto {
-    @ApiProperty()
-    id!: string;
+  @ApiProperty()
+  id!: string;
 
-    @ApiProperty()
-    fullName!: string;
+  @ApiProperty()
+  fullName!: string;
 
-    @ApiProperty()
-    phone!: string;
+  @ApiProperty()
+  phone!: string;
 
-    @ApiProperty({
-        nullable: true,
-    })
-    email!: string | null;
+  @ApiPropertyOptional({
+    nullable: true,
+  })
+  email!: string | null;
 
-    @ApiProperty({
-        example: 'https://example.com/avatar.jpg',
-        nullable: true,
-    })
-    avatar!: string | null;
+  @ApiPropertyOptional({
+    type: DonorAvatarDto,
+    nullable: true,
+  })
+  avatar!: DonorAvatarDto | null;
 
-    @ApiProperty({
-        nullable: true,
-    })
-    address!: string | null;
+  @ApiPropertyOptional({
+    nullable: true,
+  })
+  address!: string | null;
 
-    @ApiProperty()
-    isActive!: boolean;
+  @ApiProperty()
+  isActive!: boolean;
 
-    @ApiProperty()
-    createdAt!: Date;
+  @ApiProperty()
+  createdAt!: Date;
 
-    @ApiProperty()
-    updatedAt!: Date;
+  @ApiProperty()
+  updatedAt!: Date;
 }

@@ -54,6 +54,12 @@ export class ListDevelopmentProjectsService {
                     createdAt: 'desc',
                 },
                 include: {
+                    images: {
+                        select: {
+                            id: true,
+                            url: true,
+                        },
+                    },
                     createdBy: {
                         select: {
                             id: true,

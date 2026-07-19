@@ -2,11 +2,15 @@ import {
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger';
+
 import {
+  ArrayUnique,
+  IsArray,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   Min,
 } from 'class-validator';
@@ -21,11 +25,18 @@ export class CreateGalleryDto {
   title?: string;
 
   @ApiProperty({
-    example: 'https://example.com/gallery/image.jpg',
+    type: [String],
+    description: 'Uploaded image file IDs',
+    example: [
+      '3d4eeb9d-3e7d-4b40-bb66-c36fef0f87d2',
+      '8dbdc8fd-c1db-4a73-8cf6-7e1d7c8b34b5',
+    ],
   })
-  @IsString()
+  @IsArray()
+  @ArrayUnique()
+  @IsUUID('4', { each: true })
   @IsNotEmpty()
-  imageUrl!: string;
+  imageIds!: string[];
 
   @ApiPropertyOptional({
     example: 'Photos from Eid-ul-Adha prayer.',

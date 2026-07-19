@@ -11,6 +11,14 @@ class GalleryUserDto {
   fullName!: string;
 }
 
+class GalleryImageDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  url!: string;
+}
+
 export class GalleryResponseDto {
   @ApiProperty()
   id!: string;
@@ -18,8 +26,10 @@ export class GalleryResponseDto {
   @ApiPropertyOptional()
   title!: string | null;
 
-  @ApiProperty()
-  imageUrl!: string;
+  @ApiProperty({
+    type: [GalleryImageDto],
+  })
+  images!: GalleryImageDto[];
 
   @ApiPropertyOptional()
   description!: string | null;

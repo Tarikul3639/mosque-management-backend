@@ -23,6 +23,12 @@ export class GetGalleryService {
                 id: galleryId,
             },
             include: {
+                images: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
                 createdBy: {
                     select: {
                         id: true,

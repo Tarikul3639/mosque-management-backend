@@ -16,7 +16,11 @@ export class GetMeService {
                 fullName: true,
                 email: true,
                 phone: true,
-                avatar: true,
+                avatar: {
+                    select: {
+                        url: true,
+                    },
+                },
                 role: {
                     select: {
                         name: true,
@@ -34,7 +38,7 @@ export class GetMeService {
             fullName: user.fullName,
             email: user.email,
             phone: user.phone,
-            avatar: user.avatar,
+            avatar: user.avatar?.url || null,
             role: user.role.name,
         };
 

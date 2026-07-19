@@ -25,6 +25,7 @@ import { ExpensesModule } from './modules/expense/expenses.module';
 import { DevelopmentProjectsModule } from "./modules/development-project/development-projects.module"
 import { GalleriesModule } from './modules/gallery/galleries.module';
 import { PrayerTimesModule } from './modules/prayer-times/prayer-times.module';
+import { UploadsModule } from './common/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { PrayerTimesModule } from './modules/prayer-times/prayer-times.module';
     DevelopmentProjectsModule,
     GalleriesModule,
     PrayerTimesModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],

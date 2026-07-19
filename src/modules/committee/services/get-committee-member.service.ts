@@ -13,7 +13,7 @@ import { CommitteeMemberResponseDto } from '../dto/responses/committee-member-re
 export class GetCommitteeMemberService {
   constructor(
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   async execute(
     id: string,
@@ -22,6 +22,14 @@ export class GetCommitteeMemberService {
       await this.prisma.committeeMember.findUnique({
         where: {
           id,
+        },
+        include: {
+          avatar: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       });
 

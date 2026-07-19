@@ -1,10 +1,14 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 
 import {
   IsEmail,
   IsOptional,
   IsPhoneNumber,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
 export class CreateDonorDto {
@@ -19,10 +23,15 @@ export class CreateDonorDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsEmail()
-  email!: string;
+  email?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  address!: string;
+  address?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  avatarId?: string;
 }

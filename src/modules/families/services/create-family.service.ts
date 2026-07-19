@@ -46,6 +46,23 @@ export class CreateFamilyService {
                 phone: dto.phone,
                 address: dto.address,
                 isActive: dto.isActive ?? true,
+
+                ...(dto.avatarId && {
+                    avatar: {
+                        connect: {
+                            id: dto.avatarId,
+                        },
+                    },
+                }),
+            },
+
+            include: {
+                avatar: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
             },
         });
 
@@ -55,7 +72,14 @@ export class CreateFamilyService {
             headName: family.headName,
             phone: family.phone,
             address: family.address,
-            avatar: family.avatar,
+
+            avatar: family.avatar
+                ? {
+                    id: family.avatar.id,
+                    url: family.avatar.url,
+                }
+                : null,
+
             isActive: family.isActive,
             createdAt: family.createdAt,
             updatedAt: family.updatedAt,

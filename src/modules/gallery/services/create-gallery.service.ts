@@ -8,43 +8,49 @@ import { GalleryMapper } from '../mappers/gallery.mapper';
 
 @Injectable()
 export class CreateGalleryService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async execute(
     dto: CreateGalleryDto,
     userId: string,
   ): Promise<GalleryResponseDto> {
-    const gallery =
-      await this.prisma.gallery.create({
-        data: {
-          title: dto.title,
-          imageUrl: dto.imageUrl,
-          description: dto.description,
-          order: dto.order ?? 0,
+    const gallery = await this.prisma.gallery.create({
+      data: {
+        title: dto.title,
+        description: dto.description,
+        order: dto.order ?? 0,
 
-          createdById: userId,
-          updatedById: userId,
+        images: {
+          connect: dto.imageIds.map((id) => ({
+            id,
+          })),
         },
-        include: {
-          createdBy: {
-            select: {
-              id: true,
-              fullName: true,
-            },
-          },
-          updatedBy: {
-            select: {
-              id: true,
-              fullName: true,
-            },
+
+        createdById: userId,
+        updatedById: userId,
+      },
+      include: {
+        images: {
+          select: {
+            id: true,
+            url: true,
           },
         },
-      });
+        createdBy: {
+          select: {
+            id: true,
+            fullName: true,
+          },
+        },
+        updatedBy: {
+          select: {
+            id: true,
+            fullName: true,
+          },
+        },
+      },
+    });
 
-    return GalleryMapper.toResponse(
-      gallery,
-    );
+    return GalleryMapper.toResponse(gallery);
   }
 }

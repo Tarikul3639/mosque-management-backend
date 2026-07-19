@@ -16,7 +16,7 @@ import {
 export class ListCommitteeMembersService {
   constructor(
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   async execute(
     query: CommitteeMemberQueryDto,
@@ -51,6 +51,14 @@ export class ListCommitteeMembersService {
         take: limit,
         orderBy: {
           createdAt: 'desc',
+        },
+        include: {
+          avatar: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       }),
 

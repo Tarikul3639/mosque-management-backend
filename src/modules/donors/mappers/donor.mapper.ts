@@ -1,26 +1,42 @@
-import { Donor } from '@/lib/prisma/client';
+import { Prisma } from '@/lib/prisma/client';
+
 import { DonorResponseDto } from '../dto/responses/donor-response.dto';
 
+type DonorWithAvatar = Prisma.DonorGetPayload<{
+  include: {
+    avatar: {
+      select: {
+        id: true;
+        url: true;
+      };
+    };
+  };
+}>;
+
 export class DonorMapper {
-  static toResponse(
-    donor: Donor,
-  ): DonorResponseDto {
+  static toResponse(donor: DonorWithAvatar): DonorResponseDto {
     return {
       id: donor.id,
       fullName: donor.fullName,
       phone: donor.phone,
       email: donor.email,
-      avatar: donor.avatar,
-      isActive: donor.isActive,
       address: donor.address,
+
+      avatar: donor.avatar
+        ? {
+          id: donor.avatar.id,
+          url: donor.avatar.url,
+        }
+        : null,
+
+      isActive: donor.isActive,
+
       createdAt: donor.createdAt,
       updatedAt: donor.updatedAt,
     };
   }
 
-  static toResponseList(
-    donors: Donor[],
-  ): DonorResponseDto[] {
-    return donors.map(this.toResponse);
+  static toResponseList(donors: DonorWithAvatar[]): DonorResponseDto[] {
+    return donors.map((donor) => DonorMapper.toResponse(donor));
   }
 }

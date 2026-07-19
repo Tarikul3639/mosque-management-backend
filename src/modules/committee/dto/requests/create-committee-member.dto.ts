@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsPhoneNumber,
   IsString,
+  IsUUID,
   MaxLength,
 } from 'class-validator';
 
@@ -43,11 +44,12 @@ export class CreateCommitteeMemberDto {
   email?: string;
 
   @ApiPropertyOptional({
-    example: 'https://example.com/photo.jpg',
+    example: '6b8b0d0b-0b7d-4d16-91c8-9b1d1d2e3f4a',
+    description: 'Uploaded File ID',
   })
   @IsOptional()
-  @IsString()
-  avatar?: string;
+  @IsUUID()
+  avatarId?: string;
 
   @ApiPropertyOptional({
     example: 'Dhaka, Bangladesh',

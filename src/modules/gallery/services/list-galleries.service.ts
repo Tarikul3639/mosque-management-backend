@@ -54,6 +54,12 @@ export class ListGalleriesService {
                     },
                 ],
                 include: {
+                    images: {
+                        select: {
+                            id: true,
+                            url: true,
+                        },
+                    },
                     createdBy: {
                         select: {
                             id: true,

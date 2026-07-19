@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsPhoneNumber, IsString, Length } from 'class-validator';
+import {
+  IsBoolean,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsUUID,
+  Length,
+} from 'class-validator';
 
 export class CreateFamilyDto {
   @ApiProperty({
@@ -25,6 +32,14 @@ export class CreateFamilyDto {
   @IsOptional()
   @IsPhoneNumber('BD')
   phone?: string;
+
+  @ApiPropertyOptional({
+    example: '6b8b0d0b-0b7d-4d16-91c8-9b1d1d2e3f4a',
+    description: 'Avatar File ID',
+  })
+  @IsOptional()
+  @IsUUID()
+  avatarId?: string;
 
   @ApiPropertyOptional({
     example: 'Village: Rathura, Kaliganj, Gazipur',

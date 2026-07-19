@@ -13,6 +13,14 @@ class DevelopmentProjectUserDto {
   fullName!: string;
 }
 
+class DevelopmentProjectImageDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  url!: string;
+}
+
 export class DevelopmentProjectResponseDto {
   @ApiProperty()
   id!: string;
@@ -37,11 +45,14 @@ export class DevelopmentProjectResponseDto {
   })
   status!: ProjectStatus;
 
-  @ApiPropertyOptional()
-  image!: string | null;
+  @ApiPropertyOptional({
+    type: DevelopmentProjectImageDto,
+    nullable: true,
+  })
+  images!: DevelopmentProjectImageDto[] | null;
 
   @ApiPropertyOptional()
-  startDate?: Date | null;
+  startDate!: Date | null;
 
   @ApiPropertyOptional()
   endDate!: Date | null;

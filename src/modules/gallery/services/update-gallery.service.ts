@@ -48,13 +48,10 @@ export class UpdateGalleryService {
             where: {
                 id: galleryId,
             },
+
             data: {
                 ...(dto.title !== undefined && {
                     title: dto.title,
-                }),
-
-                ...(dto.imageUrl !== undefined && {
-                    imageUrl: dto.imageUrl,
                 }),
 
                 ...(dto.description !== undefined && {
@@ -65,15 +62,32 @@ export class UpdateGalleryService {
                     order: dto.order,
                 }),
 
+                ...(dto.imageIds !== undefined && {
+                    images: {
+                        set: dto.imageIds.map((id) => ({
+                            id,
+                        })),
+                    },
+                }),
+
                 updatedById: userId,
             },
+
             include: {
+                images: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
+
                 createdBy: {
                     select: {
                         id: true,
                         fullName: true,
                     },
                 },
+
                 updatedBy: {
                     select: {
                         id: true,

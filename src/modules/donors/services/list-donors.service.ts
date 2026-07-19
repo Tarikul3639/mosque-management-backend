@@ -53,6 +53,14 @@ export class ListDonorsService {
                 orderBy: {
                     createdAt: 'desc',
                 },
+                include: {
+                    avatar: {
+                        select: {
+                            id: true,
+                            url: true,
+                        },
+                    },
+                },
             }),
 
             this.prismaService.donor.count({

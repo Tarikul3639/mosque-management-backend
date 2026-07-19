@@ -59,8 +59,27 @@ export class UpdateDonorService {
                 phone: dto.phone,
                 email: dto.email,
                 address: dto.address,
-                avatar: dto.avatar,
                 isActive: dto.isActive,
+
+                ...(dto.avatarId !== undefined && {
+                    avatar: dto.avatarId
+                        ? {
+                            connect: {
+                                id: dto.avatarId,
+                            },
+                        }
+                        : {
+                            disconnect: true,
+                        },
+                }),
+            },
+            include: {
+                avatar: {
+                    select: {
+                        id: true,
+                        url: true,
+                    },
+                },
             },
         });
 

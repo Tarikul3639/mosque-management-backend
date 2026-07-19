@@ -1,9 +1,21 @@
-import { CommitteeMember } from "@/lib/prisma/client";
-import { CommitteeMemberResponseDto } from "../dto/responses/committee-member-response.dto";
+import { Prisma } from '@/lib/prisma/client';
+import { CommitteeMemberResponseDto } from '../dto/responses/committee-member-response.dto';
+
+type CommitteeMemberWithAvatar =
+    Prisma.CommitteeMemberGetPayload<{
+        include: {
+            avatar: {
+                select: {
+                    id: true;
+                    url: true;
+                };
+            };
+        };
+    }>;
 
 export class CommitteeMemberMapper {
     static toResponse(
-        member: CommitteeMember,
+        member: CommitteeMemberWithAvatar,
     ): CommitteeMemberResponseDto {
         return {
             id: member.id,
@@ -14,7 +26,13 @@ export class CommitteeMemberMapper {
             phone: member.phone,
             email: member.email,
 
-            avatar: member.avatar,
+            avatar: member.avatar
+                ? {
+                      id: member.avatar.id,
+                      url: member.avatar.url,
+                  }
+                : null,
+
             address: member.address,
 
             joiningDate: member.joiningDate,
@@ -27,13 +45,11 @@ export class CommitteeMemberMapper {
         };
     }
 
-
-    //List
     static toResponseList(
-        members: CommitteeMember[],
+        members: CommitteeMemberWithAvatar[],
     ): CommitteeMemberResponseDto[] {
         return members.map((member) =>
-            CommitteeMemberMapper.toResponse(member)
-        )
+            CommitteeMemberMapper.toResponse(member),
+        );
     }
 }
