@@ -48,6 +48,7 @@ export class MailService {
 
         const context: WelcomeContext = {
             appName,
+            logoUrl: this.configService.getOrThrow<string>('app.logoUrl'),
             userName,
             loginUrl: `${frontendUrl}/login`,
             year: new Date().getFullYear(),
@@ -77,6 +78,7 @@ export class MailService {
 
         const context: ResetPasswordContext = {
             appName,
+            logoUrl: this.configService.getOrThrow<string>('app.logoUrl'),
             userName,
             resetPasswordUrl: `${frontendUrl}/reset-password?token=${token}`,
             expireIn,

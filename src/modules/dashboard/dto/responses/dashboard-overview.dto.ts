@@ -1,51 +1,65 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class DashboardMetricDto {
+    @ApiProperty({
+        example: 245680,
+        description: 'Current value.',
+    })
+    total!: number;
+
+    @ApiProperty({
+        example: 18.5,
+        description: 'Percentage change compared to the previous period.',
+    })
+    growth!: number;
+
+    @ApiProperty({
+        example: 'increase',
+        enum: ['increase', 'decrease', 'neutral'],
+        description: 'Growth trend.',
+    })
+    trend!: 'increase' | 'decrease' | 'neutral';
+}
+
+export class DashboardCountMetricDto {
+    @ApiProperty({
+        example: 245,
+        description: 'Current count.',
+    })
+    total!: number;
+
+    @ApiProperty({
+        example: 8.2,
+        description: 'Percentage change compared to the previous period.',
+    })
+    growth!: number;
+
+    @ApiProperty({
+        example: 'increase',
+        enum: ['increase', 'decrease', 'neutral'],
+        description: 'Growth trend.',
+    })
+    trend!: 'increase' | 'decrease' | 'neutral';
+}
+
 export class DashboardOverviewDto {
     @ApiProperty({
-        example: 250,
-        description: 'Total number of registered families.',
+        type: DashboardMetricDto,
     })
-    totalFamilies!: number;
+    donations!: DashboardMetricDto;
 
     @ApiProperty({
-        example: 240,
-        description: 'Total number of active families.',
+        type: DashboardMetricDto,
     })
-    activeFamilies!: number;
+    expenses!: DashboardMetricDto;
 
     @ApiProperty({
-        example: 120,
-        description: 'Total number of registered donors.',
+        type: DashboardMetricDto,
     })
-    totalDonors!: number;
+    balance!: DashboardMetricDto;
 
     @ApiProperty({
-        example: 105,
-        description: 'Total number of active donors.',
+        type: DashboardCountMetricDto,
     })
-    activeDonors!: number;
-
-    @ApiProperty({
-        example: 12,
-        description: 'Total number of committee members.',
-    })
-    totalCommitteeMembers!: number;
-
-    @ApiProperty({
-        example: 850000,
-        description: 'Total donation amount.',
-    })
-    totalDonations!: number;
-
-    @ApiProperty({
-        example: 420000,
-        description: 'Total expense amount.',
-    })
-    totalExpenses!: number;
-
-    @ApiProperty({
-        example: 3,
-        description: 'Total number of running development projects.',
-    })
-    runningProjects!: number;
+    families!: DashboardCountMetricDto;
 }

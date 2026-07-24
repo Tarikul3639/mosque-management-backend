@@ -1,43 +1,56 @@
 import { Expense } from '@/lib/prisma/client';
-import { DashboardOverviewDto } from '../dto/responses/dashboard-overview.dto';
+
+import {
+    DashboardMetricDto,
+    DashboardOverviewDto,
+} from '../dto/responses/dashboard-overview.dto';
+
 import { RecentExpenseDto } from '../dto/responses/recent-expense.dto';
 
 interface DashboardOverview {
-  totalFamilies: number;
-  activeFamilies: number;
-  totalDonors: number;
-  activeDonors: number;
-  totalCommitteeMembers: number;
-  totalDonations: number;
-  totalExpenses: number;
-  runningProjects: number;
+    donations: DashboardMetricInput;
+    expenses: DashboardMetricInput;
+    balance: DashboardMetricInput;
+    families: DashboardMetricInput;
+}
+
+interface DashboardMetricInput {
+    total: number;
+    growth?: number;
+    trend?: DashboardMetricDto['trend'];
 }
 
 export class DashboardMapper {
-  static toOverviewDto(overview: DashboardOverview): DashboardOverviewDto {
-    return {
-      totalFamilies: overview.totalFamilies,
-      activeFamilies: overview.activeFamilies,
+    static toOverviewDto(
+        overview: DashboardOverview,
+    ): DashboardOverviewDto {
+        return {
+            donations: this.toMetricDto(overview.donations),
+            expenses: this.toMetricDto(overview.expenses),
+            balance: this.toMetricDto(overview.balance),
+            families: this.toMetricDto(overview.families),
+        };
+    }
 
-      totalDonors: overview.totalDonors,
-      activeDonors: overview.activeDonors,
+    private static toMetricDto(
+        metric: DashboardMetricInput,
+    ): DashboardMetricDto {
+        return {
+            total: metric.total,
+            growth: metric.growth ?? 0,
+            trend: metric.trend ?? 'neutral',
+        };
+    }
 
-      totalCommitteeMembers: overview.totalCommitteeMembers,
-
-      totalDonations: overview.totalDonations,
-      totalExpenses: overview.totalExpenses,
-
-      runningProjects: overview.runningProjects,
-    };
-  }
-
-  static toRecentExpenseDto(expense: Expense): RecentExpenseDto {
-    return {
-      id: expense.id,
-      title: expense.title,
-      category: expense.category,
-      amount: Number(expense.amount),
-      expenseDate: expense.expenseDate,
-    };
-  }
+    static toRecentExpenseDto(
+        expense: Expense,
+    ): RecentExpenseDto {
+        return {
+            id: expense.id,
+            title: expense.title,
+            category: expense.category,
+            amount: Number(expense.amount),
+            expenseDate: expense.expenseDate,
+        };
+    }
 }

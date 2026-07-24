@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { MailService } from '@/common/mail/mail.service';
-import { PrismaService } from '@/common/prisma/prisma.service';
 import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
+import { PrismaService } from '@/common/prisma/prisma.service';
 
 import { TokenService } from './token.service';
 
@@ -14,10 +14,11 @@ export class ForgotPasswordService {
     private readonly prismaService: PrismaService,
     private readonly tokenService: TokenService,
     private readonly mailService: MailService,
-  ) {}
+  ) { }
 
   async execute(email: string): Promise<void> {
     this.logger.log(`Initiating password reset for email: ${email}`);
+
     const user = await this.prismaService.user.findUnique({
       where: {
         email,
@@ -44,12 +45,17 @@ export class ForgotPasswordService {
       role: user.role.name,
     };
 
-    const token = await this.tokenService.generateAccessToken(payload);
+    const token = await this.tokenService.generateResetPasswordToken(payload);
 
-    await this.mailService.sendResetPasswordEmail(user.email, user.fullName, token);
+    await this.mailService.sendResetPasswordEmail(
+      user.email,
+      user.fullName,
+      token,
+    );
 
     this.logger.log(`Password reset link sent to ${user.email}`);
 
+    // Remove this in production
     console.log(token);
   }
 }
