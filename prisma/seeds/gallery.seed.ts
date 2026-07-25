@@ -7,7 +7,7 @@ export async function seedGallery(
 ): Promise<void> {
     console.log('🖼️ Seeding gallery...');
 
-    for (let index = 1; index <= 20; index++) {
+    for (let index = 1; index <= 10; index++) {
         const imageCount = faker.number.int({
             min: 3,
             max: 8,

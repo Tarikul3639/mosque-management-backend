@@ -28,7 +28,7 @@ class DonorDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 
   @ApiProperty()
   phone!: string;

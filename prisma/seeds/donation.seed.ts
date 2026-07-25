@@ -15,7 +15,7 @@ export async function seedDonations(
     for (let i = 0; i < 50; i++) {
         const donor = await prisma.donor.create({
             data: {
-                fullName: faker.person.fullName(),
+                name: faker.person.fullName(),
                 phone: faker.phone.number(),
                 address: faker.location.streetAddress(),
                 email: faker.internet.email(),

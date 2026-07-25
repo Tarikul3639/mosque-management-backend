@@ -50,7 +50,7 @@ export class CreateCommitteeMemberService {
         const member =
             await this.prismaService.committeeMember.create({
                 data: {
-                    fullName: dto.fullName,
+                    name: dto.name,
                     designation: dto.designation,
                     phone: dto.phone,
                     email: dto.email,

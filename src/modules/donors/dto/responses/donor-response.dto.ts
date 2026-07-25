@@ -16,7 +16,7 @@ export class DonorResponseDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 
   @ApiProperty()
   phone!: string;

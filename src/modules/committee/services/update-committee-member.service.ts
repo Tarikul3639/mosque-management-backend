@@ -79,7 +79,7 @@ export class UpdateCommitteeMemberService {
           id,
         },
         data: {
-          fullName: dto.fullName,
+          name: dto.name,
           designation: dto.designation,
           phone: dto.phone,
           email: dto.email,

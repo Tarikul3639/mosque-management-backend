@@ -1,36 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { FinancialSummaryDto } from '../dto/responses/financial-summary.dto';
-import { FinancialSummaryQueryDto } from '../dto/requests/financial-summary-query.dto';
+import { DashboardQueryDto } from '../dto/requests/dashboard-query.dto';
 
 @Injectable()
 export class GetFinancialSummaryService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async execute(query: FinancialSummaryQueryDto): Promise<FinancialSummaryDto> {
+    async execute(query: DashboardQueryDto): Promise<FinancialSummaryDto> {
         const paymentWhere =
-            query.startDate || query.endDate
+            query.from || query.to
                 ? {
                     paidAt: {
-                        ...(query.startDate && {
-                            gte: new Date(query.startDate),
+                        ...(query.from && {
+                            gte: new Date(query.from),
                         }),
-                        ...(query.endDate && {
-                            lte: new Date(query.endDate),
+                        ...(query.to && {
+                            lte: new Date(query.to),
                         }),
                     },
                 }
                 : {};
 
         const expenseWhere =
-            query.startDate || query.endDate
+            query.from || query.to
                 ? {
                     expenseDate: {
-                        ...(query.startDate && {
-                            gte: new Date(query.startDate),
+                        ...(query.from && {
+                            gte: new Date(query.from),
                         }),
-                        ...(query.endDate && {
-                            lte: new Date(query.endDate),
+                        ...(query.to && {
+                            lte: new Date(query.to),
                         }),
                     },
                 }
@@ -55,19 +55,32 @@ export class GetFinancialSummaryService {
         const totalCollection = Number(paymentAggregate._sum.amount ?? 0);
         const totalExpense = Number(expenseAggregate._sum.amount ?? 0);
         const balance = totalCollection - totalExpense;
-        const expensePercentage =
-            totalCollection === 0
-                ? 0
-                : Number(((totalExpense / totalCollection) * 100).toFixed(2));
-        const balancePercentage =
-            totalCollection === 0
-                ? 0
-                : Number(((balance / totalCollection) * 100).toFixed(2));
+
+        const maxValue = Math.max(
+            totalCollection,
+            totalExpense,
+            Math.abs(balance),
+            1,
+        );
+
+        const collectionPercentage = Number(
+            ((totalCollection / maxValue) * 100).toFixed(2),
+        );
+
+        const expensePercentage = Number(
+            ((totalExpense / maxValue) * 100).toFixed(2),
+        );
+
+        const balancePercentage = Number(
+            ((Math.abs(balance) / maxValue) * 100).toFixed(2),
+        );
 
         return {
             totalCollection,
             totalExpense,
             balance,
+
+            collectionPercentage,
             expensePercentage,
             balancePercentage,
         };

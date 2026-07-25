@@ -10,7 +10,7 @@ export async function seedDevelopmentProjects(
 
   const statuses = Object.values(ProjectStatus);
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 10; i++) {
     const budget = faker.number.float({
       min: 50000,
       max: 1000000,

@@ -36,7 +36,7 @@ export class UpdateDonorService {
 
         const existingDonor = await this.prisma.donor.findFirst({
             where: {
-                fullName: dto.fullName,
+                name: dto.name,
                 phone: dto.phone,
                 NOT: {
                     id,
@@ -55,7 +55,7 @@ export class UpdateDonorService {
                 id,
             },
             data: {
-                fullName: dto.fullName,
+                name: dto.name,
                 phone: dto.phone,
                 email: dto.email,
                 address: dto.address,

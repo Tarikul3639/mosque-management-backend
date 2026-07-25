@@ -13,13 +13,13 @@ type GalleryWithUsers = Prisma.GalleryGetPayload<{
     createdBy: {
       select: {
         id: true;
-        fullName: true;
+        name: true;
       };
     };
     updatedBy: {
       select: {
         id: true;
-        fullName: true;
+        name: true;
       };
     };
   };
@@ -39,13 +39,13 @@ export class GalleryMapper {
       createdBy: gallery.createdBy
         ? {
             id: gallery.createdBy.id,
-            fullName: gallery.createdBy.fullName,
+            name: gallery.createdBy.name,
           }
         : null,
       updatedBy: gallery.updatedBy
         ? {
             id: gallery.updatedBy.id,
-            fullName: gallery.updatedBy.fullName,
+            name: gallery.updatedBy.name,
           }
         : null,
       createdAt: gallery.createdAt,

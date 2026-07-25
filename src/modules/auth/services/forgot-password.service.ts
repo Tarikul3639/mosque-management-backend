@@ -26,7 +26,7 @@ export class ForgotPasswordService {
       select: {
         id: true,
         email: true,
-        fullName: true,
+        name: true,
         role: {
           select: {
             name: true,
@@ -49,7 +49,7 @@ export class ForgotPasswordService {
 
     await this.mailService.sendResetPasswordEmail(
       user.email,
-      user.fullName,
+      user.name,
       token,
     );
 

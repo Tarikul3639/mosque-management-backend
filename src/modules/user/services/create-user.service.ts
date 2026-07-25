@@ -21,7 +21,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(3)
     @MaxLength(100)
-    fullName!: string;
+    name!: string;
 
     @ApiProperty({
         description: 'Email address',

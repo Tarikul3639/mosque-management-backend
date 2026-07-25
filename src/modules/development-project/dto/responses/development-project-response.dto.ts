@@ -10,7 +10,7 @@ class DevelopmentProjectUserDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 }
 
 class DevelopmentProjectImageDto {

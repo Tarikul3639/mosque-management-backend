@@ -8,12 +8,12 @@ export async function seedDonors(
   console.log('🤝 Seeding donors...');
 
   for (let index = 1; index <= 30; index++) {
-    const fullName = faker.person.fullName();
+    const name = faker.person.fullName();
     const phone = `017${faker.string.numeric(8)}`;
 
     const existing = await prisma.donor.findFirst({
       where: {
-        fullName,
+        name,
         phone,
       },
     });
@@ -24,7 +24,7 @@ export async function seedDonors(
 
     await prisma.donor.create({
       data: {
-        fullName,
+        name,
         phone,
         address: faker.helpers.maybe(
           () => faker.location.streetAddress(),

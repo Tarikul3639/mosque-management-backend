@@ -13,7 +13,7 @@ export class GetMeService {
             },
             select: {
                 id: true,
-                fullName: true,
+                name: true,
                 email: true,
                 phone: true,
                 avatar: {
@@ -35,7 +35,7 @@ export class GetMeService {
 
         const userDto: CurrentUserDto = {
             id: user.id,
-            fullName: user.fullName,
+            name: user.name,
             email: user.email,
             phone: user.phone,
             avatar: user.avatar?.url || null,

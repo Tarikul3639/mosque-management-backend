@@ -10,7 +10,7 @@ class ExpenseUserDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 }
 
 export class ExpenseResponseDto {

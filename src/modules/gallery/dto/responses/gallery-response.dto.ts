@@ -8,7 +8,7 @@ class GalleryUserDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 }
 
 class GalleryImageDto {

@@ -17,7 +17,7 @@ export class DonorMapper {
   static toResponse(donor: DonorWithAvatar): DonorResponseDto {
     return {
       id: donor.id,
-      fullName: donor.fullName,
+      name: donor.name,
       phone: donor.phone,
       email: donor.email,
       address: donor.address,

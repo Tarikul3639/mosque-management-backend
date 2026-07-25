@@ -18,7 +18,7 @@ export class GetRecentDonationsService {
             include: {
                 donor: {
                     select: {
-                        fullName: true,
+                        name: true,
                     },
                 },
             },
@@ -26,7 +26,7 @@ export class GetRecentDonationsService {
 
         return donations.map((donation) => ({
             id: donation.id,
-            donorName: donation.donor.fullName,
+            donorName: donation.donor.name,
             amount: Number(donation.amount),
             receiptNo: donation.receiptNo,
             paymentMethod: donation.paymentMethod,

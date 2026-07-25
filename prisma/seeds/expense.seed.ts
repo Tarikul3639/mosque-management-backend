@@ -17,7 +17,7 @@ export async function seedExpenses(
 
     const categories = Object.values(ExpenseCategory);
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 10; i++) {
         const user = faker.helpers.arrayElement(users);
 
         await prisma.expense.create({

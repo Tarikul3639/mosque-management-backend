@@ -6,7 +6,7 @@ class DonorDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 
   @ApiProperty()
   phone!: string;
@@ -27,7 +27,7 @@ class UserDto {
   id!: string;
 
   @ApiProperty()
-  fullName!: string;
+  name!: string;
 }
 
 export class DonationResponseDto {

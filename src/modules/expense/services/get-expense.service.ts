@@ -19,13 +19,13 @@ export class GetExpenseService {
                 createdBy: {
                     select: {
                         id: true,
-                        fullName: true,
+                        name: true,
                     },
                 },
                 updatedBy: {
                     select: {
                         id: true,
-                        fullName: true,
+                        name: true,
                     },
                 },
             },

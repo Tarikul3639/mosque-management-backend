@@ -1,19 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { MonthlyChartDto } from '../dto/responses/monthly-chart.dto';
+import { DashboardQueryDto } from '../dto/requests/dashboard-query.dto';
 
 @Injectable()
 export class GetMonthlyChartService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) {}
 
-    async execute(): Promise<MonthlyChartDto[]> {
+    async execute(query: DashboardQueryDto): Promise<MonthlyChartDto[]> {
         const currentYear = new Date().getFullYear();
 
-        const [donations, expenses] = await Promise.all([
+        const from = query.from
+            ? new Date(query.from)
+            : new Date(currentYear, 0, 1);
+
+        const to = query.to
+            ? new Date(query.to)
+            : new Date(currentYear + 1, 0, 1);
+
+        const [donations, expenses, collections] = await Promise.all([
             this.prisma.donation.findMany({
                 where: {
                     donatedAt: {
-                        gte: new Date(currentYear, 0, 1),
+                        gte: from,
+                        lt: to,
                     },
                 },
                 select: {
@@ -25,12 +35,26 @@ export class GetMonthlyChartService {
             this.prisma.expense.findMany({
                 where: {
                     expenseDate: {
-                        gte: new Date(currentYear, 0, 1),
+                        gte: from,
+                        lt: to,
                     },
                 },
                 select: {
                     amount: true,
                     expenseDate: true,
+                },
+            }),
+
+            this.prisma.payment.findMany({
+                where: {
+                    paidAt: {
+                        gte: from,
+                        lt: to,
+                    },
+                },
+                select: {
+                    amount: true,
+                    paidAt: true,
                 },
             }),
         ]);
@@ -53,19 +77,26 @@ export class GetMonthlyChartService {
         const result: MonthlyChartDto[] = months.map((month) => ({
             month,
             donation: 0,
+            collection: 0,
             expense: 0,
         }));
 
         donations.forEach((donation) => {
-            const month = donation.donatedAt.getMonth();
-
-            result[month].donation += Number(donation.amount);
+            result[donation.donatedAt.getMonth()].donation += Number(
+                donation.amount,
+            );
         });
 
         expenses.forEach((expense) => {
-            const month = expense.expenseDate.getMonth();
+            result[expense.expenseDate.getMonth()].expense += Number(
+                expense.amount,
+            );
+        });
 
-            result[month].expense += Number(expense.amount);
+        collections.forEach((collection) => {
+            result[collection.paidAt.getMonth()].collection += Number(
+                collection.amount,
+            );
         });
 
         return result;

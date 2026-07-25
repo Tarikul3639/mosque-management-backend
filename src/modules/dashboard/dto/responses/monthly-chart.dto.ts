@@ -9,6 +9,12 @@ export class MonthlyChartDto {
 
     @ApiProperty({
         example: 25000,
+        description: 'Total collection amount.',
+    })
+    collection!: number;
+
+    @ApiProperty({
+        example: 25000,
         description: 'Total donation amount.',
     })
     donation!: number;

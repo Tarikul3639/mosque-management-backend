@@ -119,7 +119,7 @@ model User {
   roleId String
   role   Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
 
-  fullName String
+  name String
   email    String @unique
   phone    String @unique
   password String
@@ -157,7 +157,7 @@ model User {
 model CommitteeMember {
   id String @id @default(uuid())
 
-  fullName String
+  name String
 
   designation CommitteeRole
 
@@ -267,7 +267,7 @@ model MonthlyCharge {
 model Donor {
   id String @id @default(uuid())
 
-  fullName String
+  name String
   phone    String
   email    String?
   address  String?
@@ -282,8 +282,8 @@ model Donor {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([fullName, phone])
-  @@index([fullName])
+  @@unique([name, phone])
+  @@index([name])
   @@index([phone])
   @@map("donors")
 }

@@ -21,7 +21,7 @@ export class CreateCommitteeMemberDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  fullName!: string;
+  name!: string;
 
   @ApiProperty({
     enum: CommitteeRole,

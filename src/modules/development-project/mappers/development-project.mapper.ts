@@ -12,13 +12,13 @@ type DevelopmentProjectWithUsers = Prisma.DevelopmentProjectGetPayload<{
         createdBy: {
             select: {
                 id: true;
-                fullName: true;
+                name: true;
             };
         };
         updatedBy: {
             select: {
                 id: true;
-                fullName: true;
+                name: true;
             };
         };
     };
@@ -45,14 +45,14 @@ export class DevelopmentProjectMapper {
             createdBy: project.createdBy
                 ? {
                     id: project.createdBy.id,
-                    fullName: project.createdBy.fullName,
+                    name: project.createdBy.name,
                 }
                 : null,
 
             updatedBy: project.updatedBy
                 ? {
                     id: project.updatedBy.id,
-                    fullName: project.updatedBy.fullName,
+                    name: project.updatedBy.name,
                 }
                 : null,
 

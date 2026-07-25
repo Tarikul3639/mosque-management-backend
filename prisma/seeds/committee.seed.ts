@@ -13,7 +13,7 @@ export async function seedCommittee(
     for (const designation of designations) {
         await prisma.committeeMember.create({
             data: {
-                fullName: faker.person.fullName(),
+                name: faker.person.fullName(),
                 designation,
                 phone: faker.phone.number(),
                 email: faker.internet.email(),

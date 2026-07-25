@@ -15,4 +15,4 @@ export const COMMITTEE_MESSAGES = {
 export const COMMITTEE_DEFAULT_PAGE = 1;
 export const COMMITTEE_DEFAULT_LIMIT = 10;
 
-export const COMMITTEE_SEARCH_FIELDS = ['fullName', 'phone', 'email'] as const;
+export const COMMITTEE_SEARCH_FIELDS = ['name', 'phone', 'email'] as const;

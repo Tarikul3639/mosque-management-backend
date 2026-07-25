@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { calculateGrowth } from '@/common/utils/calculate-growth';
 
-import { DashboardOverviewQueryDto } from '../dto/requests/dashboard-overview-query.dto';
+import { DashboardQueryDto } from '../dto/requests/dashboard-query.dto';
 import { DashboardOverviewDto } from '../dto/responses/dashboard-overview.dto';
 import { DashboardMapper } from '../mappers/dashboard.mapper';
 
@@ -14,7 +14,7 @@ export class GetDashboardOverviewService {
     ) {}
 
     async execute(
-        query: DashboardOverviewQueryDto,
+        query: DashboardQueryDto,
     ): Promise<DashboardOverviewDto> {
         if (query.from && query.to) {
             return this.getOverviewByDateRange(

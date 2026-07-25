@@ -24,13 +24,13 @@ export async function seedUsers(
 
     await prisma.user.upsert({
         where: {
-            email: 'admin@mosque.com',
+            email: 'tarikulislam3639@gmail.com',
         },
         update: {},
         create: {
             roleId: role.id,
-            fullName: 'Super Admin',
-            email: 'admin@mosque.com',
+            name: 'Super Admin',
+            email: 'tarikulislam3639@gmail.com',
             phone: '01700000000',
             password,
         },

@@ -18,6 +18,12 @@ export class FinancialSummaryDto {
 
     @ApiProperty({
         example: 70,
+        description: 'Collection percentage of total collection.',
+    })
+    collectionPercentage!: number;
+
+    @ApiProperty({
+        example: 70,
         description: 'Expense percentage of total collection.',
     })
     expensePercentage!: number;

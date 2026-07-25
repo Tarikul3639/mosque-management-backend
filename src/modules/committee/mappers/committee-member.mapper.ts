@@ -20,7 +20,7 @@ export class CommitteeMemberMapper {
         return {
             id: member.id,
 
-            fullName: member.fullName,
+            name: member.name,
             designation: member.designation,
 
             phone: member.phone,

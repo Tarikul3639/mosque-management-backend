@@ -21,7 +21,7 @@ export class ListDonorsService {
         if (search) {
             where.OR = [
                 {
-                    fullName: {
+                    name: {
                         contains: search,
                         mode: 'insensitive',
                     },

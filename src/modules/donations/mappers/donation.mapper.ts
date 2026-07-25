@@ -14,7 +14,7 @@ export class DonationMapper {
       donatedAt: donation.donatedAt,
       donor: {
         id: donation.donor.id,
-        fullName: donation.donor.fullName,
+        name: donation.donor.name,
         phone: donation.donor.phone,
         email: donation.donor.email,
         address: donation.donor.address,
@@ -22,13 +22,13 @@ export class DonationMapper {
       createdBy: donation.createdBy
         ? {
             id: donation.createdBy.id,
-            fullName: donation.createdBy.fullName,
+            name: donation.createdBy.name,
           }
         : null,
       updatedBy: donation.updatedBy
         ? {
             id: donation.updatedBy.id,
-            fullName: donation.updatedBy.fullName,
+            name: donation.updatedBy.name,
           }
         : null,
       createdAt: donation.createdAt,

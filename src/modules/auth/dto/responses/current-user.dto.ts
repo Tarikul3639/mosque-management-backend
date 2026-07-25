@@ -7,7 +7,7 @@ export class CurrentUserDto {
     id!: string;
 
     @ApiProperty()
-    fullName!: string;
+    name!: string;
 
     @ApiProperty()
     email!: string;

@@ -14,7 +14,7 @@ import {
 export class CreateDonorDto {
   @ApiProperty()
   @IsString()
-  fullName!: string;
+  name!: string;
 
   @ApiProperty()
   @IsPhoneNumber('BD')

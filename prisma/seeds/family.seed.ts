@@ -7,7 +7,7 @@ export async function seedFamilies(
 ): Promise<void> {
     console.log('🏠 Seeding families...');
 
-    for (let index = 1; index <= 50; index++) {
+    for (let index = 1; index <= 10; index++) {
         const familyNo = `F-${index.toString().padStart(4, '0')}`;
 
         let avatarId: string | undefined;

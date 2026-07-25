@@ -1,18 +1,20 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsOptional } from 'class-validator';
 
-export class FinancialSummaryQueryDto {
+export class DashboardQueryDto {
     @ApiPropertyOptional({
-        example: '2026-01-01',
+        example: '2026-07-01',
+        description: 'Start date',
     })
     @IsOptional()
     @IsDateString()
-    startDate?: string;
+    from?: string;
 
     @ApiPropertyOptional({
-        example: '2026-12-31',
+        example: '2026-07-31',
+        description: 'End date',
     })
     @IsOptional()
     @IsDateString()
-    endDate?: string;
+    to?: string;
 }

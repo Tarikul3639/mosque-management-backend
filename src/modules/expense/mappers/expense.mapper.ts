@@ -6,13 +6,13 @@ type ExpenseWithUsers = Prisma.ExpenseGetPayload<{
         createdBy: {
             select: {
                 id: true;
-                fullName: true;
+                name: true;
             };
         };
         updatedBy: {
             select: {
                 id: true;
-                fullName: true;
+                name: true;
             };
         };
     };
@@ -30,13 +30,13 @@ export class ExpenseMapper {
             createdBy: expense.createdBy
                 ? {
                     id: expense.createdBy.id,
-                    fullName: expense.createdBy.fullName,
+                    name: expense.createdBy.name,
                 }
                 : null,
             updatedBy: expense.updatedBy
                 ? {
                     id: expense.updatedBy.id,
-                    fullName: expense.updatedBy.fullName,
+                    name: expense.updatedBy.name,
                 }
                 : null,
             createdAt: expense.createdAt,

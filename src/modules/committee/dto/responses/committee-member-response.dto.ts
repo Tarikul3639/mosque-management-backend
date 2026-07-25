@@ -22,7 +22,7 @@ export class CommitteeMemberResponseDto {
   @ApiProperty({
     example: 'Md. Abdul Karim',
   })
-  fullName!: string;
+  name!: string;
 
   @ApiProperty({
     enum: CommitteeRole,

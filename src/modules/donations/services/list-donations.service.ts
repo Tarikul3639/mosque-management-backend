@@ -22,7 +22,7 @@ export class ListDonationsService {
             where.OR = [
                 {
                     donor: {
-                        fullName: {
+                        name: {
                             contains: query.search,
                             mode: 'insensitive',
                         },
@@ -66,13 +66,13 @@ export class ListDonationsService {
                     createdBy: {
                         select: {
                             id: true,
-                            fullName: true,
+                            name: true,
                         },
                     },
                     updatedBy: {
                         select: {
                             id: true,
-                            fullName: true,
+                            name: true,
                         },
                     },
                 },

@@ -1,9 +1,4 @@
-import {
-    Controller,
-    Get,
-    Query,
-    UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -16,8 +11,6 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { UserRole } from '@/lib/prisma/client';
 
-import { FinancialSummaryQueryDto } from '../dto/requests/financial-summary-query.dto';
-
 import { DashboardOverviewDto } from '../dto/responses/dashboard-overview.dto';
 import { DashboardSummaryDto } from '../dto/responses/dashboard-summary.dto';
 import { FinancialSummaryDto } from '../dto/responses/financial-summary.dto';
@@ -25,7 +18,7 @@ import { MonthlyChartDto } from '../dto/responses/monthly-chart.dto';
 import { ExpenseChartDto } from '../dto/responses/expense-chart.dto';
 import { RecentDonationDto } from '../dto/responses/recent-donation.dto';
 import { RecentExpenseDto } from '../dto/responses/recent-expense.dto';
-import { DashboardOverviewQueryDto } from '../dto/requests/dashboard-overview-query.dto';
+import { DashboardQueryDto } from '../dto/requests/dashboard-query.dto';
 
 import { GetDashboardOverviewService } from '../services/get-dashboard-overview.service';
 import { GetDashboardSummaryService } from '../services/get-dashboard-summary.service';
@@ -64,7 +57,7 @@ export class DashboardController {
         type: DashboardOverviewDto,
     })
     async getOverview(
-        @Query() query: DashboardOverviewQueryDto,
+        @Query() query: DashboardQueryDto,
     ): Promise<DashboardOverviewDto> {
         return this.getDashboardOverviewService.execute(query);
     }
@@ -96,7 +89,7 @@ export class DashboardController {
         type: FinancialSummaryDto,
     })
     async getFinancialSummary(
-        @Query() query: FinancialSummaryQueryDto,
+        @Query() query: DashboardQueryDto,
     ): Promise<FinancialSummaryDto> {
         return this.getFinancialSummaryService.execute(query);
     }
@@ -113,8 +106,10 @@ export class DashboardController {
         type: MonthlyChartDto,
         isArray: true,
     })
-    async getMonthlyChart(): Promise<MonthlyChartDto[]> {
-        return this.getMonthlyChartService.execute();
+    async getMonthlyChart(
+        @Query() query: DashboardQueryDto,
+    ): Promise<MonthlyChartDto[]> {
+        return this.getMonthlyChartService.execute(query);
     }
 
     @Get('expense-chart')
@@ -129,8 +124,10 @@ export class DashboardController {
         type: ExpenseChartDto,
         isArray: true,
     })
-    async getExpenseChart(): Promise<ExpenseChartDto[]> {
-        return this.getExpenseChartService.execute();
+    async getExpenseChart(
+        @Query() query: DashboardQueryDto,
+    ): Promise<ExpenseChartDto[]> {
+        return this.getExpenseChartService.execute(query);
     }
 
     @Get('recent-donations')

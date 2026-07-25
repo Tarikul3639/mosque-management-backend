@@ -15,7 +15,7 @@ export class CreateDonorService {
     async execute(dto: CreateDonorDto): Promise<DonorResponseDto> {
         const existingDonor = await this.prisma.donor.findFirst({
             where: {
-                fullName: dto.fullName,
+                name: dto.name,
                 phone: dto.phone,
             },
         });
@@ -26,7 +26,7 @@ export class CreateDonorService {
 
         const donor = await this.prisma.donor.create({
             data: {
-                fullName: dto.fullName,
+                name: dto.name,
                 phone: dto.phone,
                 email: dto.email,
                 address: dto.address,

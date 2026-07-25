@@ -52,7 +52,7 @@ export class GetDonorHistoryService {
         return {
             donor: {
                 id: donor.id,
-                fullName: donor.fullName,
+                name: donor.name,
                 phone: donor.phone,
                 email: donor.email,
                 address: donor.address,
