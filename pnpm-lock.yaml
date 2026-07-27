@@ -59,6 +59,9 @@ importers:
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       joi:
         specifier: ^18.2.3
         version: 18.2.3

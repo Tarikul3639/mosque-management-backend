@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider     = "prisma-client"
   output       = "../src/lib/prisma"
@@ -11,9 +8,287 @@ datasource db {
   provider = "postgresql"
 }
 
-/// ===========================
-/// ENUMS
-/// ===========================
+model Role {
+  id          String   @id @default(uuid())
+  name        UserRole @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+
+  @@map("roles")
+}
+
+model User {
+  id                         String               @id @default(uuid())
+  roleId                     String
+  name                       String
+  email                      String               @unique
+  phone                      String               @unique
+  password                   String
+  avatarId                   String?              @unique
+  status                     UserStatus           @default(ACTIVE)
+  lastLoginAt                DateTime?
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  createdDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectCreatedBy")
+  updatedDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectUpdatedBy")
+  createdDonations           Donation[]           @relation("DonationCreatedBy")
+  updatedDonations           Donation[]           @relation("DonationUpdatedBy")
+  createdExpenses            Expense[]            @relation("ExpenseCreatedBy")
+  updatedExpenses            Expense[]            @relation("ExpenseUpdatedBy")
+  updatedFiles               File[]               @relation("FileUpdatedBy")
+  uploadedFiles              File[]               @relation("FileUploadedBy")
+  createdGalleries           Gallery[]            @relation("GalleryCreatedBy")
+  updatedGalleries           Gallery[]            @relation("GalleryUpdatedBy")
+  avatar                     File?                @relation(fields: [avatarId], references: [id])
+  role                       Role                 @relation(fields: [roleId], references: [id])
+
+  @@index([roleId])
+  @@index([status])
+  @@map("users")
+}
+
+model CommitteeMember {
+  id          String        @id @default(uuid())
+  name        String
+  designation CommitteeRole
+  phone       String
+  email       String?
+  avatarId    String?       @unique
+  address     String?
+  joiningDate DateTime?
+  endDate     DateTime?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  avatar      File?         @relation(fields: [avatarId], references: [id])
+
+  @@index([designation])
+  @@index([isActive])
+  @@map("committee_members")
+}
+
+model Family {
+  id         String          @id @default(uuid())
+  familyNo   String          @unique
+  headName   String
+  avatarId   String?         @unique
+  phone      String?
+  address    String?
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  feeHistory FamilyFee[]
+  charges    MonthlyCharge[]
+  payments   Payment[]
+  avatar     File?           @relation(fields: [avatarId], references: [id])
+
+  @@index([isActive])
+  @@map("families")
+}
+
+model FamilyFee {
+  id         String    @id @default(cuid())
+  familyId   String
+  monthlyFee Decimal   @db.Decimal(10, 2)
+  startDate  DateTime
+  endDate    DateTime?
+  createdAt  DateTime  @default(now())
+  family     Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  familyId        String
+  monthlyChargeId String
+  amount          Decimal       @db.Decimal(10, 2)
+  paidAt          DateTime      @default(now())
+  method          PaymentMethod @default(CASH)
+  reference       String?
+  note            String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  family          Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  monthlyCharge   MonthlyCharge @relation(fields: [monthlyChargeId], references: [id], onDelete: Cascade)
+
+  @@index([familyId])
+  @@index([monthlyChargeId])
+}
+
+model MonthlyCharge {
+  id         String        @id @default(cuid())
+  familyId   String
+  year       Int
+  month      Int
+  amount     Decimal       @db.Decimal(10, 2)
+  paidAmount Decimal       @default(0) @db.Decimal(10, 2)
+  status     PaymentStatus @default(DUE)
+  dueDate    DateTime?
+  paidAt     DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  family     Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  payments   Payment[]
+
+  @@unique([familyId, year, month])
+  @@index([familyId])
+  @@index([year, month])
+}
+
+model Donor {
+  id        String     @id @default(uuid())
+  name      String
+  phone     String
+  email     String?
+  address   String?
+  avatarId  String?    @unique
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  donations Donation[]
+  avatar    File?      @relation(fields: [avatarId], references: [id])
+
+  @@unique([name, phone])
+  @@index([name])
+  @@index([phone])
+  @@map("donors")
+}
+
+model Donation {
+  id                   String        @id @default(uuid())
+  donorId              String
+  amount               Decimal       @db.Decimal(10, 2)
+  createdById          String?
+  updatedById          String?
+  purpose              String?
+  isAnonymous          Boolean       @default(false)
+  receiptNo            String        @unique
+  paymentMethod        PaymentMethod @default(CASH)
+  transactionReference String?
+  note                 String?
+  donatedAt            DateTime      @default(now())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  createdBy            User?         @relation("DonationCreatedBy", fields: [createdById], references: [id])
+  donor                Donor         @relation(fields: [donorId], references: [id])
+  updatedBy            User?         @relation("DonationUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([donorId])
+  @@index([donatedAt])
+  @@index([paymentMethod])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("donations")
+}
+
+model Expense {
+  id          String          @id @default(uuid())
+  category    ExpenseCategory
+  title       String
+  amount      Decimal         @db.Decimal(10, 2)
+  note        String?
+  expenseDate DateTime
+  createdById String?
+  updatedById String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  createdBy   User?           @relation("ExpenseCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?           @relation("ExpenseUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([category])
+  @@index([expenseDate])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("expenses")
+}
+
+model DevelopmentProject {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  budget      Decimal?      @db.Decimal(10, 2)
+  spent       Decimal?      @db.Decimal(10, 2)
+  progress    Int           @default(0)
+  status      ProjectStatus @default(PLANNING)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdById String?
+  updatedById String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   User?         @relation("DevelopmentProjectCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?         @relation("DevelopmentProjectUpdatedBy", fields: [updatedById], references: [id])
+  images      File[]        @relation("DevelopmentProjectToFile")
+
+  @@index([status])
+  @@index([startDate])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("development_projects")
+}
+
+model Gallery {
+  id          String   @id @default(uuid())
+  title       String?
+  description String?
+  order       Int      @default(0)
+  createdById String?
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   User?    @relation("GalleryCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?    @relation("GalleryUpdatedBy", fields: [updatedById], references: [id])
+  images      File[]   @relation("FileToGallery")
+
+  @@index([order])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("galleries")
+}
+
+model PrayerTime {
+  id        String   @id @default(uuid())
+  fajr      String
+  sunrise   String?
+  dhuhr     String
+  asr       String
+  maghrib   String
+  isha      String
+  jummah    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("prayer_times")
+}
+
+model File {
+  id              String               @id @default(uuid())
+  url             String
+  publicId        String               @unique
+  originalName    String?
+  mimeType        String?
+  extension       String?
+  size            Int
+  width           Int?
+  height          Int?
+  uploadedById    String?
+  updatedById     String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  committeeAvatar CommitteeMember?
+  donorAvatar     Donor?
+  familyAvatar    Family?
+  updatedBy       User?                @relation("FileUpdatedBy", fields: [updatedById], references: [id])
+  uploadedBy      User?                @relation("FileUploadedBy", fields: [uploadedById], references: [id])
+  userAvatar      User?
+  projects        DevelopmentProject[] @relation("DevelopmentProjectToFile")
+  galleries       Gallery[]            @relation("FileToGallery")
+
+  @@index([uploadedById])
+  @@index([updatedById])
+  @@map("files")
+}
 
 enum UserRole {
   SUPER_ADMIN
@@ -36,7 +311,6 @@ enum CommitteeRole {
   MUAZZIN
 }
 
-// Future-ready. Add BKASH/NAGAD/CARD/QR usage without breaking existing rows.
 enum PaymentMethod {
   CASH
   BKASH
@@ -50,19 +324,15 @@ enum PaymentMethod {
 enum ExpenseCategory {
   IMAM_SALARY
   MUAZZIN_SALARY
-
   ELECTRICITY
   WATER
   INTERNET
   GAS
-
   MAINTENANCE
   CLEANING
   DEVELOPMENT
-
   OFFICE
   EVENT
-
   OTHER
 }
 
@@ -92,388 +362,4 @@ enum PaymentStatus {
   DUE
   PAID
   PARTIAL
-}
-
-/// ===========================
-/// ROLE
-/// ===========================
-
-model Role {
-  id          String   @id @default(uuid())
-  name        UserRole @unique
-  description String?
-  users       User[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("roles")
-}
-
-/// ===========================
-/// USER
-/// ===========================
-
-model User {
-  id String @id @default(uuid())
-
-  roleId String
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
-
-  name String
-  email    String @unique
-  phone    String @unique
-  password String
-
-  avatarId String? @unique
-  avatar   File?   @relation(fields: [avatarId], references: [id])
-
-  status      UserStatus @default(ACTIVE)
-  lastLoginAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  createdExpenses Expense[] @relation("ExpenseCreatedBy")
-  updatedExpenses Expense[] @relation("ExpenseUpdatedBy")
-
-  createdDonations           Donation[]           @relation("DonationCreatedBy")
-  updatedDonations           Donation[]           @relation("DonationUpdatedBy")
-  createdDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectCreatedBy")
-  updatedDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectUpdatedBy")
-  createdGalleries           Gallery[]            @relation("GalleryCreatedBy")
-  updatedGalleries           Gallery[]            @relation("GalleryUpdatedBy")
-  uploadedFiles              File[]               @relation("FileUploadedBy")
-  updatedFiles               File[]               @relation("FileUpdatedBy")
-
-  @@index([roleId])
-  @@index([status])
-  @@map("users")
-}
-
-/// ===========================
-/// COMMITTEE MEMBER
-/// ===========================
-
-model CommitteeMember {
-  id String @id @default(uuid())
-
-  name String
-
-  designation CommitteeRole
-
-  phone String
-  email String?
-
-  avatarId String? @unique
-  avatar   File?   @relation(fields: [avatarId], references: [id])
-
-  address String?
-
-  joiningDate DateTime?
-  endDate     DateTime?
-
-  isActive Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([designation])
-  @@index([isActive])
-  @@map("committee_members")
-}
-
-/// ===========================
-/// FAMILY
-/// ===========================
-
-model Family {
-  id String @id @default(uuid())
-
-  familyNo String @unique
-
-  headName String
-
-  avatarId String? @unique
-  avatar   File?   @relation(fields: [avatarId], references: [id])
-
-  phone   String?
-  address String?
-
-  isActive Boolean @default(true)
-
-  feeHistory FamilyFee[]
-  payments   Payment[]
-  charges    MonthlyCharge[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([isActive])
-  @@map("families")
-}
-
-model FamilyFee {
-  id         String    @id @default(cuid())
-  familyId   String
-  family     Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  monthlyFee Decimal   @db.Decimal(10, 2)
-  startDate  DateTime
-  endDate    DateTime?
-  createdAt  DateTime  @default(now())
-}
-
-model Payment {
-  id              String        @id @default(cuid())
-  familyId        String
-  family          Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  monthlyChargeId String
-  monthlyCharge   MonthlyCharge @relation(fields: [monthlyChargeId], references: [id], onDelete: Cascade)
-  amount          Decimal       @db.Decimal(10, 2)
-  paidAt          DateTime      @default(now())
-  method          PaymentMethod @default(CASH)
-  reference       String?
-  note            String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  @@index([familyId])
-  @@index([monthlyChargeId])
-}
-
-model MonthlyCharge {
-  id         String        @id @default(cuid())
-  familyId   String
-  family     Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  year       Int
-  month      Int
-  amount     Decimal       @db.Decimal(10, 2)
-  paidAmount Decimal       @default(0) @db.Decimal(10, 2)
-  status     PaymentStatus @default(DUE)
-  payments   Payment[]
-  dueDate    DateTime?
-  paidAt     DateTime?
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-
-  @@unique([familyId, year, month])
-  @@index([familyId])
-  @@index([year, month])
-}
-
-/// ===========================
-/// DONOR
-/// ===========================
-
-model Donor {
-  id String @id @default(uuid())
-
-  name String
-  phone    String
-  email    String?
-  address  String?
-
-  avatarId String? @unique
-  avatar   File?   @relation(fields: [avatarId], references: [id])
-
-  isActive Boolean @default(true)
-
-  donations Donation[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([name, phone])
-  @@index([name])
-  @@index([phone])
-  @@map("donors")
-}
-
-/// ===========================
-/// DONATION
-/// ===========================
-
-model Donation {
-  id      String  @id @default(uuid())
-  donorId String
-  donor   Donor   @relation(fields: [donorId], references: [id], onDelete: Restrict)
-  amount  Decimal @db.Decimal(10, 2)
-
-  createdById String?
-  createdBy   User?   @relation("DonationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-
-  updatedById String?
-  updatedBy   User?   @relation("DonationUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-
-  purpose              String?
-  isAnonymous          Boolean       @default(false)
-  receiptNo            String        @unique
-  paymentMethod        PaymentMethod @default(CASH)
-  transactionReference String?
-  note                 String?
-  donatedAt            DateTime      @default(now())
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-
-  @@index([donorId])
-  @@index([donatedAt])
-  @@index([paymentMethod])
-  @@index([createdById])
-  @@index([updatedById])
-  @@map("donations")
-}
-
-/// ===========================
-/// EXPENSE
-/// ===========================
-
-model Expense {
-  id String @id @default(uuid())
-
-  category ExpenseCategory
-
-  title  String
-  amount Decimal @db.Decimal(10, 2)
-
-  note String?
-
-  expenseDate DateTime
-
-  createdById String?
-  createdBy   User?   @relation("ExpenseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-
-  updatedById String?
-  updatedBy   User?   @relation("ExpenseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([category])
-  @@index([expenseDate])
-  @@index([createdById])
-  @@index([updatedById])
-  @@map("expenses")
-}
-
-/// ===========================
-/// DEVELOPMENT PROJECT
-/// ===========================
-
-model DevelopmentProject {
-  id String @id @default(uuid())
-
-  title       String
-  description String?
-
-  budget Decimal? @db.Decimal(10, 2)
-  spent  Decimal? @db.Decimal(10, 2)
-
-  progress Int @default(0)
-
-  status ProjectStatus @default(PLANNING)
-
-  startDate DateTime?
-  endDate   DateTime?
-
-  images File[]
-
-  createdById String?
-  updatedById String?
-
-  createdBy User? @relation("DevelopmentProjectCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  updatedBy User? @relation("DevelopmentProjectUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status])
-  @@index([startDate])
-  @@index([createdById])
-  @@index([updatedById])
-  @@map("development_projects")
-}
-
-/// ===========================
-/// GALLERY
-/// ===========================
-
-model Gallery {
-  id String @id @default(uuid())
-
-  title       String?
-  description String?
-
-  images File[]
-
-  order Int @default(0)
-
-  createdById String?
-  updatedById String?
-
-  createdBy User? @relation("GalleryCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  updatedBy User? @relation("GalleryUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([order])
-  @@index([createdById])
-  @@index([updatedById])
-  @@map("galleries")
-}
-
-/// ===========================
-/// PRAYER TIME
-/// ===========================
-
-model PrayerTime {
-  id String @id @default(uuid())
-
-  fajr    String
-  sunrise String?
-  dhuhr   String
-  asr     String
-  maghrib String
-  isha    String
-  jummah  String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("prayer_times")
-}
-
-model File {
-  id String @id @default(uuid())
-
-  url      String
-  publicId String @unique
-
-  originalName String?
-  mimeType     String?
-  extension    String?
-
-  size   Int
-  width  Int?
-  height Int?
-
-  uploadedById String?
-  uploadedBy   User?   @relation("FileUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
-
-  updatedById String?
-  updatedBy   User?   @relation("FileUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-
-  userAvatar      User?
-  familyAvatar    Family?
-  donorAvatar     Donor?
-  committeeAvatar CommitteeMember?
-
-  galleries Gallery[]
-  projects  DevelopmentProject[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([uploadedById])
-  @@index([updatedById])
-  @@map("files")
 }

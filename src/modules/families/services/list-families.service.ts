@@ -13,13 +13,9 @@ import { FamilyListResponseDto } from '../dto/responses/family-list-response.dto
 
 @Injectable()
 export class ListFamiliesService {
-  constructor(
-    private readonly prismaService: PrismaService,
-  ) { }
+  constructor(private readonly prismaService: PrismaService) { }
 
-  async execute(
-    query: FamilyQueryDto,
-  ): Promise<FamilyListResponseDto> {
+  async execute(query: FamilyQueryDto): Promise<FamilyListResponseDto> {
     const page = query.page ?? FAMILY_DEFAULT_PAGE;
     const limit = query.limit ?? FAMILY_DEFAULT_LIMIT;
 
@@ -60,29 +56,39 @@ export class ListFamiliesService {
       where.isActive = query.isActive;
     }
 
-    const [families, total] = await this.prismaService.$transaction([
-      this.prismaService.family.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: {
-          [query.sortBy ?? 'createdAt']:
-            query.sortOrder ?? 'desc',
-        },
-        include: {
-          avatar: {
-            select: {
-              id: true,
-              url: true,
+    const { families, total } = await this.prismaService.$transaction(
+      async (tx) => {
+        const families = await tx.family.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: {
+            [query.sortBy ?? 'createdAt']: query.sortOrder ?? 'desc',
+          },
+          include: {
+            avatar: {
+              select: {
+                id: true,
+                url: true,
+              },
             },
           },
-        },
-      }),
+        });
 
-      this.prismaService.family.count({
-        where,
-      }),
-    ]);
+        const total = await tx.family.count({
+          where,
+        });
+
+        return {
+          families,
+          total,
+        };
+      },
+      {
+        maxWait: 10000,
+        timeout: 20000,
+      },
+    );
 
     return {
       data: families.map((family) => ({

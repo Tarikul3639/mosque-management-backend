@@ -47,7 +47,17 @@ export class FamilyQueryDto {
     description: 'Filter by active families',
   })
   @IsOptional()
-  @Type(() => Boolean)
+  @Transform(({ value }) => {
+    if (value === undefined || value === '') {
+      return undefined;
+    }
+
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    return value === 'true';
+  })
   @IsBoolean()
   isActive?: boolean;
 
@@ -57,7 +67,8 @@ export class FamilyQueryDto {
   })
   @IsOptional()
   @IsIn(['familyNo', 'headName', 'createdAt', 'updatedAt'])
-  sortBy?: 'familyNo' | 'headName' | 'createdAt' | 'updatedAt' = 'createdAt';
+  sortBy?: 'familyNo' | 'headName' | 'createdAt' | 'updatedAt' =
+    'createdAt';
 
   @ApiPropertyOptional({
     example: 'desc',

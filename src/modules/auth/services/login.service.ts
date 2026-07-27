@@ -23,6 +23,8 @@ export class LoginService {
     async execute(loginDto: LoginRequestDto): Promise<LoginResult> {
         const { email, password } = loginDto;
 
+        this.logger.log(`Attempting to log in user with email: ${email}`);
+
         const user = await this.prismaService.user.findUnique({
             where: { email },
             select: {

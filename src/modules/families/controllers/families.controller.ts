@@ -24,6 +24,7 @@ import { UserRole } from '@/lib/prisma/client';
 import { CreateFamilyDto } from '../dto/requests/create-family.dto';
 import { UpdateFamilyDto } from '../dto/requests/update-family.dto';
 import { FamilyQueryDto } from '../dto/requests/family-query.dto';
+import { FamilyStatsDto } from '../dto/responses/family-stats.dto';
 
 import { FamilyResponseDto } from '../dto/responses/family-response.dto';
 import { FamilyListResponseDto } from '../dto/responses/family-list-response.dto';
@@ -33,21 +34,35 @@ import { UpdateFamilyService } from '../services/update-family.service';
 import { DeleteFamilyService } from '../services/delete-family.service';
 import { GetFamilyService } from '../services/get-family.service';
 import { ListFamiliesService } from '../services/list-families.service';
+import { GetFamilyStatsService } from '../services/get-family-stats.service';
 
 @ApiTags('Families')
 @Controller('families')
 export class FamiliesController {
   constructor(
+    private readonly getFamilyStatsService: GetFamilyStatsService,
     private readonly createFamilyService: CreateFamilyService,
     private readonly updateFamilyService: UpdateFamilyService,
     private readonly deleteFamilyService: DeleteFamilyService,
     private readonly getFamilyService: GetFamilyService,
     private readonly listFamiliesService: ListFamiliesService,
-  ) {}
+  ) { }
 
   // -----------------------------
   // Public APIs
   // -----------------------------
+
+  @Get('stats')
+  @ApiOperation({
+    summary: 'Get family statistics',
+  })
+  @ApiResponse({
+    status: 200,
+    type: FamilyStatsDto,
+  })
+  async getStats(): Promise<FamilyStatsDto> {
+    return this.getFamilyStatsService.execute();
+  }
 
   @Get()
   @ApiOperation({

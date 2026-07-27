@@ -11,6 +11,7 @@ import { UpdateFamilyService } from './services/update-family.service';
 import { DeleteFamilyService } from './services/delete-family.service';
 import { GetFamilyService } from './services/get-family.service';
 import { ListFamiliesService } from './services/list-families.service';
+import { GetFamilyStatsService } from './services/get-family-stats.service';
 // Family Fees Services
 import { CreateFamilyFeeService } from './services/create-family-fee.service';
 import { UpdateFamilyFeeService } from './services/update-family-fee.service';
@@ -38,6 +39,7 @@ import { DeleteMonthlyChargeService } from './services/delete-monthly-charge.ser
     DeleteFamilyService,
     GetFamilyService,
     ListFamiliesService,
+    GetFamilyStatsService,
     // Family Fees Services
     CreateFamilyFeeService,
     UpdateFamilyFeeService,
