@@ -1,7 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
-
 import { FAMILY_MESSAGES } from '../constants/family.constants';
 
 import { CreateFamilyDto } from '../dto/requests/create-family.dto';
@@ -12,36 +11,38 @@ export class CreateFamilyService {
     constructor(private readonly prisma: PrismaService) { }
 
     async execute(dto: CreateFamilyDto): Promise<FamilyResponseDto> {
-        const existingFamily = await this.prisma.family.findFirst({
-            where: {
-                OR: [
-                    {
-                        familyNo: dto.familyNo,
-                    },
-                    ...(dto.phone
-                        ? [
-                            {
-                                phone: dto.phone,
-                            },
-                        ]
-                        : []),
-                ],
+        const lastFamily = await this.prisma.family.findFirst({
+            orderBy: {
+                familyNo: 'desc',
+            },
+            select: {
+                familyNo: true,
             },
         });
 
-        if (existingFamily) {
-            if (existingFamily.familyNo === dto.familyNo) {
-                throw new ConflictException(FAMILY_MESSAGES.ALREADY_EXISTS);
-            }
+        let familyNo = 'F-0001';
 
-            if (dto.phone && existingFamily.phone === dto.phone) {
-                throw new ConflictException(FAMILY_MESSAGES.PHONE_EXISTS);
-            }
+        if (lastFamily?.familyNo) {
+            const lastNumber = Number(lastFamily.familyNo.replace('F-', ''));
+
+            familyNo = `F-${String(lastNumber + 1).padStart(4, '0')}`;
+        }
+
+        const existingFamily = await this.prisma.family.findFirst({
+            where: {
+                ...(dto.phone && {
+                    phone: dto.phone,
+                }),
+            },
+        });
+
+        if (existingFamily && dto.phone) {
+            throw new ConflictException(FAMILY_MESSAGES.PHONE_EXISTS);
         }
 
         const family = await this.prisma.family.create({
             data: {
-                familyNo: dto.familyNo,
+                familyNo,
                 headName: dto.headName,
                 phone: dto.phone,
                 address: dto.address,

@@ -30,6 +30,10 @@ export const FAMILY_MESSAGES = {
   ALREADY_EXISTS: 'Family already exists.',
   PHONE_EXISTS: 'Phone number already exists.',
   INACTIVE: 'Family is inactive.',
+  ACTIVE: 'Family is active.',
+  ACTIVATED: 'Family activated successfully.',
+  DEACTIVATED: 'Family deactivated successfully.',
+  HARD_DELETED: 'Family permanently deleted successfully.',
 } as const;
 
 export const FAMILY_FEE_MESSAGES = {

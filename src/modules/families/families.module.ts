@@ -9,7 +9,7 @@ import { MonthlyChargesController } from './controllers/monthly-charges.controll
 import { CreateFamilyService } from './services/create-family.service';
 import { UpdateFamilyService } from './services/update-family.service';
 import { DeleteFamilyService } from './services/delete-family.service';
-import { GetFamilyService } from './services/get-family.service';
+import { GetFamilyDetailsService } from './services/get-family-details.service';
 import { ListFamiliesService } from './services/list-families.service';
 import { GetFamilyStatsService } from './services/get-family-stats.service';
 // Family Fees Services
@@ -23,6 +23,7 @@ import { GetMonthlyChargeService } from './services/get-monthly-charge.service';
 import { ListMonthlyChargesService } from './services/list-monthly-charges.service';
 import { UpdateMonthlyChargeService } from './services/update-monthly-charge.service';
 import { DeleteMonthlyChargeService } from './services/delete-monthly-charge.service';
+import { ActivateFamilyService } from './services/active-family.service';
 
 @Module({
   imports: [PrismaModule],
@@ -37,7 +38,7 @@ import { DeleteMonthlyChargeService } from './services/delete-monthly-charge.ser
     CreateFamilyService,
     UpdateFamilyService,
     DeleteFamilyService,
-    GetFamilyService,
+    GetFamilyDetailsService,
     ListFamiliesService,
     GetFamilyStatsService,
     // Family Fees Services
@@ -51,13 +52,14 @@ import { DeleteMonthlyChargeService } from './services/delete-monthly-charge.ser
     ListMonthlyChargesService,
     UpdateMonthlyChargeService,
     DeleteMonthlyChargeService,
+    ActivateFamilyService,
   ],
 
   exports: [
     CreateFamilyService,
     UpdateFamilyService,
     DeleteFamilyService,
-    GetFamilyService,
+    GetFamilyDetailsService,
     ListFamiliesService,
 
     CreateFamilyFeeService,

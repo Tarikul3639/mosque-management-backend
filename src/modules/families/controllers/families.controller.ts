@@ -25,6 +25,7 @@ import { CreateFamilyDto } from '../dto/requests/create-family.dto';
 import { UpdateFamilyDto } from '../dto/requests/update-family.dto';
 import { FamilyQueryDto } from '../dto/requests/family-query.dto';
 import { FamilyStatsDto } from '../dto/responses/family-stats.dto';
+import { FamilyDetailsResponseDto } from '../dto/responses/family-details.dto';
 
 import { FamilyResponseDto } from '../dto/responses/family-response.dto';
 import { FamilyListResponseDto } from '../dto/responses/family-list-response.dto';
@@ -32,7 +33,8 @@ import { FamilyListResponseDto } from '../dto/responses/family-list-response.dto
 import { CreateFamilyService } from '../services/create-family.service';
 import { UpdateFamilyService } from '../services/update-family.service';
 import { DeleteFamilyService } from '../services/delete-family.service';
-import { GetFamilyService } from '../services/get-family.service';
+import { ActivateFamilyService } from '../services/active-family.service';
+import { GetFamilyDetailsService } from '../services/get-family-details.service';
 import { ListFamiliesService } from '../services/list-families.service';
 import { GetFamilyStatsService } from '../services/get-family-stats.service';
 
@@ -44,8 +46,9 @@ export class FamiliesController {
     private readonly createFamilyService: CreateFamilyService,
     private readonly updateFamilyService: UpdateFamilyService,
     private readonly deleteFamilyService: DeleteFamilyService,
-    private readonly getFamilyService: GetFamilyService,
+    private readonly getFamilyDetailsService: GetFamilyDetailsService,
     private readonly listFamiliesService: ListFamiliesService,
+    private readonly activateFamilyService: ActivateFamilyService,
   ) { }
 
   // -----------------------------
@@ -84,12 +87,12 @@ export class FamiliesController {
   })
   @ApiResponse({
     status: 200,
-    type: FamilyResponseDto,
+    type: FamilyDetailsResponseDto,
   })
   async findOne(
     @Param('id') id: string,
-  ): Promise<FamilyResponseDto> {
-    return this.getFamilyService.execute(id);
+  ): Promise<FamilyDetailsResponseDto> {
+    return this.getFamilyDetailsService.execute(id);
   }
 
   // -----------------------------
@@ -134,5 +137,18 @@ export class FamiliesController {
     @Param('id') id: string,
   ): Promise<{ message: string }> {
     return this.deleteFamilyService.execute(id);
+  }
+
+  @Post(':id/activate')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Activate family',
+  })
+  async activate(
+    @Param('id') id: string,
+  ): Promise<{ message: string }> {
+    return this.activateFamilyService.execute(id);
   }
 }
