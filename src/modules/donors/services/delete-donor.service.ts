@@ -2,21 +2,25 @@ import {
     ConflictException,
     Injectable,
     NotFoundException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { DONOR_MESSAGES } from '../constants/donor.constants';
+import { PrismaService } from "@/common/prisma/prisma.service";
+import { CloudinaryService } from "@/common/cloudinary/cloudinary.service";
+
+import { DONOR_MESSAGES } from "../constants/donor.constants";
 
 @Injectable()
 export class DeleteDonorService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly cloudinary: CloudinaryService,
+    ) { }
 
     async execute(id: string): Promise<{ message: string }> {
         const donor = await this.prisma.donor.findUnique({
-            where: {
-                id,
-            },
+            where: { id },
             include: {
+                avatar: true,
                 _count: {
                     select: {
                         donations: true,
@@ -33,11 +37,23 @@ export class DeleteDonorService {
             throw new ConflictException(DONOR_MESSAGES.DONOR_HAS_DONATIONS);
         }
 
-        await this.prisma.donor.delete({
-            where: {
-                id,
-            },
+        await this.prisma.$transaction(async (tx) => {
+            await tx.donor.delete({
+                where: { id },
+            });
+
+            if (donor.avatar) {
+                await tx.file.delete({
+                    where: {
+                        id: donor.avatar.id,
+                    },
+                });
+            }
         });
+
+        if (donor.avatar?.publicId) {
+            await this.cloudinary.delete(donor.avatar.publicId);
+        }
 
         return {
             message: DONOR_MESSAGES.DONOR_DELETED,

@@ -12,7 +12,7 @@ export class CookieUtil {
             secure: configService.getOrThrow<boolean>('app.isProduction'),
             sameSite: 'lax',
             path: '/',
-            maxAge: 15 * 60 * 1000, // 15 minutes
+            maxAge: configService.getOrThrow<number>('cookies.maxAge'),
         };
     }
 

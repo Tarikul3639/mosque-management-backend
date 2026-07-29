@@ -2,18 +2,26 @@ import {
     ConflictException,
     Injectable,
     NotFoundException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { FAMILY_MESSAGES } from '../constants/family.constants';
-import { UpdateFamilyDto } from '../dto/requests/update-family.dto';
-import { FamilyResponseDto } from '../dto/responses/family-response.dto';
+import { PrismaService } from "@/common/prisma/prisma.service";
+import { FileService } from "@/common/file/file.service";
+
+import { FAMILY_MESSAGES } from "../constants/family.constants";
+import { UpdateFamilyDto } from "../dto/requests/update-family.dto";
+import { FamilyResponseDto } from "../dto/responses/family-response.dto";
 
 @Injectable()
 export class UpdateFamilyService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly fileService: FileService,
+    ) { }
 
-    async execute(id: string, dto: UpdateFamilyDto): Promise<FamilyResponseDto> {
+    async execute(
+        id: string,
+        dto: UpdateFamilyDto,
+    ): Promise<FamilyResponseDto> {
         const family = await this.prisma.family.findUnique({
             where: {
                 id,
@@ -32,72 +40,83 @@ export class UpdateFamilyService {
             });
 
             if (existingFamily) {
-                throw new ConflictException(FAMILY_MESSAGES.ALREADY_EXISTS);
+                throw new ConflictException(
+                    FAMILY_MESSAGES.ALREADY_EXISTS,
+                );
             }
         }
 
         if (dto.phone && dto.phone !== family.phone) {
-            const existingPhone = await this.prisma.family.findFirst({
+            const existingPhone =
+                await this.prisma.family.findFirst({
+                    where: {
+                        phone: dto.phone,
+                        NOT: {
+                            id,
+                        },
+                    },
+                });
+
+            if (existingPhone) {
+                throw new ConflictException(
+                    FAMILY_MESSAGES.PHONE_EXISTS,
+                );
+            }
+        }
+
+        const updatedFamily =
+            await this.prisma.family.update({
                 where: {
-                    phone: dto.phone,
-                    NOT: {
-                        id,
+                    id,
+                },
+                data: {
+                    ...(dto.familyNo !== undefined && {
+                        familyNo: dto.familyNo,
+                    }),
+
+                    ...(dto.headName !== undefined && {
+                        headName: dto.headName,
+                    }),
+
+                    ...(dto.phone !== undefined && {
+                        phone: dto.phone,
+                    }),
+
+                    ...(dto.address !== undefined && {
+                        address: dto.address,
+                    }),
+
+                    ...(dto.isActive !== undefined && {
+                        isActive: dto.isActive,
+                    }),
+
+                    ...(dto.avatarId !== undefined && {
+                        avatar: dto.avatarId
+                            ? {
+                                connect: {
+                                    id: dto.avatarId,
+                                },
+                            }
+                            : {
+                                disconnect: true,
+                            },
+                    }),
+                },
+
+                include: {
+                    avatar: {
+                        select: {
+                            id: true,
+                            url: true,
+                        },
                     },
                 },
             });
 
-            if (existingPhone) {
-                throw new ConflictException(FAMILY_MESSAGES.PHONE_EXISTS);
-            }
-        }
-
-        const updatedFamily = await this.prisma.family.update({
-            where: {
-                id,
-            },
-            data: {
-                ...(dto.familyNo !== undefined && {
-                    familyNo: dto.familyNo,
-                }),
-
-                ...(dto.headName !== undefined && {
-                    headName: dto.headName,
-                }),
-
-                ...(dto.phone !== undefined && {
-                    phone: dto.phone,
-                }),
-
-                ...(dto.address !== undefined && {
-                    address: dto.address,
-                }),
-
-                ...(dto.isActive !== undefined && {
-                    isActive: dto.isActive,
-                }),
-
-                ...(dto.avatarId !== undefined && {
-                    avatar: dto.avatarId
-                        ? {
-                            connect: {
-                                id: dto.avatarId,
-                            },
-                        }
-                        : {
-                            disconnect: true,
-                        },
-                }),
-            },
-
-            include: {
-                avatar: {
-                    select: {
-                        id: true,
-                        url: true,
-                    },
-                },
-            },
-        });
+        await this.fileService.replace(
+            family.avatarId,
+            dto.avatarId,
+        );
 
         return {
             id: updatedFamily.id,

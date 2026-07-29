@@ -8,3 +8,4 @@ export { default as envValidationSchema } from "./env/env.validation";
 export { default as loggerConfig } from "./logger/logger.config";
 export { default as mailConfig } from "./mail/mail.config";
 export { default as swaggerConfig } from "./swagger/swagger.config";
+export { default as cookieConfig } from "./cookies/cookies.config";

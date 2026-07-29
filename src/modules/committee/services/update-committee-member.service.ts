@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { FileService } from '@/common/file/file.service';
 
 import { COMMITTEE_MESSAGES } from '../constants/committee.constants';
 import { UpdateCommitteeMemberDto } from '../dto/requests/update-committee-member.dto';
@@ -15,7 +16,8 @@ import { CommitteeMemberMapper } from '../mappers/committee-member.mapper';
 export class UpdateCommitteeMemberService {
   constructor(
     private readonly prisma: PrismaService,
-  ) {}
+    private readonly fileService: FileService,
+  ) { }
 
   async execute(
     id: string,
@@ -98,13 +100,13 @@ export class UpdateCommitteeMemberService {
           ...(dto.avatarId !== undefined && {
             avatar: dto.avatarId
               ? {
-                  connect: {
-                    id: dto.avatarId,
-                  },
-                }
-              : {
-                  disconnect: true,
+                connect: {
+                  id: dto.avatarId,
                 },
+              }
+              : {
+                disconnect: true,
+              },
           }),
         },
 
@@ -117,6 +119,11 @@ export class UpdateCommitteeMemberService {
           },
         },
       });
+
+    await this.fileService.replace(
+      member.avatarId,
+      dto.avatarId,
+    );
 
     return CommitteeMemberMapper.toResponse(
       updatedMember,

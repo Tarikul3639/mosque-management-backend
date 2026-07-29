@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { FileService } from '@/common/file/file.service';
+
 import { UserRole } from '@/lib/prisma/client';
 
 import { GALLERY_MESSAGES } from '../constants/gallery.constants';
@@ -14,7 +16,10 @@ import { GalleryMapper } from '../mappers/gallery.mapper';
 
 @Injectable()
 export class UpdateGalleryService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly fileService: FileService,
+    ) { }
 
     async execute(
         galleryId: string,
@@ -29,6 +34,11 @@ export class UpdateGalleryService {
             select: {
                 id: true,
                 createdById: true,
+                images: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
 
@@ -96,6 +106,18 @@ export class UpdateGalleryService {
                 },
             },
         });
+
+        const imageIds = dto.imageIds;
+
+        if (imageIds !== undefined) {
+            const removedImages = existingGallery.images.filter(
+                (image) => !imageIds.includes(image.id),
+            );
+
+            for (const image of removedImages) {
+                await this.fileService.deleteById(image.id);
+            }
+        }
 
         return GalleryMapper.toResponse(gallery);
     }

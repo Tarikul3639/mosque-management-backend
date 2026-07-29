@@ -11,11 +11,13 @@ import { DonorMapper } from '../mappers/donor.mapper';
 
 import { UpdateDonorDto } from '../dto/requests/update-donor.dto';
 import { DonorResponseDto } from '../dto/responses/donor-response.dto';
+import { FileService } from '@/common/file/file.service';
 
 @Injectable()
 export class UpdateDonorService {
     constructor(
         private readonly prisma: PrismaService,
+        private readonly fileService: FileService,
     ) { }
 
     async execute(
@@ -23,9 +25,7 @@ export class UpdateDonorService {
         dto: UpdateDonorDto,
     ): Promise<DonorResponseDto> {
         const donor = await this.prisma.donor.findUnique({
-            where: {
-                id,
-            },
+            where: { id },
         });
 
         if (!donor) {
@@ -34,15 +34,16 @@ export class UpdateDonorService {
             );
         }
 
-        const existingDonor = await this.prisma.donor.findFirst({
-            where: {
-                name: dto.name,
-                phone: dto.phone,
-                NOT: {
-                    id,
+        const existingDonor =
+            await this.prisma.donor.findFirst({
+                where: {
+                    name: dto.name,
+                    phone: dto.phone,
+                    NOT: {
+                        id,
+                    },
                 },
-            },
-        });
+            });
 
         if (existingDonor) {
             throw new ConflictException(
@@ -50,38 +51,44 @@ export class UpdateDonorService {
             );
         }
 
-        const updatedDonor = await this.prisma.donor.update({
-            where: {
-                id,
-            },
-            data: {
-                name: dto.name,
-                phone: dto.phone,
-                email: dto.email,
-                address: dto.address,
-                isActive: dto.isActive,
+        const updatedDonor =
+            await this.prisma.donor.update({
+                where: {
+                    id,
+                },
+                data: {
+                    name: dto.name,
+                    phone: dto.phone,
+                    email: dto.email,
+                    address: dto.address,
+                    isActive: dto.isActive,
 
-                ...(dto.avatarId !== undefined && {
-                    avatar: dto.avatarId
-                        ? {
-                            connect: {
-                                id: dto.avatarId,
+                    ...(dto.avatarId !== undefined && {
+                        avatar: dto.avatarId
+                            ? {
+                                connect: {
+                                    id: dto.avatarId,
+                                },
+                            }
+                            : {
+                                disconnect: true,
                             },
-                        }
-                        : {
-                            disconnect: true,
+                    }),
+                },
+                include: {
+                    avatar: {
+                        select: {
+                            id: true,
+                            url: true,
                         },
-                }),
-            },
-            include: {
-                avatar: {
-                    select: {
-                        id: true,
-                        url: true,
                     },
                 },
-            },
-        });
+            });
+
+        await this.fileService.replace(
+            donor.avatarId,
+            dto.avatarId,
+        );
 
         return DonorMapper.toResponse(updatedDonor);
     }

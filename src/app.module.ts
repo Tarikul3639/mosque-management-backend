@@ -11,6 +11,7 @@ import {
   mailConfig,
   swaggerConfig,
   envValidationSchema,
+  cookieConfig
 } from './config';
 import { PrismaModule } from '@/common/prisma/prisma.module';
 import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
@@ -27,6 +28,7 @@ import { GalleriesModule } from './modules/gallery/galleries.module';
 import { PrayerTimesModule } from './modules/prayer-times/prayer-times.module';
 import { UploadsModule } from './common/uploads/uploads.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { FileModule } from './common/file/file.module';
 
 @Module({
   imports: [
@@ -52,11 +54,13 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
         loggerConfig,
         mailConfig,
         swaggerConfig,
+        cookieConfig
       ],
     }),
     MailModule,
     PrismaModule,
     CloudinaryModule,
+    FileModule,
     // AuthModule is imported here to make its services available throughout the application
     AuthModule,
     FamiliesModule,

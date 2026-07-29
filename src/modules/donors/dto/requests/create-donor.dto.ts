@@ -6,6 +6,7 @@ import {
 import {
   IsEmail,
   IsOptional,
+  IsBoolean,
   IsPhoneNumber,
   IsString,
   IsUUID,
@@ -34,4 +35,8 @@ export class CreateDonorDto {
   @IsOptional()
   @IsUUID()
   avatarId?: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  isActive!: boolean;
 }

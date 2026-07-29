@@ -1,7 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-
 import { PrismaService } from '@/common/prisma/prisma.service';
-
 import { DONOR_MESSAGES } from '../constants/donor.constants';
 
 import { CreateDonorDto } from '../dto/requests/create-donor.dto';
@@ -30,6 +28,14 @@ export class CreateDonorService {
                 phone: dto.phone,
                 email: dto.email,
                 address: dto.address,
+                isActive: dto.isActive,
+                avatar: dto.avatarId
+                    ? {
+                        connect: {
+                            id: dto.avatarId,
+                        },
+                    }
+                    : undefined,
             },
 
             include: {
