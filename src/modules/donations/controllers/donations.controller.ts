@@ -7,45 +7,47 @@ import {
     Patch,
     Post,
     Query,
+    Res,
     UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
+import type { Response } from "express";
 
 import {
     ApiBearerAuth,
     ApiOperation,
     ApiResponse,
     ApiTags,
-} from '@nestjs/swagger';
+} from "@nestjs/swagger";
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from "@/common/decorators/roles.decorator";
+import { JwtAuthGuard } from "@/common/guards/jwt-auth.guard";
+import { RolesGuard } from "@/common/guards/roles.guard";
+import { CurrentUser } from "@/common/decorators/current-user.decorator";
 
-import { UserRole } from '@/lib/prisma/client';
+import { UserRole } from "@/lib/prisma/client";
 
-import { CreateDonationDto } from '../dto/requests/create-donation.dto';
-import { UpdateDonationDto } from '../dto/requests/update-donation.dto';
-import { DonationQueryDto } from '../dto/requests/donation-query.dto';
-import { DonationSummaryQueryDto } from '../dto/requests/donation-summary-query.dto';
-import { DonorHistoryQueryDto } from '../dto/requests/donor-history-query.dto';
+import { CreateDonationDto } from "../dto/requests/create-donation.dto";
+import { DonationQueryDto } from "../dto/requests/donation-query.dto";
+import { DonationSummaryQueryDto } from "../dto/requests/donation-summary-query.dto";
+import { DonorHistoryQueryDto } from "../dto/requests/donor-history-query.dto";
+import { UpdateDonationDto } from "../dto/requests/update-donation.dto";
 
-import { DonationResponseDto } from '../dto/responses/donation-response.dto';
-import { DonationListResponseDto } from '../dto/responses/donation-list-response.dto';
-import { DonationSummaryResponseDto } from '../dto/responses/donation-summary-response.dto';
-import { DonationReceiptResponseDto } from '../dto/responses/donation-receipt-response.dto';
-import { DonorHistoryResponseDto } from '../dto/responses/donor-history-response.dto';
+import { DonationListResponseDto } from "../dto/responses/donation-list-response.dto";
+import { DonationResponseDto } from "../dto/responses/donation-response.dto";
+import { DonationSummaryResponseDto } from "../dto/responses/donation-summary-response.dto";
+import { DonorHistoryResponseDto } from "../dto/responses/donor-history-response.dto";
 
-import { CreateDonationService } from '../services/create-donation.service';
-import { UpdateDonationService } from '../services/update-donation.service';
-import { DeleteDonationService } from '../services/delete-donation.service';
-import { GetDonationService } from '../services/get-donation.service';
-import { ListDonationsService } from '../services/list-donations.service';
-import { GetDonationSummaryService } from '../services/get-donation-summary.service';
-import { GetDonorHistoryService } from '../services/get-donor-history.service';
-import { GenerateDonationReceiptService } from '../services/generate-donation-receipt.service';
+import { CreateDonationService } from "../services/create-donation.service";
+import { DeleteDonationService } from "../services/delete-donation.service";
+import { GenerateDonationReceiptService } from "../services/generate-donation-receipt.service";
+import { GetDonationService } from "../services/get-donation.service";
+import { GetDonationSummaryService } from "../services/get-donation-summary.service";
+import { GetDonorHistoryService } from "../services/get-donor-history.service";
+import { ListDonationsService } from "../services/list-donations.service";
+import { UpdateDonationService } from "../services/update-donation.service";
 
-@ApiTags('Donations')
-@Controller('donations')
+@ApiTags("Donations")
+@Controller("donations")
 export class DonationsController {
     constructor(
         private readonly createDonationService: CreateDonationService,
@@ -64,7 +66,7 @@ export class DonationsController {
 
     @Get()
     @ApiOperation({
-        summary: 'Get donation list',
+        summary: "Get donation list",
     })
     @ApiResponse({
         status: 200,
@@ -76,9 +78,9 @@ export class DonationsController {
         return this.listDonationsService.execute(query);
     }
 
-    @Get('summary')
+    @Get("summary")
     @ApiOperation({
-        summary: 'Get donation summary',
+        summary: "Get donation summary",
     })
     @ApiResponse({
         status: 200,
@@ -90,9 +92,9 @@ export class DonationsController {
         return this.getDonationSummaryService.execute(query);
     }
 
-    @Get('donor/history')
+    @Get("donor/history")
     @ApiOperation({
-        summary: 'Get donor donation history',
+        summary: "Get donor donation history",
     })
     @ApiResponse({
         status: 200,
@@ -104,27 +106,41 @@ export class DonationsController {
         return this.getDonorHistoryService.execute(query);
     }
 
-    @Get(':id/receipt')
+    @Get(":id/receipt")
     @ApiOperation({
-        summary: 'Generate donation receipt',
+        summary: "Download donation receipt",
     })
     @ApiResponse({
         status: 200,
-        type: DonationReceiptResponseDto,
+        description: "PDF receipt",
     })
-    async receipt(@Param('id') id: string): Promise<DonationReceiptResponseDto> {
-        return this.generateDonationReceiptService.execute(id);
+    async downloadReceipt(
+        @Param("id") id: string,
+        @Res() res: Response,
+    ): Promise<void> {
+        const { fileName, buffer } =
+            await this.generateDonationReceiptService.execute(id);
+
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": `attachment; filename="${fileName}"`,
+            "Content-Length": buffer.length,
+        });
+
+        res.end(buffer);
     }
 
-    @Get(':id')
+    @Get(":id")
     @ApiOperation({
-        summary: 'Get donation details',
+        summary: "Get donation details",
     })
     @ApiResponse({
         status: 200,
         type: DonationResponseDto,
     })
-    async findOne(@Param('id') id: string): Promise<DonationResponseDto> {
+    async findOne(
+        @Param("id") id: string,
+    ): Promise<DonationResponseDto> {
         return this.getDonationService.execute(id);
     }
 
@@ -137,45 +153,59 @@ export class DonationsController {
     @ApiBearerAuth()
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @ApiOperation({
-        summary: 'Create donation',
+        summary: "Create donation",
     })
     @ApiResponse({
         status: 201,
         type: DonationResponseDto,
     })
-    async create(@Body() dto: CreateDonationDto): Promise<DonationResponseDto> {
-        return this.createDonationService.execute(dto);
+    async create(
+        @CurrentUser() user: {
+            sub: string;
+            email: string;
+            role: UserRole;
+        },
+        @Body() dto: CreateDonationDto,
+    ): Promise<DonationResponseDto> {
+        return this.createDonationService.execute(dto, user.sub);
     }
 
-    @Patch(':id')
+    @Patch(":id")
     @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiBearerAuth()
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @ApiOperation({
-        summary: 'Update donation',
+        summary: "Update donation",
     })
     @ApiResponse({
         status: 200,
         type: DonationResponseDto,
     })
     async update(
-        @Param('id') id: string,
+        @CurrentUser() user: {
+            sub: string;
+            email: string;
+            role: UserRole;
+        },
+        @Param("id") id: string,
         @Body() dto: UpdateDonationDto,
     ): Promise<DonationResponseDto> {
-        return this.updateDonationService.execute(id, dto);
+        return this.updateDonationService.execute(id, dto, user.sub);
     }
 
-    @Delete(':id')
+    @Delete(":id")
     @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiBearerAuth()
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     @ApiOperation({
-        summary: 'Delete donation',
+        summary: "Delete donation",
     })
     @ApiResponse({
         status: 200,
     })
-    async delete(@Param('id') id: string): Promise<void> {
+    async delete(
+        @Param("id") id: string,
+    ): Promise<void> {
         return this.deleteDonationService.execute(id);
     }
 }

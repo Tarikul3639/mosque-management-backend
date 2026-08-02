@@ -14,8 +14,9 @@ export class UpdateDonationService {
     async execute(
         id: string,
         dto: UpdateDonationDto,
-        userId?: string,
+        userId: string,
     ): Promise<DonationResponseDto> {
+        console.log("UpdateDonationService.execute called with id:", id, "dto:", dto, "userId:", userId);
         const donation = await this.prisma.donation.findUnique({
             where: {
                 id,

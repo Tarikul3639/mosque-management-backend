@@ -18,7 +18,7 @@ export class CreateDonationService {
 
     async execute(
         dto: CreateDonationDto,
-        userId?: string,
+        userId: string,
     ): Promise<DonationResponseDto> {
         const donor = await this.prisma.donor.findUnique({
             where: {
