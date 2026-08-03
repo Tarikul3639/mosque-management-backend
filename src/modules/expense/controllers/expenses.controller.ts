@@ -21,6 +21,7 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/lib/prisma/client';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
 
 import { CreateExpenseService } from '../services/create-expense.service';
 import { DeleteExpenseService } from '../services/delete-expense.service';
@@ -83,9 +84,7 @@ export class ExpensesController {
         status: 200,
         type: ExpenseResponseDto,
     })
-    async findOne(
-        @Param('id') id: string,
-    ): Promise<ExpenseResponseDto> {
+    async findOne(@Param('id') id: string): Promise<ExpenseResponseDto> {
         return this.getExpenseService.execute(id);
     }
 
@@ -101,13 +100,10 @@ export class ExpensesController {
         type: ExpenseResponseDto,
     })
     async create(
+        @CurrentUser('sub') userId: string,
         @Body() dto: CreateExpenseDto,
-        @Req() req: any,
     ): Promise<ExpenseResponseDto> {
-        return this.createExpenseService.execute(
-            dto,
-            req.user.id,
-        );
+        return this.createExpenseService.execute(dto, userId);
     }
 
     @Patch(':id')
@@ -123,15 +119,10 @@ export class ExpensesController {
     })
     async update(
         @Param('id') id: string,
+        @CurrentUser() user: { sub: string; role: UserRole },
         @Body() dto: UpdateExpenseDto,
-        @Req() req: any,
     ): Promise<ExpenseResponseDto> {
-        return this.updateExpenseService.execute(
-            id,
-            dto,
-            req.user.id,
-            req.user.role,
-        );
+        return this.updateExpenseService.execute(id, dto, user.sub, user.role);
     }
 
     @Delete(':id')
@@ -153,10 +144,6 @@ export class ExpensesController {
         @Param('id') id: string,
         @Req() req: any,
     ): Promise<{ message: string }> {
-        return this.deleteExpenseService.execute(
-            id,
-            req.user.id,
-            req.user.role,
-        );
+        return this.deleteExpenseService.execute(id, req.user.id, req.user.role);
     }
 }

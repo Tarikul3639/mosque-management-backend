@@ -4,11 +4,11 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { PaymentStatus } from '@/lib/prisma/client';
 
 import { PAYMENT_MESSAGES } from '../constants/payment.constants';
 import { UpdatePaymentDto } from '../dto/requests/update-payment.dto';
 import { PaymentResponseDto } from '../dto/responses/payment-response.dto';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class UpdatePaymentService {
@@ -72,20 +72,12 @@ export class UpdatePaymentService {
                 0,
             );
 
-            const status =
-                paidAmount === 0
-                    ? PaymentStatus.DUE
-                    : paidAmount >= Number(charge.amount)
-                        ? PaymentStatus.PAID
-                        : PaymentStatus.PARTIAL;
-
             const updatedCharge = await tx.monthlyCharge.update({
                 where: {
                     id: payment.monthlyChargeId,
                 },
                 data: {
                     paidAmount,
-                    status,
                     paidAt:
                         payments.length > 0 ? payments[payments.length - 1].paidAt : null,
                 },
@@ -116,7 +108,10 @@ export class UpdatePaymentService {
             chargeAmount: Number(result.charge.amount),
             paymentAmount: Number(result.payment.amount),
             paidAmount: Number(result.charge.paidAmount),
-            status: result.charge.status,
+            status: getPaymentStatus(
+                Number(result.charge.amount),
+                Number(result.charge.paidAmount),
+            ),
             method: result.payment.method,
             reference: result.payment.reference,
             note: result.payment.note,

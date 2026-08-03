@@ -5,12 +5,11 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 
 import { MonthlyChargeQueryDto } from '../dto/requests/monthly-charge-query.dto';
 import { MonthlyChargeListResponseDto } from '../dto/responses/monthly-charge-list-response.dto';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class ListMonthlyChargesService {
-    constructor(
-        private readonly prisma: PrismaService,
-    ) { }
+    constructor(private readonly prisma: PrismaService) { }
 
     async execute(
         query: MonthlyChargeQueryDto,
@@ -113,7 +112,10 @@ export class ListMonthlyChargesService {
                 amount: Number(charge.amount),
                 paidAmount: Number(charge.paidAmount),
 
-                status: charge.status,
+                status: getPaymentStatus(
+                    Number(charge.amount),
+                    Number(charge.paidAmount),
+                ),
 
                 dueDate: charge.dueDate,
                 paidAt: charge.paidAt,

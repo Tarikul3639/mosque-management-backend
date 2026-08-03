@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { PaymentStatus } from '@/lib/prisma/client';
+import { PaymentStatus } from '@/common/enums/payment-status.enum';
 
 import { PAYMENT_MESSAGES } from '../constants/payment.constants';
 import { CreatePaymentDto } from '../dto/requests/create-payment.dto';
 import { PaymentResponseDto } from '../dto/responses/payment-response.dto';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class CreatePaymentService {
@@ -52,7 +53,12 @@ export class CreatePaymentService {
             );
         }
 
-        if (monthlyCharge.status === PaymentStatus.PAID) {
+        const status = getPaymentStatus(
+            Number(monthlyCharge.amount),
+            Number(monthlyCharge.paidAmount),
+        );
+
+        if (status === PaymentStatus.PAID) {
             throw new BadRequestException(PAYMENT_MESSAGES.ALREADY_PAID);
         }
 
@@ -103,7 +109,6 @@ export class CreatePaymentService {
                 },
                 data: {
                     paidAmount,
-                    status,
                     paidAt: payments[payments.length - 1]?.paidAt ?? null,
                 },
                 include: {
@@ -133,7 +138,10 @@ export class CreatePaymentService {
             chargeAmount: Number(result.updatedCharge.amount),
             paymentAmount: Number(result.payment.amount),
             paidAmount: Number(result.updatedCharge.paidAmount),
-            status: result.updatedCharge.status,
+            status: getPaymentStatus(
+                Number(result.updatedCharge.amount),
+                Number(result.updatedCharge.paidAmount),
+            ),
             method: result.payment.method,
             reference: result.payment.reference,
             note: result.payment.note,

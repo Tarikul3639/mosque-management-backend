@@ -4,7 +4,6 @@ import { faker } from '@faker-js/faker';
 
 import {
   PaymentMethod,
-  PaymentStatus,
 } from '@/lib/prisma/client';
 
 export async function seedPayments(
@@ -30,40 +29,40 @@ export async function seedPayments(
     })
       ? Number(charge.amount)
       : faker.number.float({
-          min: 0,
-          max: Number(charge.amount),
-          fractionDigits: 2,
-        });
+        min: 0,
+        max: Number(charge.amount),
+        fractionDigits: 2,
+      });
 
     const payment =
       paidAmount > 0
         ? await prisma.payment.create({
-            data: {
-              familyId: charge.familyId,
-              monthlyChargeId: charge.id,
-              amount: paidAmount,
-              method: faker.helpers.arrayElement([
-                PaymentMethod.CASH,
-                PaymentMethod.BKASH,
-                PaymentMethod.NAGAD,
-                PaymentMethod.BANK_TRANSFER,
-                PaymentMethod.CARD,
-                PaymentMethod.QR,
-              ]),
-              reference: faker.helpers.maybe(
-                () => faker.string.alphanumeric(12),
-                {
-                  probability: 0.6,
-                },
-              ),
-              note: faker.helpers.maybe(
-                () => faker.lorem.sentence(),
-                {
-                  probability: 0.3,
-                },
-              ),
-            },
-          })
+          data: {
+            familyId: charge.familyId,
+            monthlyChargeId: charge.id,
+            amount: paidAmount,
+            method: faker.helpers.arrayElement([
+              PaymentMethod.CASH,
+              PaymentMethod.BKASH,
+              PaymentMethod.NAGAD,
+              PaymentMethod.BANK_TRANSFER,
+              PaymentMethod.CARD,
+              PaymentMethod.QR,
+            ]),
+            reference: faker.helpers.maybe(
+              () => faker.string.alphanumeric(12),
+              {
+                probability: 0.6,
+              },
+            ),
+            note: faker.helpers.maybe(
+              () => faker.lorem.sentence(),
+              {
+                probability: 0.3,
+              },
+            ),
+          },
+        })
         : null;
 
     await prisma.monthlyCharge.update({
@@ -72,12 +71,6 @@ export async function seedPayments(
       },
       data: {
         paidAmount,
-        status:
-          paidAmount >= Number(charge.amount)
-            ? PaymentStatus.PAID
-            : paidAmount === 0
-              ? PaymentStatus.DUE
-              : PaymentStatus.PARTIAL,
         paidAt: payment?.paidAt,
       },
     });

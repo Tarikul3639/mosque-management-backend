@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { PaymentStatus } from '@/lib/prisma/client';
+import { PaymentStatus } from '@/common/enums/payment-status.enum';
 
 export class MonthlyChargeQueryDto {
   @ApiPropertyOptional({

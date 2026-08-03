@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { PaymentStatus } from '@/lib/prisma/client';
 
 import { PAYMENT_MESSAGES } from '../constants/payment.constants';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class DeletePaymentService {
@@ -47,15 +47,6 @@ export class DeletePaymentService {
                 0,
             );
 
-            const isPaid = paidAmount >= Number(charge.amount);
-            const isPartial = paidAmount > 0 && !isPaid;
-
-            const status = isPaid
-                ? PaymentStatus.PAID
-                : isPartial
-                    ? PaymentStatus.PARTIAL
-                    : PaymentStatus.DUE;
-
             const lastPayment =
                 payments.length > 0
                     ? payments[payments.length - 1]
@@ -67,7 +58,6 @@ export class DeletePaymentService {
                 },
                 data: {
                     paidAmount,
-                    status,
                     paidAt: lastPayment?.paidAt ?? null,
                 },
             });

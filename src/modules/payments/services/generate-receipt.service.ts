@@ -5,6 +5,7 @@ import { ReceiptNoGenerator } from '@/common/utils/receipt';
 
 import { PAYMENT_MESSAGES } from '../constants/payment.constants';
 import { ReceiptResponseDto } from '../dto/responses/receipt-response.dto';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class GenerateReceiptService {
@@ -34,7 +35,6 @@ export class GenerateReceiptService {
                         month: true,
                         amount: true,
                         paidAmount: true,
-                        status: true,
                     },
                 },
             },
@@ -67,7 +67,10 @@ export class GenerateReceiptService {
             paymentAmount: Number(payment.amount),
             paidAmount: Number(payment.monthlyCharge.paidAmount),
 
-            status: payment.monthlyCharge.status,
+            status: getPaymentStatus(
+                Number(payment.monthlyCharge.amount),
+                Number(payment.monthlyCharge.paidAmount),
+            ),
 
             method: payment.method,
             reference: payment.reference,

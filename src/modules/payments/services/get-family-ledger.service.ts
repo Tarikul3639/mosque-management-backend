@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { PaymentStatus } from '@/lib/prisma/client';
+import { PaymentStatus } from '@/common/enums/payment-status.enum';
 
 import { PAYMENT_MESSAGES } from '../constants/payment.constants';
 import { FamilyLedgerQueryDto } from '../dto/requests/family-ledger-query.dto';

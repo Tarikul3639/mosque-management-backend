@@ -5,6 +5,7 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 
 import { PaymentQueryDto } from '../dto/requests/payment-query.dto';
 import { PaymentListResponseDto } from '../dto/responses/payment-list-response.dto';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class ListPaymentsService {
@@ -97,7 +98,6 @@ export class ListPaymentsService {
                             month: true,
                             amount: true,
                             paidAmount: true,
-                            status: true,
                         },
                     },
                 },
@@ -129,7 +129,10 @@ export class ListPaymentsService {
 
                 paidAmount: Number(payment.monthlyCharge.paidAmount),
 
-                status: payment.monthlyCharge.status,
+                status: getPaymentStatus(
+                    Number(payment.monthlyCharge.amount),
+                    Number(payment.monthlyCharge.paidAmount),
+                ),
 
                 method: payment.method,
 

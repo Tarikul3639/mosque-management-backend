@@ -10,14 +10,10 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import {
-  ApiPropertyOptional,
-} from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-import {
-  PaymentMethod,
-  PaymentStatus,
-} from '@/lib/prisma/client';
+import { PaymentMethod } from '@/lib/prisma/client';
+import { PaymentStatus } from '@/common/enums/payment-status.enum';
 
 export class PaymentQueryDto {
   @ApiPropertyOptional({

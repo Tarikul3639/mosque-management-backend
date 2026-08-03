@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { Prisma } from '@/lib/prisma/client';
+
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { PaymentStatus, Prisma } from '@/lib/prisma/client';
 
 import { PaymentSummaryQueryDto } from '../dto/requests/payment-summary-query.dto';
 import { PaymentSummaryResponseDto } from '../dto/responses/payment-summary-response.dto';
@@ -16,13 +17,9 @@ export class GetPaymentSummaryService {
         const { year, month, fromDate, toDate } = query;
 
         const chargeWhere: Prisma.MonthlyChargeWhereInput = {
-            ...(year && {
-                year,
-            }),
+            ...(year && { year }),
 
-            ...(month && {
-                month,
-            }),
+            ...(month && { month }),
 
             ...((fromDate || toDate) && {
                 createdAt: {
@@ -52,25 +49,22 @@ export class GetPaymentSummaryService {
 
             ...((year || month) && {
                 monthlyCharge: {
-                    ...(year && {
-                        year,
-                    }),
+                    ...(year && { year }),
 
-                    ...(month && {
-                        month,
-                    }),
+                    ...(month && { month }),
                 },
             }),
         };
 
         const [
             totalFamilies,
-            totalCharges,
-            paidCharges,
-            partialCharges,
-            dueCharges,
+
+            charges,
+
             paymentCount,
+
             chargeAggregate,
+
             paymentAggregate,
         ] = await Promise.all([
             this.prisma.family.count({
@@ -79,28 +73,12 @@ export class GetPaymentSummaryService {
                 },
             }),
 
-            this.prisma.monthlyCharge.count({
+            this.prisma.monthlyCharge.findMany({
                 where: chargeWhere,
-            }),
 
-            this.prisma.monthlyCharge.count({
-                where: {
-                    ...chargeWhere,
-                    status: PaymentStatus.PAID,
-                },
-            }),
-
-            this.prisma.monthlyCharge.count({
-                where: {
-                    ...chargeWhere,
-                    status: PaymentStatus.PARTIAL,
-                },
-            }),
-
-            this.prisma.monthlyCharge.count({
-                where: {
-                    ...chargeWhere,
-                    status: PaymentStatus.DUE,
+                select: {
+                    amount: true,
+                    paidAmount: true,
                 },
             }),
 
@@ -110,6 +88,7 @@ export class GetPaymentSummaryService {
 
             this.prisma.monthlyCharge.aggregate({
                 where: chargeWhere,
+
                 _sum: {
                     amount: true,
                     paidAmount: true,
@@ -118,11 +97,29 @@ export class GetPaymentSummaryService {
 
             this.prisma.payment.aggregate({
                 where: paymentWhere,
+
                 _avg: {
                     amount: true,
                 },
             }),
         ]);
+
+        let paidCharges = 0;
+        let partialCharges = 0;
+        let dueCharges = 0;
+
+        for (const charge of charges) {
+            const amount = Number(charge.amount);
+            const paidAmount = Number(charge.paidAmount);
+
+            if (paidAmount <= 0) {
+                dueCharges++;
+            } else if (paidAmount >= amount) {
+                paidCharges++;
+            } else {
+                partialCharges++;
+            }
+        }
 
         const totalChargeAmount = Number(chargeAggregate._sum.amount ?? 0);
 
@@ -131,10 +128,12 @@ export class GetPaymentSummaryService {
         return {
             totalFamilies,
 
-            totalCharges,
+            totalCharges: charges.length,
 
             paidCharges,
+
             partialCharges,
+
             dueCharges,
 
             totalChargeAmount,

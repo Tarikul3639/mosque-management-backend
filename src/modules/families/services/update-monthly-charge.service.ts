@@ -5,6 +5,7 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 import { MONTHLY_CHARGE_MESSAGES } from '../constants/family.constants';
 import { UpdateMonthlyChargeDto } from '../dto/requests/update-monthly-charge.dto';
 import { MonthlyChargeResponseDto } from '../dto/responses/monthly-charge-response.dto';
+import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class UpdateMonthlyChargeService {
@@ -35,9 +36,6 @@ export class UpdateMonthlyChargeService {
                 ...(dto.paidAmount !== undefined && {
                     paidAmount: dto.paidAmount,
                 }),
-                ...(dto.status !== undefined && {
-                    status: dto.status,
-                }),
                 ...(dto.dueDate !== undefined && {
                     dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
                 }),
@@ -64,7 +62,10 @@ export class UpdateMonthlyChargeService {
             month: updatedCharge.month,
             amount: Number(updatedCharge.amount),
             paidAmount: Number(updatedCharge.paidAmount),
-            status: updatedCharge.status,
+            status: getPaymentStatus(
+                Number(updatedCharge.amount),
+                Number(updatedCharge.paidAmount),
+            ),
             dueDate: updatedCharge.dueDate,
             paidAt: updatedCharge.paidAt,
             createdAt: updatedCharge.createdAt,

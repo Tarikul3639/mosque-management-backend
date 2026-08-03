@@ -2,14 +2,11 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDateString,
-  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
   Min,
 } from 'class-validator';
-
-import { PaymentStatus } from '@/lib/prisma/client';
 
 export class UpdateMonthlyChargeDto {
   @ApiPropertyOptional({
@@ -31,14 +28,6 @@ export class UpdateMonthlyChargeDto {
   @Min(0)
   @IsOptional()
   paidAmount?: number;
-
-  @ApiPropertyOptional({
-    enum: PaymentStatus,
-    example: PaymentStatus.PARTIAL,
-  })
-  @IsEnum(PaymentStatus)
-  @IsOptional()
-  status?: PaymentStatus;
 
   @ApiPropertyOptional({
     example: 'cmf7l3b0d0000abcd1234efgh',
