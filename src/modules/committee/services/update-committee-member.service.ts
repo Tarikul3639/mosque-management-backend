@@ -63,6 +63,11 @@ export class UpdateCommitteeMemberService {
       }
     }
 
+    // If the member is being deactivated and no end date is provided, set the end date to the current date
+    if (dto.isActive === false && dto.endDate === undefined) {
+      dto.endDate = new Date().toISOString();
+    }
+
     const updatedMember = await this.prisma.committeeMember.update({
       where: {
         id,
@@ -73,11 +78,8 @@ export class UpdateCommitteeMemberService {
         phone: dto.phone,
         email: dto.email,
         address: dto.address,
-
         joiningDate: dto.joiningDate ? new Date(dto.joiningDate) : undefined,
-
         endDate: dto.endDate ? new Date(dto.endDate) : undefined,
-
         isActive: dto.isActive,
 
         ...(dto.avatarId !== undefined && {

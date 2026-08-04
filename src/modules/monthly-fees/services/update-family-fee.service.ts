@@ -13,7 +13,7 @@ import { FamilyFeeResponseDto } from '../dto/responses/family-fee-response.dto';
 
 @Injectable()
 export class UpdateFamilyFeeService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(
     id: string,

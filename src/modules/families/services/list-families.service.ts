@@ -54,7 +54,7 @@ export class ListFamiliesService {
             contains: query.search,
             mode: 'insensitive',
           },
-        }
+        },
       ];
     }
 

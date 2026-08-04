@@ -16,7 +16,7 @@ export class UpdateFamilyService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly fileService: FileService,
-  ) { }
+  ) {}
 
   async execute(id: string, dto: UpdateFamilyDto): Promise<FamilyResponseDto> {
     const family = await this.prisma.family.findUnique({
@@ -103,13 +103,13 @@ export class UpdateFamilyService {
         ...(dto.avatarId !== undefined && {
           avatar: dto.avatarId
             ? {
-              connect: {
-                id: dto.avatarId,
-              },
-            }
+                connect: {
+                  id: dto.avatarId,
+                },
+              }
             : {
-              disconnect: true,
-            },
+                disconnect: true,
+              },
         }),
       },
 
@@ -135,9 +135,9 @@ export class UpdateFamilyService {
 
       avatar: updatedFamily.avatar
         ? {
-          id: updatedFamily.avatar.id,
-          url: updatedFamily.avatar.url,
-        }
+            id: updatedFamily.avatar.id,
+            url: updatedFamily.avatar.url,
+          }
         : null,
 
       isActive: updatedFamily.isActive,

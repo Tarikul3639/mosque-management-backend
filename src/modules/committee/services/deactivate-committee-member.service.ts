@@ -32,6 +32,7 @@ export class DeactivateCommitteeMemberService {
       },
       data: {
         isActive: false,
+        endDate: new Date(),
       },
     });
   }

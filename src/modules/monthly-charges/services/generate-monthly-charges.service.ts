@@ -7,7 +7,7 @@ import { GenerateMonthlyChargesResponseDto } from '../dto/responses/generate-mon
 
 @Injectable()
 export class GenerateMonthlyChargesService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async execute(
     dto: GenerateMonthlyChargesDto,

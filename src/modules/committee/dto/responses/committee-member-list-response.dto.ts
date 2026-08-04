@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { CommitteeMemberResponseDto } from './committee-member-response.dto';
+import { CommitteeSummaryResponseDto } from './committee-summary-response.dto';
+import { MetaData } from '@/common/interfaces/meta-data.interface';
 
 export class CommitteeMemberListResponseDto {
   @ApiProperty({
@@ -8,32 +11,12 @@ export class CommitteeMemberListResponseDto {
   data!: CommitteeMemberResponseDto[];
 
   @ApiProperty({
-    example: 25,
+    type: CommitteeSummaryResponseDto,
   })
-  total!: number;
+  summary!: CommitteeSummaryResponseDto;
 
   @ApiProperty({
-    example: 1,
+    type: MetaData,
   })
-  page!: number;
-
-  @ApiProperty({
-    example: 10,
-  })
-  limit!: number;
-
-  @ApiProperty({
-    example: 3,
-  })
-  totalPages!: number;
-
-  @ApiProperty({
-    example: true,
-  })
-  hasNextPage!: boolean;
-
-  @ApiProperty({
-    example: false,
-  })
-  hasPreviousPage!: boolean;
+  meta!: MetaData;
 }
