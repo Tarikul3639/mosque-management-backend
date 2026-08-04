@@ -10,7 +10,7 @@ import {
 
 import { ProjectStatus } from '@/lib/prisma/client';
 
-export class DevelopmentProjectQueryDto {
+export class ProjectQueryDto {
   @ApiPropertyOptional({
     example: 1,
     default: 1,

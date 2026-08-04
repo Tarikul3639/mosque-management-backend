@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { ProjectStatus } from '@/lib/prisma/client';
 
-import { DevelopmentProjectSummaryResponseDto } from '../dto/responses/development-project-summary-response.dto';
+import { ProjectSummaryResponseDto } from '../dto/responses/project-summary-response.dto';
 
 @Injectable()
-export class GetDevelopmentProjectSummaryService {
+export class GetProjectSummaryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(): Promise<DevelopmentProjectSummaryResponseDto> {
+  async execute(): Promise<ProjectSummaryResponseDto> {
     const [
       totalProjects,
       planningProjects,
@@ -19,39 +19,39 @@ export class GetDevelopmentProjectSummaryService {
       budgetAggregate,
       spentAggregate,
     ] = await Promise.all([
-      this.prisma.developmentProject.count(),
+      this.prisma.project.count(),
 
-      this.prisma.developmentProject.count({
+      this.prisma.project.count({
         where: {
           status: ProjectStatus.PLANNING,
         },
       }),
 
-      this.prisma.developmentProject.count({
+      this.prisma.project.count({
         where: {
           status: ProjectStatus.RUNNING,
         },
       }),
 
-      this.prisma.developmentProject.count({
+      this.prisma.project.count({
         where: {
           status: ProjectStatus.COMPLETED,
         },
       }),
 
-      this.prisma.developmentProject.count({
+      this.prisma.project.count({
         where: {
           status: ProjectStatus.CANCELLED,
         },
       }),
 
-      this.prisma.developmentProject.aggregate({
+      this.prisma.project.aggregate({
         _sum: {
           budget: true,
         },
       }),
 
-      this.prisma.developmentProject.aggregate({
+      this.prisma.project.aggregate({
         _sum: {
           spent: true,
         },

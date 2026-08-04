@@ -80,6 +80,7 @@ CREATE TABLE "families" (
     "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" TEXT,
 
     CONSTRAINT "families_pkey" PRIMARY KEY ("id")
 );
@@ -261,19 +262,19 @@ CREATE TABLE "files" (
 );
 
 -- CreateTable
-CREATE TABLE "_DevelopmentProjectToFile" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL,
-
-    CONSTRAINT "_DevelopmentProjectToFile_AB_pkey" PRIMARY KEY ("A","B")
-);
-
--- CreateTable
 CREATE TABLE "_FileToGallery" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
 
     CONSTRAINT "_FileToGallery_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateTable
+CREATE TABLE "_ProjectImages" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_ProjectImages_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -451,10 +452,10 @@ CREATE INDEX "files_updatedById_idx" ON "files"("updatedById");
 CREATE INDEX "files_uploadedById_idx" ON "files"("uploadedById");
 
 -- CreateIndex
-CREATE INDEX "_DevelopmentProjectToFile_B_index" ON "_DevelopmentProjectToFile"("B");
+CREATE INDEX "_FileToGallery_B_index" ON "_FileToGallery"("B");
 
 -- CreateIndex
-CREATE INDEX "_FileToGallery_B_index" ON "_FileToGallery"("B");
+CREATE INDEX "_ProjectImages_B_index" ON "_ProjectImages"("B");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -481,13 +482,16 @@ ALTER TABLE "families" ADD CONSTRAINT "families_createdById_fkey" FOREIGN KEY ("
 ALTER TABLE "families" ADD CONSTRAINT "families_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "payments" ADD CONSTRAINT "payments_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -496,19 +500,16 @@ ALTER TABLE "payments" ADD CONSTRAINT "payments_familyId_fkey" FOREIGN KEY ("fam
 ALTER TABLE "payments" ADD CONSTRAINT "payments_monthlyChargeId_fkey" FOREIGN KEY ("monthlyChargeId") REFERENCES "monthly_charges"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "payments" ADD CONSTRAINT "payments_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "payments" ADD CONSTRAINT "payments_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "payments" ADD CONSTRAINT "payments_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_familyFeeId_fkey" FOREIGN KEY ("familyFeeId") REFERENCES "family_fees"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -565,13 +566,13 @@ ALTER TABLE "files" ADD CONSTRAINT "files_updatedById_fkey" FOREIGN KEY ("update
 ALTER TABLE "files" ADD CONSTRAINT "files_uploadedById_fkey" FOREIGN KEY ("uploadedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_DevelopmentProjectToFile" ADD CONSTRAINT "_DevelopmentProjectToFile_A_fkey" FOREIGN KEY ("A") REFERENCES "development_projects"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_DevelopmentProjectToFile" ADD CONSTRAINT "_DevelopmentProjectToFile_B_fkey" FOREIGN KEY ("B") REFERENCES "files"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "_FileToGallery" ADD CONSTRAINT "_FileToGallery_A_fkey" FOREIGN KEY ("A") REFERENCES "files"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_FileToGallery" ADD CONSTRAINT "_FileToGallery_B_fkey" FOREIGN KEY ("B") REFERENCES "galleries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectImages" ADD CONSTRAINT "_ProjectImages_A_fkey" FOREIGN KEY ("A") REFERENCES "files"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectImages" ADD CONSTRAINT "_ProjectImages_B_fkey" FOREIGN KEY ("B") REFERENCES "development_projects"("id") ON DELETE CASCADE ON UPDATE CASCADE;

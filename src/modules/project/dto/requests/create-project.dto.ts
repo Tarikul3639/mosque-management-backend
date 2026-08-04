@@ -17,7 +17,7 @@ import {
 
 import { ProjectStatus } from '@/lib/prisma/client';
 
-export class CreateDevelopmentProjectDto {
+export class CreateProjectDto {
   @ApiProperty({
     example: 'Mosque Expansion Project',
   })

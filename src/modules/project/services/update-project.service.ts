@@ -7,22 +7,22 @@ import {
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { UserRole } from '@/lib/prisma/client';
 
-import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/development-project.constants';
-import { UpdateDevelopmentProjectDto } from '../dto/requests/update-development-project.dto';
-import { DevelopmentProjectResponseDto } from '../dto/responses/development-project-response.dto';
-import { DevelopmentProjectMapper } from '../mappers/development-project.mapper';
+import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/project.constants';
+import { UpdateProjectDto } from '../dto/requests/update-project.dto';
+import { ProjectResponseDto } from '../dto/responses/project-response.dto';
+import { ProjectMapper } from '../mappers/project.mapper';
 
 @Injectable()
-export class UpdateDevelopmentProjectService {
+export class UpdateProjectService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(
     projectId: string,
-    dto: UpdateDevelopmentProjectDto,
+    dto: UpdateProjectDto,
     userId: string,
     role: UserRole,
-  ): Promise<DevelopmentProjectResponseDto> {
-    const existingProject = await this.prisma.developmentProject.findUnique({
+  ): Promise<ProjectResponseDto> {
+    const existingProject = await this.prisma.project.findUnique({
       where: {
         id: projectId,
       },
@@ -44,7 +44,7 @@ export class UpdateDevelopmentProjectService {
       throw new ForbiddenException(DEVELOPMENT_PROJECT_MESSAGES.FORBIDDEN);
     }
 
-    const project = await this.prisma.developmentProject.update({
+    const project = await this.prisma.project.update({
       where: {
         id: projectId,
       },
@@ -114,6 +114,6 @@ export class UpdateDevelopmentProjectService {
       },
     });
 
-    return DevelopmentProjectMapper.toResponse(project);
+    return ProjectMapper.toResponse(project);
   }
 }

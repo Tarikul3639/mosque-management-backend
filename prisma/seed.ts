@@ -15,7 +15,7 @@ import { seedFamilies } from './seeds/family.seed';
 import { seedGallery } from './seeds/gallery.seed';
 import { seedDonations } from './seeds/donation.seed';
 import { seedExpenses } from './seeds/expense.seed';
-import { seedDevelopmentProjects } from './seeds/development-project.seed';
+import { seedProjects } from './seeds/project.seed';
 
 const prisma = new PrismaClient({
     adapter: new PrismaPg({
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
 
     // Others
     await seedExpenses(prisma);
-    await seedDevelopmentProjects(prisma);
+    await seedProjects(prisma);
     await seedGallery(prisma);
 
     // Payer Times

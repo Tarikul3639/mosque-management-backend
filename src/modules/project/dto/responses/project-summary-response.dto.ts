@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class DevelopmentProjectSummaryResponseDto {
+export class ProjectSummaryResponseDto {
   @ApiProperty()
   totalProjects!: number;
 

@@ -20,44 +20,44 @@ model Role {
 }
 
 model User {
-  id                         String               @id @default(uuid())
-  roleId                     String
-  name                       String
-  email                      String               @unique
-  phone                      String               @unique
-  password                   String
-  avatarId                   String?              @unique
-  status                     UserStatus           @default(ACTIVE)
-  lastLoginAt                DateTime?
-  createdAt                  DateTime             @default(now())
-  updatedAt                  DateTime             @updatedAt
-  createdCommitteeMembers    CommitteeMember[]    @relation("CommitteeMemberCreatedBy")
-  updatedCommitteeMembers    CommitteeMember[]    @relation("CommitteeMemberUpdatedBy")
-  createdDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectCreatedBy")
-  updatedDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectUpdatedBy")
-  createdDonations           Donation[]           @relation("DonationCreatedBy")
-  updatedDonations           Donation[]           @relation("DonationUpdatedBy")
-  createdDonors              Donor[]              @relation("DonorCreatedBy")
-  updatedDonors              Donor[]              @relation("DonorUpdatedBy")
-  createdExpenses            Expense[]            @relation("ExpenseCreatedBy")
-  updatedExpenses            Expense[]            @relation("ExpenseUpdatedBy")
-  createdFamilies            Family[]             @relation("FamilyCreatedBy")
-  updatedFamilies            Family[]             @relation("FamilyUpdatedBy")
-  createdFamilyFees          FamilyFee[]          @relation("FamilyFeeCreatedBy")
-  updatedFamilyFees          FamilyFee[]          @relation("FamilyFeeUpdatedBy")
-  createdFiles               File[]               @relation("FileCreatedBy")
-  updatedFiles               File[]               @relation("FileUpdatedBy")
-  uploadedFiles              File[]               @relation("FileUploadedBy")
-  createdGalleries           Gallery[]            @relation("GalleryCreatedBy")
-  updatedGalleries           Gallery[]            @relation("GalleryUpdatedBy")
-  createdMonthlyCharges      MonthlyCharge[]      @relation("MonthlyChargeCreatedBy")
-  updatedMonthlyCharges      MonthlyCharge[]      @relation("MonthlyChargeUpdatedBy")
-  createdPayments            Payment[]            @relation("PaymentCreatedBy")
-  updatedPayments            Payment[]            @relation("PaymentUpdatedBy")
-  createdPrayerTimes         PrayerTime[]         @relation("PrayerTimeCreatedBy")
-  updatedPrayerTimes         PrayerTime[]         @relation("PrayerTimeUpdatedBy")
-  avatar                     File?                @relation(fields: [avatarId], references: [id])
-  role                       Role                 @relation(fields: [roleId], references: [id])
+  id                      String            @id @default(uuid())
+  roleId                  String
+  name                    String
+  email                   String            @unique
+  phone                   String            @unique
+  password                String
+  avatarId                String?           @unique
+  status                  UserStatus        @default(ACTIVE)
+  lastLoginAt             DateTime?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  createdCommitteeMembers CommitteeMember[] @relation("CommitteeMemberCreatedBy")
+  updatedCommitteeMembers CommitteeMember[] @relation("CommitteeMemberUpdatedBy")
+  createdProjects         Project[]         @relation("ProjectCreatedBy")
+  updatedProjects         Project[]         @relation("ProjectUpdatedBy")
+  createdDonations        Donation[]        @relation("DonationCreatedBy")
+  updatedDonations        Donation[]        @relation("DonationUpdatedBy")
+  createdDonors           Donor[]           @relation("DonorCreatedBy")
+  updatedDonors           Donor[]           @relation("DonorUpdatedBy")
+  createdExpenses         Expense[]         @relation("ExpenseCreatedBy")
+  updatedExpenses         Expense[]         @relation("ExpenseUpdatedBy")
+  createdFamilies         Family[]          @relation("FamilyCreatedBy")
+  updatedFamilies         Family[]          @relation("FamilyUpdatedBy")
+  createdFamilyFees       FamilyFee[]       @relation("FamilyFeeCreatedBy")
+  updatedFamilyFees       FamilyFee[]       @relation("FamilyFeeUpdatedBy")
+  createdFiles            File[]            @relation("FileCreatedBy")
+  updatedFiles            File[]            @relation("FileUpdatedBy")
+  uploadedFiles           File[]            @relation("FileUploadedBy")
+  createdGalleries        Gallery[]         @relation("GalleryCreatedBy")
+  updatedGalleries        Gallery[]         @relation("GalleryUpdatedBy")
+  createdMonthlyCharges   MonthlyCharge[]   @relation("MonthlyChargeCreatedBy")
+  updatedMonthlyCharges   MonthlyCharge[]   @relation("MonthlyChargeUpdatedBy")
+  createdPayments         Payment[]         @relation("PaymentCreatedBy")
+  updatedPayments         Payment[]         @relation("PaymentUpdatedBy")
+  createdPrayerTimes      PrayerTime[]      @relation("PrayerTimeCreatedBy")
+  updatedPrayerTimes      PrayerTime[]      @relation("PrayerTimeUpdatedBy")
+  avatar                  File?             @relation(fields: [avatarId], references: [id])
+  role                    Role              @relation(fields: [roleId], references: [id])
 
   @@index([roleId])
   @@index([status])
@@ -96,13 +96,13 @@ model Family {
   headName    String
   avatarId    String?         @unique
   phone       String?
-  email       String?
   address     String?
   isActive    Boolean         @default(true)
   createdById String?
   updatedById String?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+  email       String?
   avatar      File?           @relation(fields: [avatarId], references: [id])
   createdBy   User?           @relation("FamilyCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?           @relation("FamilyUpdatedBy", fields: [updatedById], references: [id])
@@ -264,7 +264,7 @@ model Expense {
   @@map("expenses")
 }
 
-model DevelopmentProject {
+model Project {
   id          String        @id @default(uuid())
   title       String
   description String?
@@ -278,9 +278,9 @@ model DevelopmentProject {
   updatedById String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  createdBy   User?         @relation("DevelopmentProjectCreatedBy", fields: [createdById], references: [id])
-  updatedBy   User?         @relation("DevelopmentProjectUpdatedBy", fields: [updatedById], references: [id])
-  images      File[]        @relation("DevelopmentProjectToFile")
+  createdBy   User?         @relation("ProjectCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?         @relation("ProjectUpdatedBy", fields: [updatedById], references: [id])
+  images      File[]        @relation("ProjectImages")
 
   @@index([status])
   @@index([startDate])
@@ -330,9 +330,9 @@ model PrayerTime {
 }
 
 model File {
-  id              String               @id @default(uuid())
+  id              String           @id @default(uuid())
   url             String
-  publicId        String               @unique
+  publicId        String           @unique
   originalName    String?
   mimeType        String?
   extension       String?
@@ -342,17 +342,17 @@ model File {
   createdById     String?
   updatedById     String?
   uploadedById    String?
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   committeeAvatar CommitteeMember?
   donorAvatar     Donor?
   familyAvatar    Family?
-  createdBy       User?                @relation("FileCreatedBy", fields: [createdById], references: [id])
-  updatedBy       User?                @relation("FileUpdatedBy", fields: [updatedById], references: [id])
-  uploadedBy      User?                @relation("FileUploadedBy", fields: [uploadedById], references: [id])
+  createdBy       User?            @relation("FileCreatedBy", fields: [createdById], references: [id])
+  updatedBy       User?            @relation("FileUpdatedBy", fields: [updatedById], references: [id])
+  uploadedBy      User?            @relation("FileUploadedBy", fields: [uploadedById], references: [id])
   userAvatar      User?
-  projects        DevelopmentProject[] @relation("DevelopmentProjectToFile")
-  galleries       Gallery[]            @relation("FileToGallery")
+  galleries       Gallery[]        @relation("FileToGallery")
+  projects        Project[]        @relation("ProjectImages")
 
   @@index([createdById])
   @@index([updatedById])

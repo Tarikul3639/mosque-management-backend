@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DevelopmentProjectResponseDto } from './development-project-response.dto';
+import { ProjectResponseDto } from './project-response.dto';
 
 class PaginationMetaDto {
   @ApiProperty()
@@ -15,11 +15,11 @@ class PaginationMetaDto {
   totalPages!: number;
 }
 
-export class DevelopmentProjectListResponseDto {
+export class ProjectListResponseDto {
   @ApiProperty({
-    type: [DevelopmentProjectResponseDto],
+    type: [ProjectResponseDto],
   })
-  data!: DevelopmentProjectResponseDto[];
+  data!: ProjectResponseDto[];
 
   @ApiProperty({
     type: PaginationMetaDto,

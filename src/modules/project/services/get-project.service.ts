@@ -2,16 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
 
-import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/development-project.constants';
-import { DevelopmentProjectResponseDto } from '../dto/responses/development-project-response.dto';
-import { DevelopmentProjectMapper } from '../mappers/development-project.mapper';
+import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/project.constants';
+import { ProjectResponseDto } from '../dto/responses/project-response.dto';
+import { ProjectMapper } from '../mappers/project.mapper';
 
 @Injectable()
-export class GetDevelopmentProjectService {
+export class GetProjectService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(projectId: string): Promise<DevelopmentProjectResponseDto> {
-    const project = await this.prisma.developmentProject.findUnique({
+  async execute(projectId: string): Promise<ProjectResponseDto> {
+    const project = await this.prisma.project.findUnique({
       where: {
         id: projectId,
       },
@@ -42,6 +42,6 @@ export class GetDevelopmentProjectService {
       throw new NotFoundException(DEVELOPMENT_PROJECT_MESSAGES.NOT_FOUND);
     }
 
-    return DevelopmentProjectMapper.toResponse(project);
+    return ProjectMapper.toResponse(project);
   }
 }

@@ -1,7 +1,7 @@
 import { Prisma } from '@/lib/prisma/client';
-import { DevelopmentProjectResponseDto } from '../dto/responses/development-project-response.dto';
+import { ProjectResponseDto } from '../dto/responses/project-response.dto';
 
-type DevelopmentProjectWithUsers = Prisma.DevelopmentProjectGetPayload<{
+type ProjectWithUsers = Prisma.ProjectGetPayload<{
   include: {
     images: {
       select: {
@@ -24,10 +24,10 @@ type DevelopmentProjectWithUsers = Prisma.DevelopmentProjectGetPayload<{
   };
 }>;
 
-export class DevelopmentProjectMapper {
+export class ProjectMapper {
   static toResponse(
-    project: DevelopmentProjectWithUsers,
-  ): DevelopmentProjectResponseDto {
+    project: ProjectWithUsers,
+  ): ProjectResponseDto {
     return {
       id: project.id,
       title: project.title,
@@ -62,10 +62,10 @@ export class DevelopmentProjectMapper {
   }
 
   static toResponseList(
-    projects: DevelopmentProjectWithUsers[],
-  ): DevelopmentProjectResponseDto[] {
+    projects: ProjectWithUsers[],
+  ): ProjectResponseDto[] {
     return projects.map((project) =>
-      DevelopmentProjectMapper.toResponse(project),
+      ProjectMapper.toResponse(project),
     );
   }
 }

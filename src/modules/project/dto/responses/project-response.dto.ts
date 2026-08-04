@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { ProjectStatus } from '@/lib/prisma/client';
 
-class DevelopmentProjectUserDto {
+class ProjectUserDto {
   @ApiProperty()
   id!: string;
 
@@ -10,7 +10,7 @@ class DevelopmentProjectUserDto {
   name!: string;
 }
 
-class DevelopmentProjectImageDto {
+class ProjectImageDto {
   @ApiProperty()
   id!: string;
 
@@ -18,7 +18,7 @@ class DevelopmentProjectImageDto {
   url!: string;
 }
 
-export class DevelopmentProjectResponseDto {
+export class ProjectResponseDto {
   @ApiProperty()
   id!: string;
 
@@ -43,10 +43,10 @@ export class DevelopmentProjectResponseDto {
   status!: ProjectStatus;
 
   @ApiPropertyOptional({
-    type: DevelopmentProjectImageDto,
+    type: ProjectImageDto,
     nullable: true,
   })
-  images!: DevelopmentProjectImageDto[] | null;
+  images!: ProjectImageDto[] | null;
 
   @ApiPropertyOptional()
   startDate!: Date | null;
@@ -55,16 +55,16 @@ export class DevelopmentProjectResponseDto {
   endDate!: Date | null;
 
   @ApiProperty({
-    type: DevelopmentProjectUserDto,
+    type: ProjectUserDto,
     nullable: true,
   })
-  createdBy!: DevelopmentProjectUserDto | null;
+  createdBy!: ProjectUserDto | null;
 
   @ApiProperty({
-    type: DevelopmentProjectUserDto,
+    type: ProjectUserDto,
     nullable: true,
   })
-  updatedBy!: DevelopmentProjectUserDto | null;
+  updatedBy!: ProjectUserDto | null;
 
   @ApiProperty()
   createdAt!: Date;

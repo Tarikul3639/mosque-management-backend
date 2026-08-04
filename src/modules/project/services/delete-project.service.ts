@@ -7,10 +7,10 @@ import {
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { UserRole } from '@/lib/prisma/client';
 
-import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/development-project.constants';
+import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/project.constants';
 
 @Injectable()
-export class DeleteDevelopmentProjectService {
+export class DeleteProjectService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(
@@ -18,7 +18,7 @@ export class DeleteDevelopmentProjectService {
     userId: string,
     role: UserRole,
   ): Promise<{ message: string }> {
-    const project = await this.prisma.developmentProject.findUnique({
+    const project = await this.prisma.project.findUnique({
       where: {
         id: projectId,
       },
@@ -40,7 +40,7 @@ export class DeleteDevelopmentProjectService {
       throw new ForbiddenException(DEVELOPMENT_PROJECT_MESSAGES.FORBIDDEN);
     }
 
-    await this.prisma.developmentProject.delete({
+    await this.prisma.project.delete({
       where: {
         id: projectId,
       },

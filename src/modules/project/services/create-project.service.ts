@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
 
-import { CreateDevelopmentProjectDto } from '../dto/requests/create-development-project.dto';
-import { DevelopmentProjectResponseDto } from '../dto/responses/development-project-response.dto';
-import { DevelopmentProjectMapper } from '../mappers/development-project.mapper';
+import { CreateProjectDto } from '../dto/requests/create-project.dto';
+import { ProjectResponseDto } from '../dto/responses/project-response.dto';
+import { ProjectMapper } from '../mappers/project.mapper';
 
 @Injectable()
-export class CreateDevelopmentProjectService {
+export class CreateProjectService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async execute(
-    dto: CreateDevelopmentProjectDto,
+    dto: CreateProjectDto,
     userId: string,
-  ): Promise<DevelopmentProjectResponseDto> {
-    const project = await this.prismaService.developmentProject.create({
+  ): Promise<ProjectResponseDto> {
+    const project = await this.prismaService.project.create({
       data: {
         title: dto.title,
         description: dto.description,
@@ -59,6 +59,6 @@ export class CreateDevelopmentProjectService {
       },
     });
 
-    return DevelopmentProjectMapper.toResponse(project);
+    return ProjectMapper.toResponse(project);
   }
 }

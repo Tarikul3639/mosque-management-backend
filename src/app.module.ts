@@ -24,7 +24,7 @@ import { DonationsModule } from './modules/donations/donations.module';
 import { ExpensesModule } from './modules/expense/expenses.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { CommitteeModule } from './modules/committee/committee.module';
-import { DevelopmentProjectsModule } from './modules/development-project/development-projects.module';
+import { ProjectsModule } from './modules/project/projects.module';
 import { GalleriesModule } from './modules/gallery/galleries.module';
 import { PrayerTimesModule } from './modules/prayer-times/prayer-times.module';
 import { UploadsModule } from './common/uploads/uploads.module';
@@ -76,7 +76,7 @@ import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
     ExpensesModule,
     PaymentsModule,
     CommitteeModule,
-    DevelopmentProjectsModule,
+    ProjectsModule,
     GalleriesModule,
 
     // Other Utility/Feature Modules

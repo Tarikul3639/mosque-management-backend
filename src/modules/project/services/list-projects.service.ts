@@ -4,18 +4,18 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 import {
   DEVELOPMENT_PROJECT_DEFAULT_LIMIT,
   DEVELOPMENT_PROJECT_DEFAULT_PAGE,
-} from '../constants/development-project.constants';
-import { DevelopmentProjectQueryDto } from '../dto/requests/development-project-query.dto';
-import { DevelopmentProjectListResponseDto } from '../dto/responses/development-project-list-response.dto';
-import { DevelopmentProjectMapper } from '../mappers/development-project.mapper';
+} from '../constants/project.constants';
+import { ProjectQueryDto } from '../dto/requests/project-query.dto';
+import { ProjectListResponseDto } from '../dto/responses/project-list-response.dto';
+import { ProjectMapper } from '../mappers/project.mapper';
 
 @Injectable()
-export class ListDevelopmentProjectsService {
+export class ListProjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(
-    query: DevelopmentProjectQueryDto,
-  ): Promise<DevelopmentProjectListResponseDto> {
+    query: ProjectQueryDto,
+  ): Promise<ProjectListResponseDto> {
     const page = query.page ?? DEVELOPMENT_PROJECT_DEFAULT_PAGE;
 
     const limit = query.limit ?? DEVELOPMENT_PROJECT_DEFAULT_LIMIT;
@@ -46,7 +46,7 @@ export class ListDevelopmentProjectsService {
     };
 
     const [projects, total] = await Promise.all([
-      this.prisma.developmentProject.findMany({
+      this.prisma.project.findMany({
         where,
         skip,
         take: limit,
@@ -75,13 +75,13 @@ export class ListDevelopmentProjectsService {
         },
       }),
 
-      this.prisma.developmentProject.count({
+      this.prisma.project.count({
         where,
       }),
     ]);
 
     return {
-      data: DevelopmentProjectMapper.toResponseList(projects),
+      data: ProjectMapper.toResponseList(projects),
       meta: {
         page,
         limit,
