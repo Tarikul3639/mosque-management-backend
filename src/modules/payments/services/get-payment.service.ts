@@ -8,7 +8,7 @@ import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class GetPaymentService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(id: string): Promise<PaymentResponseDto> {
     const payment = await this.prisma.payment.findUnique({

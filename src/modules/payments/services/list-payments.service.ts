@@ -9,7 +9,7 @@ import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class ListPaymentsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(query: PaymentQueryDto): Promise<PaymentListResponseDto> {
     const {

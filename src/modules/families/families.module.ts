@@ -15,9 +15,7 @@ import { ActivateFamilyService } from './services/active-family.service';
 @Module({
   imports: [PrismaModule],
 
-  controllers: [
-    FamiliesController,
-  ],
+  controllers: [FamiliesController],
 
   providers: [
     CreateFamilyService,

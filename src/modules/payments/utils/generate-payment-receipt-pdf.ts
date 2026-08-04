@@ -65,10 +65,13 @@ export async function generatePaymentReceiptPdf(
     doc.text(`Date       : ${new Date(receipt.paidAt).toLocaleString()}`);
     doc.text(`Billing    : Month ${receipt.month}, ${receipt.year}`);
     doc.text(
-      `Paid Amt   : BDT ${Number(receipt.paymentAmount).toLocaleString('en-BD', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`,
+      `Paid Amt   : BDT ${Number(receipt.paymentAmount).toLocaleString(
+        'en-BD',
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        },
+      )}`,
     );
     doc.text(`Status     : ${receipt.status}`);
     doc.text(`Method     : ${receipt.method}`);
@@ -131,12 +134,9 @@ export async function generatePaymentReceiptPdf(
       .font('Helvetica')
       .fontSize(10)
       .fillColor('#555')
-      .text(
-        'Jazakallahu Khairan for fulfilling your monthly commitment.',
-        {
-          align: 'center',
-        },
-      );
+      .text('Jazakallahu Khairan for fulfilling your monthly commitment.', {
+        align: 'center',
+      });
 
     doc.moveDown(4);
 

@@ -14,9 +14,12 @@ import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class CreatePaymentService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  async execute(dto: CreatePaymentDto, userId: string): Promise<PaymentResponseDto> {
+  async execute(
+    dto: CreatePaymentDto,
+    userId: string,
+  ): Promise<PaymentResponseDto> {
     const {
       familyId,
       monthlyChargeId,

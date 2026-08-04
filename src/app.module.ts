@@ -65,7 +65,7 @@ import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
     FileModule,
     // AuthModule is imported here to make its services available throughout the application
     AuthModule,
-    
+
     // Sidebar Navigation Ordered Modules
     DashboardModule,
     FamiliesModule,

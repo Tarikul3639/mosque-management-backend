@@ -47,5 +47,6 @@ export const MONTHLY_CHARGE_MESSAGES = {
   UPDATED: 'Monthly charge updated successfully.',
   DELETED: 'Monthly charge deleted successfully.',
   ALREADY_EXISTS: 'Monthly charge already exists.',
-  HAS_PAYMENTS: 'This monthly charge already has payment records and cannot be deleted.',
+  HAS_PAYMENTS:
+    'This monthly charge already has payment records and cannot be deleted.',
 } as const;

@@ -27,7 +27,8 @@ export class PaymentSummaryResponseDto {
 
   @ApiProperty({
     example: 25,
-    description: 'Total number of monthly charges that are completely due/unpaid',
+    description:
+      'Total number of monthly charges that are completely due/unpaid',
   })
   dueCharges!: number;
 
@@ -51,7 +52,8 @@ export class PaymentSummaryResponseDto {
 
   @ApiProperty({
     example: 148,
-    description: 'Total number of payment transactions recorded during the period',
+    description:
+      'Total number of payment transactions recorded during the period',
   })
   totalPayments!: number;
 

@@ -14,7 +14,7 @@ export class DeleteDonorService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cloudinary: CloudinaryService,
-  ) { }
+  ) {}
 
   async execute(id: string): Promise<{ message: string }> {
     const donor = await this.prisma.donor.findUnique({

@@ -40,7 +40,8 @@ export const FAMILY_FEE_MESSAGES = {
   CREATED: 'Family fee created successfully.',
   UPDATED: 'Family fee updated successfully.',
   NOT_FOUND: 'Family fee not found.',
-  CANNOT_UPDATE_USED_FEE: 'This fee has already been used to generate monthly charges. Create a new fee instead.',
+  CANNOT_UPDATE_USED_FEE:
+    'This fee has already been used to generate monthly charges. Create a new fee instead.',
 } as const;
 
 export const MONTHLY_CHARGE_MESSAGES = {

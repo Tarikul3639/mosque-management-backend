@@ -26,4 +26,4 @@ import { DeleteMonthlyChargeService } from './services/delete-monthly-charge.ser
 
   exports: [GenerateMonthlyChargesService],
 })
-export class MonthlyChargesModule { }
+export class MonthlyChargesModule {}

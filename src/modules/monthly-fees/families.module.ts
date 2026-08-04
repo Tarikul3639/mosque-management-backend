@@ -29,4 +29,4 @@ import { GetFamilyFeeHistoryService } from './services/get-family-fee-history.se
     GetFamilyFeeHistoryService,
   ],
 })
-export class MonthlyFeesModule { }
+export class MonthlyFeesModule {}

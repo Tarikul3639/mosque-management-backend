@@ -49,7 +49,7 @@ export class PaymentsController {
     private readonly getPaymentSummaryService: GetPaymentSummaryService,
     private readonly generateReceiptService: GenerateReceiptService,
     private readonly getFamilyLedgerService: GetFamilyLedgerService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -118,12 +118,8 @@ export class PaymentsController {
     status: 200,
     description: 'PDF receipt',
   })
-  async receipt(
-    @Param('id') id: string,
-    @Res() res: Response,
-  ): Promise<void> {
-    const { fileName, buffer } =
-      await this.generateReceiptService.execute(id);
+  async receipt(@Param('id') id: string, @Res() res: Response): Promise<void> {
+    const { fileName, buffer } = await this.generateReceiptService.execute(id);
 
     res.set({
       'Content-Type': 'application/pdf',
