@@ -1,18 +1,10 @@
-import {
-  PartialType,
-  ApiPropertyOptional,
-} from '@nestjs/swagger';
+import { PartialType, ApiPropertyOptional } from '@nestjs/swagger';
 
-import {
-  IsBoolean,
-  IsOptional,
-} from 'class-validator';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 import { CreateDonorDto } from './create-donor.dto';
 
-export class UpdateDonorDto extends PartialType(
-  CreateDonorDto,
-) {
+export class UpdateDonorDto extends PartialType(CreateDonorDto) {
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()

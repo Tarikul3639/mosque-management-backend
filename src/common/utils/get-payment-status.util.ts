@@ -1,16 +1,16 @@
-import { PaymentStatus } from "@/common/enums/payment-status.enum";
+import { PaymentStatus } from '@/common/enums/payment-status.enum';
 
 export function getPaymentStatus(
-    amount: number,
-    paidAmount: number,
+  amount: number,
+  paidAmount: number,
 ): PaymentStatus {
-    if (paidAmount <= 0) {
-        return PaymentStatus.DUE;
-    }
+  if (paidAmount <= 0) {
+    return PaymentStatus.DUE;
+  }
 
-    if (paidAmount >= amount) {
-        return PaymentStatus.PAID;
-    }
+  if (paidAmount >= amount) {
+    return PaymentStatus.PAID;
+  }
 
-    return PaymentStatus.PARTIAL;
+  return PaymentStatus.PARTIAL;
 }

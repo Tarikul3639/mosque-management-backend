@@ -13,7 +13,7 @@ import { FamilyListResponseDto } from '../dto/responses/family-list-response.dto
 
 @Injectable()
 export class ListFamiliesService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async execute(query: FamilyQueryDto): Promise<FamilyListResponseDto> {
     const page = query.page ?? FAMILY_DEFAULT_PAGE;

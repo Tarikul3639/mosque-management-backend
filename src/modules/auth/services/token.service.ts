@@ -7,70 +7,62 @@ import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class TokenService {
-    constructor(
-        private readonly jwtService: JwtService,
-        private readonly configService: ConfigService,
-    ) { }
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
-    // ==========================
-    // Access Token
-    // ==========================
+  // ==========================
+  // Access Token
+  // ==========================
 
-    async generateAccessToken(payload: JwtPayload): Promise<string> {
-        const expiresIn = this.configService.getOrThrow<StringValue>(
-            'auth.accessExpiresIn',
-        );
+  async generateAccessToken(payload: JwtPayload): Promise<string> {
+    const expiresIn = this.configService.getOrThrow<StringValue>(
+      'auth.accessExpiresIn',
+    );
 
-        return this.jwtService.signAsync(payload, {
-            secret: this.getAccessSecret(),
-            expiresIn,
-        });
-    }
+    return this.jwtService.signAsync(payload, {
+      secret: this.getAccessSecret(),
+      expiresIn,
+    });
+  }
 
-    async verifyAccessToken(token: string): Promise<JwtPayload> {
-        return this.jwtService.verifyAsync<JwtPayload>(token, {
-            secret: this.getAccessSecret(),
-        });
-    }
+  async verifyAccessToken(token: string): Promise<JwtPayload> {
+    return this.jwtService.verifyAsync<JwtPayload>(token, {
+      secret: this.getAccessSecret(),
+    });
+  }
 
-    // ==========================
-    // Reset Password Token
-    // ==========================
+  // ==========================
+  // Reset Password Token
+  // ==========================
 
-    async generateResetPasswordToken(
-        payload: JwtPayload,
-    ): Promise<string> {
-        const expiresIn = this.configService.getOrThrow<StringValue>(
-            'auth.resetPasswordExpiresIn',
-        );
+  async generateResetPasswordToken(payload: JwtPayload): Promise<string> {
+    const expiresIn = this.configService.getOrThrow<StringValue>(
+      'auth.resetPasswordExpiresIn',
+    );
 
-        return this.jwtService.signAsync(payload, {
-            secret: this.getResetPasswordSecret(),
-            expiresIn,
-        });
-    }
+    return this.jwtService.signAsync(payload, {
+      secret: this.getResetPasswordSecret(),
+      expiresIn,
+    });
+  }
 
-    async verifyResetPasswordToken(
-        token: string,
-    ): Promise<JwtPayload> {
-        return this.jwtService.verifyAsync<JwtPayload>(token, {
-            secret: this.getResetPasswordSecret(),
-        });
-    }
+  async verifyResetPasswordToken(token: string): Promise<JwtPayload> {
+    return this.jwtService.verifyAsync<JwtPayload>(token, {
+      secret: this.getResetPasswordSecret(),
+    });
+  }
 
-    // ==========================
-    // Secrets
-    // ==========================
+  // ==========================
+  // Secrets
+  // ==========================
 
-    private getAccessSecret(): string {
-        return this.configService.getOrThrow<string>(
-            'auth.accessSecret',
-        );
-    }
+  private getAccessSecret(): string {
+    return this.configService.getOrThrow<string>('auth.accessSecret');
+  }
 
-    private getResetPasswordSecret(): string {
-        return this.configService.getOrThrow<string>(
-            'auth.resetPasswordSecret',
-        );
-    }
+  private getResetPasswordSecret(): string {
+    return this.configService.getOrThrow<string>('auth.resetPasswordSecret');
+  }
 }

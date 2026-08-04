@@ -15,32 +15,32 @@ import { ForgotPasswordService } from './services/forgot-password.service';
 import { ResetPasswordService } from './services/reset-password.service';
 
 @Module({
-    imports: [
-        MailModule,
-        PrismaModule,
-        JwtModule.registerAsync({
-            inject: [ConfigService],
+  imports: [
+    MailModule,
+    PrismaModule,
+    JwtModule.registerAsync({
+      inject: [ConfigService],
 
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.getOrThrow<string>('auth.accessSecret'),
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow<string>('auth.accessSecret'),
 
-                signOptions: {
-                    expiresIn: configService.getOrThrow<StringValue>(
-                        'auth.accessExpiresIn',
-                    ),
-                },
-            }),
-        }),
-    ],
-    controllers: [AuthController],
-    providers: [
-        LoginService,
-        GetMeService,
-        TokenService,
-        JwtStrategy,
-        ForgotPasswordService,
-        ResetPasswordService,
-    ],
-    exports: [JwtModule],
+        signOptions: {
+          expiresIn: configService.getOrThrow<StringValue>(
+            'auth.accessExpiresIn',
+          ),
+        },
+      }),
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [
+    LoginService,
+    GetMeService,
+    TokenService,
+    JwtStrategy,
+    ForgotPasswordService,
+    ResetPasswordService,
+  ],
+  exports: [JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}

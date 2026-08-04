@@ -24,9 +24,9 @@ export class DonorMapper {
 
       avatar: donor.avatar
         ? {
-          id: donor.avatar.id,
-          url: donor.avatar.url,
-        }
+            id: donor.avatar.id,
+            url: donor.avatar.url,
+          }
         : null,
 
       isActive: donor.isActive,

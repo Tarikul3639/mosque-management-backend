@@ -1,3 +1,3 @@
-export * from "./cloudinary.module";
-export * from "./cloudinary.service";
-export * from "./cloudinary.types";
+export * from './cloudinary.module';
+export * from './cloudinary.service';
+export * from './cloudinary.types';

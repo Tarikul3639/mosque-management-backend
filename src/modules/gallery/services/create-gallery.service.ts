@@ -8,7 +8,7 @@ import { GalleryMapper } from '../mappers/gallery.mapper';
 
 @Injectable()
 export class CreateGalleryService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(
     dto: CreateGalleryDto,

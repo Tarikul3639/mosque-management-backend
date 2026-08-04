@@ -2,12 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { MonthlyChargeResponseDto } from './monthly-charge-response.dto';
 
-export class MonthlyChargeListResponseDto {
-  @ApiProperty({
-    type: [MonthlyChargeResponseDto],
-  })
-  data!: MonthlyChargeResponseDto[];
-
+class MonthlyChargeListMetadata {
   @ApiProperty({
     example: 125,
   })
@@ -37,4 +32,16 @@ export class MonthlyChargeListResponseDto {
     example: false,
   })
   hasPreviousPage!: boolean;
+}
+
+export class MonthlyChargeListResponseDto {
+  @ApiProperty({
+    type: [MonthlyChargeResponseDto],
+  })
+  data!: MonthlyChargeResponseDto[];
+
+  @ApiProperty({
+    type: MonthlyChargeListMetadata,
+  })
+  metadata!: MonthlyChargeListMetadata;
 }

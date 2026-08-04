@@ -1,33 +1,27 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString, IsNumber, IsOptional, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-  IsDateString,
-  IsNumber,
-  IsOptional,
-  Min,
-} from 'class-validator';
 
-export class UpdateFamilyFeeDto {
-  @ApiPropertyOptional({
-    example: 600,
+export class CreateFamilyFeeDto {
+  @ApiProperty({
+    example: 500,
     description: 'Monthly fee amount',
   })
-  @IsOptional()
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  monthlyFee?: number;
+  monthlyFee!: number;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: '2026-01-01',
     description: 'Fee effective start date',
   })
-  @IsOptional()
   @IsDateString()
-  startDate?: string;
+  startDate!: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: '2026-12-31',
+    required: false,
     description: 'Fee effective end date',
   })
   @IsOptional()

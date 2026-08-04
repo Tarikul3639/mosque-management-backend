@@ -67,8 +67,7 @@ export class FamilyQueryDto {
   })
   @IsOptional()
   @IsIn(['familyNo', 'headName', 'createdAt', 'updatedAt'])
-  sortBy?: 'familyNo' | 'headName' | 'createdAt' | 'updatedAt' =
-    'createdAt';
+  sortBy?: 'familyNo' | 'headName' | 'createdAt' | 'updatedAt' = 'createdAt';
 
   @ApiPropertyOptional({
     example: 'desc',

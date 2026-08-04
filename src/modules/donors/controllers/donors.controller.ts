@@ -59,9 +59,7 @@ export class DonorsController {
     status: 200,
     type: DonorListResponseDto,
   })
-  async findAll(
-    @Query() query: DonorQueryDto,
-  ): Promise<DonorListResponseDto> {
+  async findAll(@Query() query: DonorQueryDto): Promise<DonorListResponseDto> {
     return this.listDonorsService.execute(query);
   }
 
@@ -73,9 +71,7 @@ export class DonorsController {
     status: 200,
     type: DonorResponseDto,
   })
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<DonorResponseDto> {
+  async findOne(@Param('id') id: string): Promise<DonorResponseDto> {
     return this.getDonorService.execute(id);
   }
 
@@ -94,9 +90,7 @@ export class DonorsController {
     status: 201,
     type: DonorResponseDto,
   })
-  async create(
-    @Body() dto: CreateDonorDto,
-  ): Promise<DonorResponseDto> {
+  async create(@Body() dto: CreateDonorDto): Promise<DonorResponseDto> {
     return this.createDonorService.execute(dto);
   }
 
@@ -128,9 +122,7 @@ export class DonorsController {
   @ApiResponse({
     status: 200,
   })
-  async delete(
-    @Param('id') id: string,
-  ): Promise<{ message: string }> {
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
     return this.deleteDonorService.execute(id);
   }
 }

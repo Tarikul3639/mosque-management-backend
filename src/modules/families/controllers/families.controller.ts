@@ -49,7 +49,7 @@ export class FamiliesController {
     private readonly getFamilyDetailsService: GetFamilyDetailsService,
     private readonly listFamiliesService: ListFamiliesService,
     private readonly activateFamilyService: ActivateFamilyService,
-  ) { }
+  ) {}
 
   // -----------------------------
   // Public APIs
@@ -89,9 +89,7 @@ export class FamiliesController {
     status: 200,
     type: FamilyDetailsResponseDto,
   })
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<FamilyDetailsResponseDto> {
+  async findOne(@Param('id') id: string): Promise<FamilyDetailsResponseDto> {
     return this.getFamilyDetailsService.execute(id);
   }
 
@@ -106,9 +104,7 @@ export class FamiliesController {
   @ApiOperation({
     summary: 'Create family',
   })
-  async create(
-    @Body() dto: CreateFamilyDto,
-  ): Promise<FamilyResponseDto> {
+  async create(@Body() dto: CreateFamilyDto): Promise<FamilyResponseDto> {
     return this.createFamilyService.execute(dto);
   }
 
@@ -133,9 +129,7 @@ export class FamiliesController {
   @ApiOperation({
     summary: 'Delete family',
   })
-  async delete(
-    @Param('id') id: string,
-  ): Promise<{ message: string }> {
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
     return this.deleteFamilyService.execute(id);
   }
 
@@ -146,9 +140,7 @@ export class FamiliesController {
   @ApiOperation({
     summary: 'Activate family',
   })
-  async activate(
-    @Param('id') id: string,
-  ): Promise<{ message: string }> {
+  async activate(@Param('id') id: string): Promise<{ message: string }> {
     return this.activateFamilyService.execute(id);
   }
 }

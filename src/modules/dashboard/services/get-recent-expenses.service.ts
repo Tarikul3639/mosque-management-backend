@@ -6,19 +6,19 @@ import { RecentExpenseDto } from '../dto/responses/recent-expense.dto';
 
 @Injectable()
 export class GetRecentExpensesService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(limit = 5): Promise<RecentExpenseDto[]> {
-        const expenses = await this.prisma.expense.findMany({
-            take: limit,
+  async execute(limit = 5): Promise<RecentExpenseDto[]> {
+    const expenses = await this.prisma.expense.findMany({
+      take: limit,
 
-            orderBy: {
-                expenseDate: 'desc',
-            },
-        });
+      orderBy: {
+        expenseDate: 'desc',
+      },
+    });
 
-        return expenses.map((expense) =>
-            DashboardMapper.toRecentExpenseDto(expense),
-        );
-    }
+    return expenses.map((expense) =>
+      DashboardMapper.toRecentExpenseDto(expense),
+    );
+  }
 }

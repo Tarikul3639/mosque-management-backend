@@ -3,6 +3,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PaymentMethod } from '@/lib/prisma/client';
 import { PaymentStatus } from '@/common/enums/payment-status.enum';
 
+export class PaymentUserDto {
+  @ApiProperty({
+    example: 'cmf7user123456',
+  })
+  id!: string;
+
+  @ApiProperty({
+    example: 'Admin User',
+  })
+  name!: string;
+}
+
 export class PaymentResponseDto {
   @ApiProperty({
     example: 'cmf7payment123456',
@@ -77,6 +89,16 @@ export class PaymentResponseDto {
     nullable: true,
   })
   note!: string | null;
+
+  @ApiProperty({
+    type: PaymentUserDto,
+  })
+  createdBy!: PaymentUserDto;
+
+  @ApiProperty({
+    type: PaymentUserDto,
+  })
+  updatedBy!: PaymentUserDto;
 
   @ApiProperty({
     example: '2026-07-18T10:30:00.000Z',

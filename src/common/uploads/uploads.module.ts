@@ -12,28 +12,23 @@ import { CreateUploadSignatureService } from './services/create-upload-signature
 import { CreateFileService } from './services/create-file.service';
 
 @Module({
-    imports: [
-        PrismaModule,
-        CloudinaryModule,
-    ],
+  imports: [PrismaModule, CloudinaryModule],
 
-    controllers: [
-        UploadsController,
-    ],
+  controllers: [UploadsController],
 
-    providers: [
-        UploadImageService,
-        DeleteImageService,
-        ReplaceImageService,
-        CreateFileService,
-        CreateUploadSignatureService,
-    ],
+  providers: [
+    UploadImageService,
+    DeleteImageService,
+    ReplaceImageService,
+    CreateFileService,
+    CreateUploadSignatureService,
+  ],
 
-    exports: [
-        UploadImageService,
-        DeleteImageService,
-        ReplaceImageService,
-        CreateUploadSignatureService,
-    ],
+  exports: [
+    UploadImageService,
+    DeleteImageService,
+    ReplaceImageService,
+    CreateUploadSignatureService,
+  ],
 })
-export class UploadsModule { }
+export class UploadsModule {}

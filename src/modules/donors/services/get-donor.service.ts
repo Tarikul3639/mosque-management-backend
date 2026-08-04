@@ -9,27 +9,27 @@ import { DonorResponseDto } from '../dto/responses/donor-response.dto';
 
 @Injectable()
 export class GetDonorService {
-    constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
-    async execute(id: string): Promise<DonorResponseDto> {
-        const donor = await this.prismaService.donor.findUnique({
-            where: {
-                id,
-            },
-            include: {
-                avatar: {
-                    select: {
-                        id: true,
-                        url: true,
-                    },
-                },
-            },
-        });
+  async execute(id: string): Promise<DonorResponseDto> {
+    const donor = await this.prismaService.donor.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        avatar: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+      },
+    });
 
-        if (!donor) {
-            throw new NotFoundException(DONOR_MESSAGES.DONOR_NOT_FOUND);
-        }
-
-        return DonorMapper.toResponse(donor);
+    if (!donor) {
+      throw new NotFoundException(DONOR_MESSAGES.DONOR_NOT_FOUND);
     }
+
+    return DonorMapper.toResponse(donor);
+  }
 }

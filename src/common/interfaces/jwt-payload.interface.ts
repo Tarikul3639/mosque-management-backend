@@ -1,7 +1,7 @@
-import { UserRole } from "@/lib/prisma/client";
+import { UserRole } from '@/lib/prisma/client';
 
 export class JwtPayload {
-    sub!: string;
-    email!: string;
-    role!: UserRole;
+  sub!: string;
+  email!: string;
+  role!: UserRole;
 }

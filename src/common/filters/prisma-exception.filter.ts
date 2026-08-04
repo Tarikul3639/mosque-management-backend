@@ -1,9 +1,9 @@
 import {
-    ArgumentsHost,
-    Catch,
-    ExceptionFilter,
-    HttpStatus,
-    Logger,
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -14,71 +14,68 @@ import { FieldError } from '@/common/interfaces/field-error.interface';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
-    private readonly logger = new Logger(PrismaExceptionFilter.name);
-    catch(
-        exception: Prisma.PrismaClientKnownRequestError,
-        host: ArgumentsHost,
-    ): void {
+  private readonly logger = new Logger(PrismaExceptionFilter.name);
+  catch(
+    exception: Prisma.PrismaClientKnownRequestError,
+    host: ArgumentsHost,
+  ): void {
+    this.logger.error('================ Prisma Error ================');
+    this.logger.error(`Code: ${exception.code}`);
+    this.logger.error(`Message: ${exception.message}`);
+    this.logger.error(`Meta: ${JSON.stringify(exception.meta, null, 2)}`);
+    console.dir(exception, {
+      depth: null,
+      colors: true,
+    });
+    this.logger.error('==============================================');
 
-        this.logger.error('================ Prisma Error ================');
-        this.logger.error(`Code: ${exception.code}`);
-        this.logger.error(`Message: ${exception.message}`);
-        this.logger.error(
-            `Meta: ${JSON.stringify(exception.meta, null, 2)}`,
-        );
-        console.dir(exception, {
-            depth: null,
-            colors: true,
-        });
-        this.logger.error('==============================================');
+    const context = host.switchToHttp();
 
-        const context = host.switchToHttp();
+    const request = context.getRequest<Request>();
+    const response = context.getResponse<Response>();
 
-        const request = context.getRequest<Request>();
-        const response = context.getResponse<Response>();
+    let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message = 'Database error.';
+    let errors: FieldError[] | undefined;
 
-        let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        let message = 'Database error.';
-        let errors: FieldError[] | undefined;
+    switch (exception.code) {
+      case 'P2002': {
+        statusCode = HttpStatus.CONFLICT;
+        message = 'Validation failed.';
 
-        switch (exception.code) {
-            case 'P2002': {
-                statusCode = HttpStatus.CONFLICT;
-                message = 'Validation failed.';
+        const target = exception.meta?.target;
 
-                const target = exception.meta?.target;
+        const field =
+          Array.isArray(target) && typeof target[0] === 'string'
+            ? target[0]
+            : 'field';
 
-                const field =
-                    Array.isArray(target) && typeof target[0] === 'string'
-                        ? target[0]
-                        : 'field';
+        errors = [
+          {
+            field,
+            message: `${field} already exists.`,
+          },
+        ];
 
-                errors = [
-                    {
-                        field,
-                        message: `${field} already exists.`,
-                    },
-                ];
+        break;
+      }
 
-                break;
-            }
-
-            case 'P2025': {
-                statusCode = HttpStatus.NOT_FOUND;
-                message = 'Resource not found.';
-                break;
-            }
-        }
-
-        const errorResponse: ApiErrorResponse = {
-            success: false,
-            statusCode,
-            message,
-            errors,
-            timestamp: new Date().toISOString(),
-            path: request.originalUrl,
-        };
-
-        response.status(statusCode).json(errorResponse);
+      case 'P2025': {
+        statusCode = HttpStatus.NOT_FOUND;
+        message = 'Resource not found.';
+        break;
+      }
     }
+
+    const errorResponse: ApiErrorResponse = {
+      success: false,
+      statusCode,
+      message,
+      errors,
+      timestamp: new Date().toISOString(),
+      path: request.originalUrl,
+    };
+
+    response.status(statusCode).json(errorResponse);
+  }
 }

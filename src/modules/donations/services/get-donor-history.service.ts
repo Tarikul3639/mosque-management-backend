@@ -9,67 +9,67 @@ import { DonorHistoryResponseDto } from '../dto/responses/donor-history-response
 
 @Injectable()
 export class GetDonorHistoryService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(query: DonorHistoryQueryDto): Promise<DonorHistoryResponseDto> {
-        const page = query.page || 1;
-        const limit = query.limit || 10;
-        const skip = (page - 1) * limit;
+  async execute(query: DonorHistoryQueryDto): Promise<DonorHistoryResponseDto> {
+    const page = query.page || 1;
+    const limit = query.limit || 10;
+    const skip = (page - 1) * limit;
 
-        const donor = await this.prisma.donor.findUnique({
-            where: {
-                id: query.donorId,
-            },
-        });
+    const donor = await this.prisma.donor.findUnique({
+      where: {
+        id: query.donorId,
+      },
+    });
 
-        if (!donor) {
-            throw new NotFoundException(DONATION_MESSAGES.DONOR_NOT_FOUND);
-        }
-
-        const [donations, aggregate] = await Promise.all([
-            this.prisma.donation.findMany({
-                where: {
-                    donorId: query.donorId,
-                },
-                orderBy: {
-                    donatedAt: 'desc',
-                },
-                skip,
-                take: limit,
-            }),
-
-            this.prisma.donation.aggregate({
-                where: {
-                    donorId: query.donorId,
-                },
-                _count: true,
-                _sum: {
-                    amount: true,
-                },
-            }),
-        ]);
-
-        return {
-            donor: {
-                id: donor.id,
-                name: donor.name,
-                phone: donor.phone,
-                email: donor.email,
-                address: donor.address,
-            },
-
-            totalDonations: aggregate._count,
-
-            totalAmount: Number(aggregate._sum.amount ?? 0),
-
-            donations: donations.map((donation) => ({
-                id: donation.id,
-                receiptNo: donation.receiptNo,
-                amount: Number(donation.amount),
-                purpose: donation.purpose,
-                paymentMethod: donation.paymentMethod,
-                donatedAt: donation.donatedAt,
-            })),
-        };
+    if (!donor) {
+      throw new NotFoundException(DONATION_MESSAGES.DONOR_NOT_FOUND);
     }
+
+    const [donations, aggregate] = await Promise.all([
+      this.prisma.donation.findMany({
+        where: {
+          donorId: query.donorId,
+        },
+        orderBy: {
+          donatedAt: 'desc',
+        },
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.donation.aggregate({
+        where: {
+          donorId: query.donorId,
+        },
+        _count: true,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    return {
+      donor: {
+        id: donor.id,
+        name: donor.name,
+        phone: donor.phone,
+        email: donor.email,
+        address: donor.address,
+      },
+
+      totalDonations: aggregate._count,
+
+      totalAmount: Number(aggregate._sum.amount ?? 0),
+
+      donations: donations.map((donation) => ({
+        id: donation.id,
+        receiptNo: donation.receiptNo,
+        amount: Number(donation.amount),
+        purpose: donation.purpose,
+        paymentMethod: donation.paymentMethod,
+        donatedAt: donation.donatedAt,
+      })),
+    };
+  }
 }

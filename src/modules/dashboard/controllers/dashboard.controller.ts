@@ -1,9 +1,9 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import {
-    ApiBearerAuth,
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -31,134 +31,134 @@ import { GetRecentExpensesService } from '../services/get-recent-expenses.servic
 @ApiTags('Dashboard')
 @Controller('dashboard')
 export class DashboardController {
-    constructor(
-        private readonly getDashboardOverviewService: GetDashboardOverviewService,
-        private readonly getDashboardSummaryService: GetDashboardSummaryService,
-        private readonly getFinancialSummaryService: GetFinancialSummaryService,
-        private readonly getMonthlyChartService: GetMonthlyChartService,
-        private readonly getExpenseChartService: GetExpenseChartService,
-        private readonly getRecentDonationsService: GetRecentDonationsService,
-        private readonly getRecentExpensesService: GetRecentExpensesService,
-    ) { }
+  constructor(
+    private readonly getDashboardOverviewService: GetDashboardOverviewService,
+    private readonly getDashboardSummaryService: GetDashboardSummaryService,
+    private readonly getFinancialSummaryService: GetFinancialSummaryService,
+    private readonly getMonthlyChartService: GetMonthlyChartService,
+    private readonly getExpenseChartService: GetExpenseChartService,
+    private readonly getRecentDonationsService: GetRecentDonationsService,
+    private readonly getRecentExpensesService: GetRecentExpensesService,
+  ) {}
 
-    // -----------------------------
-    // Protected APIs
-    // -----------------------------
+  // -----------------------------
+  // Protected APIs
+  // -----------------------------
 
-    @Get('overview')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiBearerAuth()
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get dashboard overview',
-    })
-    @ApiResponse({
-        status: 200,
-        type: DashboardOverviewDto,
-    })
-    async getOverview(
-        @Query() query: DashboardQueryDto,
-    ): Promise<DashboardOverviewDto> {
-        return this.getDashboardOverviewService.execute(query);
-    }
+  @Get('overview')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get dashboard overview',
+  })
+  @ApiResponse({
+    status: 200,
+    type: DashboardOverviewDto,
+  })
+  async getOverview(
+    @Query() query: DashboardQueryDto,
+  ): Promise<DashboardOverviewDto> {
+    return this.getDashboardOverviewService.execute(query);
+  }
 
-    @Get('summary')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiBearerAuth()
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get dashboard summary',
-    })
-    @ApiResponse({
-        status: 200,
-        type: DashboardSummaryDto,
-    })
-    async getSummary(): Promise<DashboardSummaryDto> {
-        return this.getDashboardSummaryService.execute();
-    }
+  @Get('summary')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get dashboard summary',
+  })
+  @ApiResponse({
+    status: 200,
+    type: DashboardSummaryDto,
+  })
+  async getSummary(): Promise<DashboardSummaryDto> {
+    return this.getDashboardSummaryService.execute();
+  }
 
-    @Get('financial-summary')
-    // @UseGuards(JwtAuthGuard, RolesGuard)
-    // @ApiBearerAuth()
-    // @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get financial summary',
-    })
-    @ApiResponse({
-        status: 200,
-        type: FinancialSummaryDto,
-    })
-    async getFinancialSummary(
-        @Query() query: DashboardQueryDto,
-    ): Promise<FinancialSummaryDto> {
-        return this.getFinancialSummaryService.execute(query);
-    }
+  @Get('financial-summary')
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @ApiBearerAuth()
+  // @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get financial summary',
+  })
+  @ApiResponse({
+    status: 200,
+    type: FinancialSummaryDto,
+  })
+  async getFinancialSummary(
+    @Query() query: DashboardQueryDto,
+  ): Promise<FinancialSummaryDto> {
+    return this.getFinancialSummaryService.execute(query);
+  }
 
-    @Get('monthly-chart')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiBearerAuth()
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get monthly chart',
-    })
-    @ApiResponse({
-        status: 200,
-        type: MonthlyChartDto,
-        isArray: true,
-    })
-    async getMonthlyChart(
-        @Query() query: DashboardQueryDto,
-    ): Promise<MonthlyChartDto[]> {
-        return this.getMonthlyChartService.execute(query);
-    }
+  @Get('monthly-chart')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get monthly chart',
+  })
+  @ApiResponse({
+    status: 200,
+    type: MonthlyChartDto,
+    isArray: true,
+  })
+  async getMonthlyChart(
+    @Query() query: DashboardQueryDto,
+  ): Promise<MonthlyChartDto[]> {
+    return this.getMonthlyChartService.execute(query);
+  }
 
-    @Get('expense-chart')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiBearerAuth()
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get expense chart',
-    })
-    @ApiResponse({
-        status: 200,
-        type: ExpenseChartDto,
-        isArray: true,
-    })
-    async getExpenseChart(
-        @Query() query: DashboardQueryDto,
-    ): Promise<ExpenseChartDto[]> {
-        return this.getExpenseChartService.execute(query);
-    }
+  @Get('expense-chart')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get expense chart',
+  })
+  @ApiResponse({
+    status: 200,
+    type: ExpenseChartDto,
+    isArray: true,
+  })
+  async getExpenseChart(
+    @Query() query: DashboardQueryDto,
+  ): Promise<ExpenseChartDto[]> {
+    return this.getExpenseChartService.execute(query);
+  }
 
-    @Get('recent-donations')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiBearerAuth()
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get recent donations',
-    })
-    @ApiResponse({
-        status: 200,
-        type: RecentDonationDto,
-        isArray: true,
-    })
-    async getRecentDonations(): Promise<RecentDonationDto[]> {
-        return this.getRecentDonationsService.execute();
-    }
+  @Get('recent-donations')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get recent donations',
+  })
+  @ApiResponse({
+    status: 200,
+    type: RecentDonationDto,
+    isArray: true,
+  })
+  async getRecentDonations(): Promise<RecentDonationDto[]> {
+    return this.getRecentDonationsService.execute();
+  }
 
-    @Get('recent-expenses')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @ApiBearerAuth()
-    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
-    @ApiOperation({
-        summary: 'Get recent expenses',
-    })
-    @ApiResponse({
-        status: 200,
-        type: RecentExpenseDto,
-        isArray: true,
-    })
-    async getRecentExpenses(): Promise<RecentExpenseDto[]> {
-        return this.getRecentExpensesService.execute();
-    }
+  @Get('recent-expenses')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Get recent expenses',
+  })
+  @ApiResponse({
+    status: 200,
+    type: RecentExpenseDto,
+    isArray: true,
+  })
+  async getRecentExpenses(): Promise<RecentExpenseDto[]> {
+    return this.getRecentExpensesService.execute();
+  }
 }

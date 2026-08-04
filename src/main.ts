@@ -19,10 +19,7 @@ async function bootstrap() {
   // Enable cookie parser middleware for handling cookies
   app.use(cookieParser());
   // Enable global filters for exception handling
-  app.useGlobalFilters(
-    new HttpExceptionFilter(),
-    new PrismaExceptionFilter(),
-  );
+  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());
 
   // Enable global validation pipe for request validation
   app.useGlobalPipes(GlobalValidationPipe);

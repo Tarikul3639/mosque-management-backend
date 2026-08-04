@@ -2,7 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UploadResponseDto {
   @ApiProperty({
-    example: 'https://res.cloudinary.com/demo/image/upload/v1234567890/families/avatar.jpg',
+    example:
+      'https://res.cloudinary.com/demo/image/upload/v1234567890/families/avatar.jpg',
     description: 'Public URL of the uploaded image',
   })
   url!: string;

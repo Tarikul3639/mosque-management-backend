@@ -1,20 +1,20 @@
 import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Patch,
-    Post,
-    Query,
-    Req,
-    UseGuards,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -40,123 +40,114 @@ import { UpdateGalleryService } from '../services/update-gallery.service';
 @ApiTags('Galleries')
 @Controller('galleries')
 export class GalleriesController {
-    constructor(
-        private readonly createGalleryService: CreateGalleryService,
-        private readonly updateGalleryService: UpdateGalleryService,
-        private readonly deleteGalleryService: DeleteGalleryService,
-        private readonly getGalleryService: GetGalleryService,
-        private readonly listGalleriesService: ListGalleriesService,
-        private readonly getGallerySummaryService: GetGallerySummaryService,
-    ) { }
+  constructor(
+    private readonly createGalleryService: CreateGalleryService,
+    private readonly updateGalleryService: UpdateGalleryService,
+    private readonly deleteGalleryService: DeleteGalleryService,
+    private readonly getGalleryService: GetGalleryService,
+    private readonly listGalleriesService: ListGalleriesService,
+    private readonly getGallerySummaryService: GetGallerySummaryService,
+  ) {}
 
-    @Get()
-    @ApiOperation({
-        summary: 'List galleries',
-    })
-    @ApiResponse({
-        status: 200,
-        type: GalleryListResponseDto,
-    })
-    async findAll(
-        @Query() query: GalleryQueryDto,
-    ): Promise<GalleryListResponseDto> {
-        return this.listGalleriesService.execute(query);
-    }
+  @Get()
+  @ApiOperation({
+    summary: 'List galleries',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GalleryListResponseDto,
+  })
+  async findAll(
+    @Query() query: GalleryQueryDto,
+  ): Promise<GalleryListResponseDto> {
+    return this.listGalleriesService.execute(query);
+  }
 
-    @Get('summary')
-    @ApiOperation({
-        summary: 'Get gallery summary',
-    })
-    @ApiResponse({
-        status: 200,
-        type: GallerySummaryResponseDto,
-    })
-    async summary(): Promise<GallerySummaryResponseDto> {
-        return this.getGallerySummaryService.execute();
-    }
+  @Get('summary')
+  @ApiOperation({
+    summary: 'Get gallery summary',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GallerySummaryResponseDto,
+  })
+  async summary(): Promise<GallerySummaryResponseDto> {
+    return this.getGallerySummaryService.execute();
+  }
 
-    @Get(':id')
-    @ApiOperation({
-        summary: 'Get gallery by ID',
-    })
-    @ApiResponse({
-        status: 200,
-        type: GalleryResponseDto,
-    })
-    async findOne(
-        @Param('id') id: string,
-    ): Promise<GalleryResponseDto> {
-        return this.getGalleryService.execute(id);
-    }
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get gallery by ID',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GalleryResponseDto,
+  })
+  async findOne(@Param('id') id: string): Promise<GalleryResponseDto> {
+    return this.getGalleryService.execute(id);
+  }
 
-    @Post()
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-    @ApiBearerAuth()
-    @ApiOperation({
-        summary: 'Create gallery',
-    })
-    @ApiResponse({
-        status: 201,
-        type: GalleryResponseDto,
-    })
-    async create(
-        @Body() dto: CreateGalleryDto,
-        @Req() req: any,
-    ): Promise<GalleryResponseDto> {
-        return this.createGalleryService.execute(
-            dto,
-            req.user.id,
-        );
-    }
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Create gallery',
+  })
+  @ApiResponse({
+    status: 201,
+    type: GalleryResponseDto,
+  })
+  async create(
+    @Body() dto: CreateGalleryDto,
+    @Req() req: any,
+  ): Promise<GalleryResponseDto> {
+    return this.createGalleryService.execute(dto, req.user.id);
+  }
 
-    @Patch(':id')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-    @ApiBearerAuth()
-    @ApiOperation({
-        summary: 'Update gallery',
-    })
-    @ApiResponse({
-        status: 200,
-        type: GalleryResponseDto,
-    })
-    async update(
-        @Param('id') id: string,
-        @Body() dto: UpdateGalleryDto,
-        @Req() req: any,
-    ): Promise<GalleryResponseDto> {
-        return this.updateGalleryService.execute(
-            id,
-            dto,
-            req.user.id,
-            req.user.role,
-        );
-    }
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Update gallery',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GalleryResponseDto,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateGalleryDto,
+    @Req() req: any,
+  ): Promise<GalleryResponseDto> {
+    return this.updateGalleryService.execute(
+      id,
+      dto,
+      req.user.id,
+      req.user.role,
+    );
+  }
 
-    @Delete(':id')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-    @ApiBearerAuth()
-    @ApiOperation({
-        summary: 'Delete gallery',
-    })
-    @ApiResponse({
-        status: 200,
-        schema: {
-            example: {
-                message: 'Gallery image deleted successfully.',
-            },
-        },
-    })
-    async remove(
-        @Param('id') id: string,
-        @Req() req: any,
-    ): Promise<{ message: string }> {
-        return this.deleteGalleryService.execute(
-            id,
-            req.user.id,
-            req.user.role,
-        );
-    }
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Delete gallery',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        message: 'Gallery image deleted successfully.',
+      },
+    },
+  })
+  async remove(
+    @Param('id') id: string,
+    @Req() req: any,
+  ): Promise<{ message: string }> {
+    return this.deleteGalleryService.execute(id, req.user.id, req.user.role);
+  }
 }

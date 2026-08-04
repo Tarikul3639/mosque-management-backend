@@ -6,29 +6,25 @@ import { GallerySummaryResponseDto } from '../dto/responses/gallery-summary-resp
 
 @Injectable()
 export class GetGallerySummaryService {
-    constructor(
-        private readonly prisma: PrismaService,
-    ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(): Promise<GallerySummaryResponseDto> {
-        const [totalImages, latestGallery] =
-            await Promise.all([
-                this.prisma.gallery.count(),
+  async execute(): Promise<GallerySummaryResponseDto> {
+    const [totalImages, latestGallery] = await Promise.all([
+      this.prisma.gallery.count(),
 
-                this.prisma.gallery.findFirst({
-                    orderBy: {
-                        createdAt: 'desc',
-                    },
-                    select: {
-                        createdAt: true,
-                    },
-                }),
-            ]);
+      this.prisma.gallery.findFirst({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          createdAt: true,
+        },
+      }),
+    ]);
 
-        return {
-            totalImages,
-            lastUploadedAt:
-                latestGallery?.createdAt ?? null,
-        };
-    }
+    return {
+      totalImages,
+      lastUploadedAt: latestGallery?.createdAt ?? null,
+    };
+  }
 }

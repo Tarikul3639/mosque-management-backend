@@ -8,33 +8,33 @@ import { ExpenseMapper } from '../mappers/expense.mapper';
 
 @Injectable()
 export class GetExpenseService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(expenseId: string): Promise<ExpenseResponseDto> {
-        const expense = await this.prisma.expense.findUnique({
-            where: {
-                id: expenseId,
-            },
-            include: {
-                createdBy: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
-                updatedBy: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
-            },
-        });
+  async execute(expenseId: string): Promise<ExpenseResponseDto> {
+    const expense = await this.prisma.expense.findUnique({
+      where: {
+        id: expenseId,
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        updatedBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
-        if (!expense) {
-            throw new NotFoundException(EXPENSE_MESSAGES.NOT_FOUND);
-        }
-
-        return ExpenseMapper.toResponse(expense);
+    if (!expense) {
+      throw new NotFoundException(EXPENSE_MESSAGES.NOT_FOUND);
     }
+
+    return ExpenseMapper.toResponse(expense);
+  }
 }

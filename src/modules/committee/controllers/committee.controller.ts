@@ -75,9 +75,7 @@ export class CommitteeController {
     status: 200,
     type: CommitteeMemberResponseDto,
   })
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<CommitteeMemberResponseDto> {
+  async findOne(@Param('id') id: string): Promise<CommitteeMemberResponseDto> {
     return this.getCommitteeMemberService.execute(id);
   }
 
@@ -127,9 +125,7 @@ export class CommitteeController {
   @ApiOperation({
     summary: 'Deactivate committee member',
   })
-  async deactivate(
-    @Param('id') id: string,
-  ): Promise<void> {
+  async deactivate(@Param('id') id: string): Promise<void> {
     await this.deactivateCommitteeMemberService.execute(id);
   }
 
@@ -140,9 +136,7 @@ export class CommitteeController {
   @ApiOperation({
     summary: 'Activate committee member',
   })
-  async activate(
-    @Param('id') id: string,
-  ): Promise<void> {
+  async activate(@Param('id') id: string): Promise<void> {
     await this.activateCommitteeMemberService.execute(id);
   }
 
@@ -153,9 +147,7 @@ export class CommitteeController {
   @ApiOperation({
     summary: 'Force delete committee member',
   })
-  async forceDelete(
-    @Param('id') id: string,
-  ): Promise<void> {
+  async forceDelete(@Param('id') id: string): Promise<void> {
     await this.forceDeleteCommitteeMemberService.execute(id);
   }
 }

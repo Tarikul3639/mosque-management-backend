@@ -1,5 +1,5 @@
-import { registerAs } from "@nestjs/config";
+import { registerAs } from '@nestjs/config';
 
-export default registerAs("swagger", () => ({
-    enabled: process.env.SWAGGER_ENABLED === "true",
+export default registerAs('swagger', () => ({
+  enabled: process.env.SWAGGER_ENABLED === 'true',
 }));

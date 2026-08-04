@@ -8,40 +8,40 @@ import { DevelopmentProjectMapper } from '../mappers/development-project.mapper'
 
 @Injectable()
 export class GetDevelopmentProjectService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(projectId: string): Promise<DevelopmentProjectResponseDto> {
-        const project = await this.prisma.developmentProject.findUnique({
-            where: {
-                id: projectId,
-            },
-            include: {
-                createdBy: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
-                updatedBy: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
+  async execute(projectId: string): Promise<DevelopmentProjectResponseDto> {
+    const project = await this.prisma.developmentProject.findUnique({
+      where: {
+        id: projectId,
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        updatedBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
 
-                images: {
-                    select: {
-                        id: true,
-                        url: true,
-                    },
-                },
-            },
-        });
+        images: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+      },
+    });
 
-        if (!project) {
-            throw new NotFoundException(DEVELOPMENT_PROJECT_MESSAGES.NOT_FOUND);
-        }
-
-        return DevelopmentProjectMapper.toResponse(project);
+    if (!project) {
+      throw new NotFoundException(DEVELOPMENT_PROJECT_MESSAGES.NOT_FOUND);
     }
+
+    return DevelopmentProjectMapper.toResponse(project);
+  }
 }

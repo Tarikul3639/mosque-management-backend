@@ -1,9 +1,9 @@
-import { Global, Module } from "@nestjs/common";
+import { Global, Module } from '@nestjs/common';
 
-import { PrismaModule } from "@/common/prisma/prisma.module";
-import { CloudinaryModule } from "@/common/cloudinary/cloudinary.module";
+import { PrismaModule } from '@/common/prisma/prisma.module';
+import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
 
-import { FileService } from "./file.service";
+import { FileService } from './file.service';
 
 @Global()
 @Module({

@@ -1,5 +1,5 @@
-import { registerAs } from "@nestjs/config";
+import { registerAs } from '@nestjs/config';
 
-export default registerAs("database", () => ({
-    connectionString: process.env.DATABASE_URL,
+export default registerAs('database', () => ({
+  connectionString: process.env.DATABASE_URL,
 }));

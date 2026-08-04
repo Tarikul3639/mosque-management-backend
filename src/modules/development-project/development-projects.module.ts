@@ -11,25 +11,25 @@ import { ListDevelopmentProjectsService } from './services/list-development-proj
 import { UpdateDevelopmentProjectService } from './services/update-development-project.service';
 
 @Module({
-    imports: [PrismaModule],
-    controllers: [DevelopmentProjectsController],
+  imports: [PrismaModule],
+  controllers: [DevelopmentProjectsController],
 
-    providers: [
-        CreateDevelopmentProjectService,
-        UpdateDevelopmentProjectService,
-        DeleteDevelopmentProjectService,
-        GetDevelopmentProjectService,
-        ListDevelopmentProjectsService,
-        GetDevelopmentProjectSummaryService,
-    ],
+  providers: [
+    CreateDevelopmentProjectService,
+    UpdateDevelopmentProjectService,
+    DeleteDevelopmentProjectService,
+    GetDevelopmentProjectService,
+    ListDevelopmentProjectsService,
+    GetDevelopmentProjectSummaryService,
+  ],
 
-    exports: [
-        CreateDevelopmentProjectService,
-        UpdateDevelopmentProjectService,
-        DeleteDevelopmentProjectService,
-        GetDevelopmentProjectService,
-        ListDevelopmentProjectsService,
-        GetDevelopmentProjectSummaryService,
-    ],
+  exports: [
+    CreateDevelopmentProjectService,
+    UpdateDevelopmentProjectService,
+    DeleteDevelopmentProjectService,
+    GetDevelopmentProjectService,
+    ListDevelopmentProjectsService,
+    GetDevelopmentProjectSummaryService,
+  ],
 })
-export class DevelopmentProjectsModule { }
+export class DevelopmentProjectsModule {}

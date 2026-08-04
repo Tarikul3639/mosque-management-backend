@@ -11,14 +11,8 @@ import { UpdatePrayerTimeService } from './services/update-prayer-time.service';
 
   controllers: [PrayerTimesController],
 
-  providers: [
-    GetPrayerTimeService,
-    UpdatePrayerTimeService,
-  ],
+  providers: [GetPrayerTimeService, UpdatePrayerTimeService],
 
-  exports: [
-    GetPrayerTimeService,
-    UpdatePrayerTimeService,
-  ],
+  exports: [GetPrayerTimeService, UpdatePrayerTimeService],
 })
 export class PrayerTimesModule {}

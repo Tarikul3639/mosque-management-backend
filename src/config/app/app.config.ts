@@ -1,12 +1,12 @@
-import { registerAs } from "@nestjs/config";
+import { registerAs } from '@nestjs/config';
 
-export default registerAs("app", () => ({
-    name: process.env.APP_NAME,
-    logoUrl: process.env.APP_LOGO_URL,
-    version: process.env.APP_VERSION,
-    port: Number(process.env.PORT),
-    apiPrefix: process.env.API_PREFIX,
-    apiVersion: process.env.API_VERSION,
-    nodeEnv: process.env.NODE_ENV,
-    isProduction: process.env.NODE_ENV === "production",
+export default registerAs('app', () => ({
+  name: process.env.APP_NAME,
+  logoUrl: process.env.APP_LOGO_URL,
+  version: process.env.APP_VERSION,
+  port: Number(process.env.PORT),
+  apiPrefix: process.env.API_PREFIX,
+  apiVersion: process.env.API_VERSION,
+  nodeEnv: process.env.NODE_ENV,
+  isProduction: process.env.NODE_ENV === 'production',
 }));

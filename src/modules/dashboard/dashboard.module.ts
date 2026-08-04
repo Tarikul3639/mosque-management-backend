@@ -11,18 +11,18 @@ import { GetRecentDonationsService } from './services/get-recent-donations.servi
 import { GetRecentExpensesService } from './services/get-recent-expenses.service';
 
 @Module({
-    imports: [PrismaModule],
+  imports: [PrismaModule],
 
-    controllers: [DashboardController],
+  controllers: [DashboardController],
 
-    providers: [
-        GetDashboardOverviewService,
-        GetDashboardSummaryService,
-        GetFinancialSummaryService,
-        GetMonthlyChartService,
-        GetExpenseChartService,
-        GetRecentDonationsService,
-        GetRecentExpensesService,
-    ],
+  providers: [
+    GetDashboardOverviewService,
+    GetDashboardSummaryService,
+    GetFinancialSummaryService,
+    GetMonthlyChartService,
+    GetExpenseChartService,
+    GetRecentDonationsService,
+    GetRecentExpensesService,
+  ],
 })
 export class DashboardModule {}

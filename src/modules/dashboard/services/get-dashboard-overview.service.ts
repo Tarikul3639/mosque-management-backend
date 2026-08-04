@@ -9,300 +9,257 @@ import { DashboardMapper } from '../mappers/dashboard.mapper';
 
 @Injectable()
 export class GetDashboardOverviewService {
-    constructor(
-        private readonly prisma: PrismaService,
-    ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(
-        query: DashboardQueryDto,
-    ): Promise<DashboardOverviewDto> {
-        if (query.from && query.to) {
-            return this.getOverviewByDateRange(
-                new Date(query.from),
-                new Date(query.to),
-            );
-        }
-
-        return this.getAllTimeOverview();
+  async execute(query: DashboardQueryDto): Promise<DashboardOverviewDto> {
+    if (query.from && query.to) {
+      return this.getOverviewByDateRange(
+        new Date(query.from),
+        new Date(query.to),
+      );
     }
 
-    private async getAllTimeOverview(): Promise<DashboardOverviewDto> {
-        const now = new Date();
+    return this.getAllTimeOverview();
+  }
 
-        const currentMonthStart = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            1,
-        );
+  private async getAllTimeOverview(): Promise<DashboardOverviewDto> {
+    const now = new Date();
 
-        const currentMonthEnd = new Date(
-            now.getFullYear(),
-            now.getMonth() + 1,
-            0,
-            23,
-            59,
-            59,
-            999,
-        );
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        const previousMonthStart = new Date(
-            now.getFullYear(),
-            now.getMonth() - 1,
-            1,
-        );
+    const currentMonthEnd = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
 
-        const previousMonthEnd = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            0,
-            23,
-            59,
-            59,
-            999,
-        );
+    const previousMonthStart = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      1,
+    );
 
-        const [
-            totalDonations,
-            totalExpenses,
-            totalFamilies,
+    const previousMonthEnd = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
 
-            currentDonations,
-            previousDonations,
+    const [
+      totalDonations,
+      totalExpenses,
+      totalFamilies,
 
-            currentExpenses,
-            previousExpenses,
+      currentDonations,
+      previousDonations,
 
-            currentFamilies,
-            previousFamilies,
-        ] = await Promise.all([
-            this.prisma.donation.aggregate({
-                _sum: {
-                    amount: true,
-                },
-            }),
+      currentExpenses,
+      previousExpenses,
 
-            this.prisma.expense.aggregate({
-                _sum: {
-                    amount: true,
-                },
-            }),
+      currentFamilies,
+      previousFamilies,
+    ] = await Promise.all([
+      this.prisma.donation.aggregate({
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.family.count({
-                where: {
-                    isActive: true,
-                },
-            }),
+      this.prisma.expense.aggregate({
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.donation.aggregate({
-                where: {
-                    donatedAt: {
-                        gte: currentMonthStart,
-                        lte: currentMonthEnd,
-                    },
-                },
-                _sum: {
-                    amount: true,
-                },
-            }),
+      this.prisma.family.count({
+        where: {
+          isActive: true,
+        },
+      }),
 
-            this.prisma.donation.aggregate({
-                where: {
-                    donatedAt: {
-                        gte: previousMonthStart,
-                        lte: previousMonthEnd,
-                    },
-                },
-                _sum: {
-                    amount: true,
-                },
-            }),
+      this.prisma.donation.aggregate({
+        where: {
+          donatedAt: {
+            gte: currentMonthStart,
+            lte: currentMonthEnd,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.expense.aggregate({
-                where: {
-                    expenseDate: {
-                        gte: currentMonthStart,
-                        lte: currentMonthEnd,
-                    },
-                },
-                _sum: {
-                    amount: true,
-                },
-            }),
+      this.prisma.donation.aggregate({
+        where: {
+          donatedAt: {
+            gte: previousMonthStart,
+            lte: previousMonthEnd,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.expense.aggregate({
-                where: {
-                    expenseDate: {
-                        gte: previousMonthStart,
-                        lte: previousMonthEnd,
-                    },
-                },
-                _sum: {
-                    amount: true,
-                },
-            }),
+      this.prisma.expense.aggregate({
+        where: {
+          expenseDate: {
+            gte: currentMonthStart,
+            lte: currentMonthEnd,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.family.count({
-                where: {
-                    isActive: true,
-                    createdAt: {
-                        lte: currentMonthEnd,
-                    },
-                },
-            }),
+      this.prisma.expense.aggregate({
+        where: {
+          expenseDate: {
+            gte: previousMonthStart,
+            lte: previousMonthEnd,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.family.count({
-                where: {
-                    isActive: true,
-                    createdAt: {
-                        lte: previousMonthEnd,
-                    },
-                },
-            }),
-        ]);
+      this.prisma.family.count({
+        where: {
+          isActive: true,
+          createdAt: {
+            lte: currentMonthEnd,
+          },
+        },
+      }),
 
-        const donationTotal = Number(
-            totalDonations._sum.amount ?? 0,
-        );
+      this.prisma.family.count({
+        where: {
+          isActive: true,
+          createdAt: {
+            lte: previousMonthEnd,
+          },
+        },
+      }),
+    ]);
 
-        const expenseTotal = Number(
-            totalExpenses._sum.amount ?? 0,
-        );
+    const donationTotal = Number(totalDonations._sum.amount ?? 0);
 
-        const balanceTotal =
-            donationTotal - expenseTotal;
+    const expenseTotal = Number(totalExpenses._sum.amount ?? 0);
 
-        const currentDonation = Number(
-            currentDonations._sum.amount ?? 0,
-        );
+    const balanceTotal = donationTotal - expenseTotal;
 
-        const previousDonation = Number(
-            previousDonations._sum.amount ?? 0,
-        );
+    const currentDonation = Number(currentDonations._sum.amount ?? 0);
 
-        const currentExpense = Number(
-            currentExpenses._sum.amount ?? 0,
-        );
+    const previousDonation = Number(previousDonations._sum.amount ?? 0);
 
-        const previousExpense = Number(
-            previousExpenses._sum.amount ?? 0,
-        );
+    const currentExpense = Number(currentExpenses._sum.amount ?? 0);
 
-        const currentBalance =
-            currentDonation - currentExpense;
+    const previousExpense = Number(previousExpenses._sum.amount ?? 0);
 
-        const previousBalance =
-            previousDonation - previousExpense;
+    const currentBalance = currentDonation - currentExpense;
 
-        return DashboardMapper.toOverviewDto({
-            donations: {
-                total: donationTotal,
-                ...calculateGrowth(
-                    currentDonation,
-                    previousDonation,
-                ),
-            },
+    const previousBalance = previousDonation - previousExpense;
 
-            expenses: {
-                total: expenseTotal,
-                ...calculateGrowth(
-                    currentExpense,
-                    previousExpense,
-                ),
-            },
+    return DashboardMapper.toOverviewDto({
+      donations: {
+        total: donationTotal,
+        ...calculateGrowth(currentDonation, previousDonation),
+      },
 
-            balance: {
-                total: balanceTotal,
-                ...calculateGrowth(
-                    currentBalance,
-                    previousBalance,
-                ),
-            },
+      expenses: {
+        total: expenseTotal,
+        ...calculateGrowth(currentExpense, previousExpense),
+      },
 
-            families: {
-                total: totalFamilies,
-                ...calculateGrowth(
-                    currentFamilies,
-                    previousFamilies,
-                ),
-            },
-        });
-    }
+      balance: {
+        total: balanceTotal,
+        ...calculateGrowth(currentBalance, previousBalance),
+      },
 
-    private async getOverviewByDateRange(
-        from: Date,
-        to: Date,
-    ): Promise<DashboardOverviewDto> {
-        const [
-            donations,
-            expenses,
-            families,
-        ] = await Promise.all([
-            this.prisma.donation.aggregate({
-                where: {
-                    donatedAt: {
-                        gte: from,
-                        lte: to,
-                    },
-                },
-                _sum: {
-                    amount: true,
-                },
-            }),
+      families: {
+        total: totalFamilies,
+        ...calculateGrowth(currentFamilies, previousFamilies),
+      },
+    });
+  }
 
-            this.prisma.expense.aggregate({
-                where: {
-                    expenseDate: {
-                        gte: from,
-                        lte: to,
-                    },
-                },
-                _sum: {
-                    amount: true,
-                },
-            }),
+  private async getOverviewByDateRange(
+    from: Date,
+    to: Date,
+  ): Promise<DashboardOverviewDto> {
+    const [donations, expenses, families] = await Promise.all([
+      this.prisma.donation.aggregate({
+        where: {
+          donatedAt: {
+            gte: from,
+            lte: to,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-            this.prisma.family.count({
-                where: {
-                    isActive: true,
-                    createdAt: {
-                        lte: to,
-                    },
-                },
-            }),
-        ]);
+      this.prisma.expense.aggregate({
+        where: {
+          expenseDate: {
+            gte: from,
+            lte: to,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-        const donationTotal = Number(
-            donations._sum.amount ?? 0,
-        );
+      this.prisma.family.count({
+        where: {
+          isActive: true,
+          createdAt: {
+            lte: to,
+          },
+        },
+      }),
+    ]);
 
-        const expenseTotal = Number(
-            expenses._sum.amount ?? 0,
-        );
+    const donationTotal = Number(donations._sum.amount ?? 0);
 
-        return DashboardMapper.toOverviewDto({
-            donations: {
-                total: donationTotal,
-                growth: 100,
-                trend: 'neutral',
-            },
+    const expenseTotal = Number(expenses._sum.amount ?? 0);
 
-            expenses: {
-                total: expenseTotal,
-                growth: 100,
-                trend: 'neutral',
-            },
+    return DashboardMapper.toOverviewDto({
+      donations: {
+        total: donationTotal,
+        growth: 100,
+        trend: 'neutral',
+      },
 
-            balance: {
-                total: donationTotal - expenseTotal,
-                growth: 100,
-                trend: 'neutral',
-            },
+      expenses: {
+        total: expenseTotal,
+        growth: 100,
+        trend: 'neutral',
+      },
 
-            families: {
-                total: families,
-                growth: 100,
-                trend: 'neutral',
-            },
-        });
-    }
+      balance: {
+        total: donationTotal - expenseTotal,
+        growth: 100,
+        trend: 'neutral',
+      },
+
+      families: {
+        total: families,
+        growth: 100,
+        trend: 'neutral',
+      },
+    });
+  }
 }

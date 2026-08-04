@@ -1,18 +1,18 @@
 import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    HttpStatus,
-    Post,
-    Res,
-    UseGuards,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
@@ -36,101 +36,99 @@ import { CurrentUserDto } from '../dto/responses/current-user.dto';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly loginService: LoginService,
-        private readonly configService: ConfigService,
-        private readonly getMeService: GetMeService,
-        private readonly forgotPasswordService: ForgotPasswordService,
-        private readonly resetPasswordService: ResetPasswordService,
-    ) { }
+  constructor(
+    private readonly loginService: LoginService,
+    private readonly configService: ConfigService,
+    private readonly getMeService: GetMeService,
+    private readonly forgotPasswordService: ForgotPasswordService,
+    private readonly resetPasswordService: ResetPasswordService,
+  ) {}
 
-    @Public()
-    @Post('login')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({
-        summary: 'Login',
-    })
-    @ApiResponse({
-        status: HttpStatus.OK,
-        type: CurrentUserDto,
-    })
-    async login(
-        @Body() loginDto: LoginRequestDto,
-        @Res({ passthrough: true }) response: Response,
-    ): Promise<CurrentUserDto> {
-        const result = await this.loginService.execute(loginDto);
+  @Public()
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Login',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: CurrentUserDto,
+  })
+  async login(
+    @Body() loginDto: LoginRequestDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<CurrentUserDto> {
+    const result = await this.loginService.execute(loginDto);
 
-        CookieUtil.setAccessToken(response, result.accessToken, this.configService);
+    CookieUtil.setAccessToken(response, result.accessToken, this.configService);
 
-        return result.user;
-    }
+    return result.user;
+  }
 
-    @Get('me')
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
-    @ApiOperation({
-        summary: 'Get current user',
-    })
-    @ApiResponse({
-        status: HttpStatus.OK,
-        type: CurrentUserDto,
-    })
-    async me(
-        @CurrentUser('sub') userId: string
-    ): Promise<CurrentUserDto> {
-        return this.getMeService.execute(userId);
-    }
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get current user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: CurrentUserDto,
+  })
+  async me(@CurrentUser('sub') userId: string): Promise<CurrentUserDto> {
+    return this.getMeService.execute(userId);
+  }
 
-    @Post('logout')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({
-        summary: 'Logout',
-    })
-    logout(@Res({ passthrough: true }) response: Response): { message: string } {
-        CookieUtil.clearAccessToken(response, this.configService);
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Logout',
+  })
+  logout(@Res({ passthrough: true }) response: Response): { message: string } {
+    CookieUtil.clearAccessToken(response, this.configService);
 
-        return {
-            message: 'Logged out successfully.',
-        };
-    }
+    return {
+      message: 'Logged out successfully.',
+    };
+  }
 
-    @Public()
-    @Post('forgot-password')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({
-        summary: 'Forgot password',
-    })
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Password reset link sent to your email.',
-    })
-    async forgotPassword(
-        @Body() forgotPasswordDto: ForgotPasswordDto,
-    ): Promise<{ message: string }> {
-        await this.forgotPasswordService.execute(forgotPasswordDto.email);
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Forgot password',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Password reset link sent to your email.',
+  })
+  async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<{ message: string }> {
+    await this.forgotPasswordService.execute(forgotPasswordDto.email);
 
-        return {
-            message: 'Password reset link sent to your email.',
-        };
-    }
+    return {
+      message: 'Password reset link sent to your email.',
+    };
+  }
 
-    @Public()
-    @Post('reset-password')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({
-        summary: 'Reset password',
-    })
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Password reset successfully.',
-    })
-    async resetPassword(
-        @Body() resetPasswordDto: ResetPasswordDto,
-    ): Promise<{ message: string }> {
-        await this.resetPasswordService.execute(resetPasswordDto);
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Reset password',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Password reset successfully.',
+  })
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ message: string }> {
+    await this.resetPasswordService.execute(resetPasswordDto);
 
-        return {
-            message: 'Password reset successfully.',
-        };
-    }
+    return {
+      message: 'Password reset successfully.',
+    };
+  }
 }

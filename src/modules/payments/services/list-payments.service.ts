@@ -9,149 +9,172 @@ import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
 
 @Injectable()
 export class ListPaymentsService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) { }
 
-    async execute(query: PaymentQueryDto): Promise<PaymentListResponseDto> {
-        const {
-            page = 1,
-            limit = 10,
-            search,
-            familyId,
+  async execute(query: PaymentQueryDto): Promise<PaymentListResponseDto> {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      familyId,
+      year,
+      month,
+      method,
+      fromDate,
+      toDate,
+    } = query;
+
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.PaymentWhereInput = {
+      ...(familyId && {
+        familyId,
+      }),
+
+      ...(method && {
+        method,
+      }),
+
+      ...((fromDate || toDate) && {
+        paidAt: {
+          ...(fromDate && {
+            gte: new Date(fromDate),
+          }),
+          ...(toDate && {
+            lte: new Date(toDate),
+          }),
+        },
+      }),
+
+      ...(search && {
+        family: {
+          OR: [
+            {
+              familyNo: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              headName: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      }),
+
+      ...((year || month) && {
+        monthlyCharge: {
+          ...(year && {
             year,
+          }),
+          ...(month && {
             month,
-            method,
-            fromDate,
-            toDate,
-        } = query;
+          }),
+        },
+      }),
+    };
 
-        const skip = (page - 1) * limit;
+    const [payments, total] = await Promise.all([
+      this.prisma.payment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: {
+          paidAt: 'desc',
+        },
+        include: {
+          family: {
+            select: {
+              familyNo: true,
+              headName: true,
+            },
+          },
+          monthlyCharge: {
+            select: {
+              year: true,
+              month: true,
+              amount: true,
+              paidAmount: true,
+            },
+          },
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      }),
 
-        const where: Prisma.PaymentWhereInput = {
-            ...(familyId && {
-                familyId,
-            }),
+      this.prisma.payment.count({
+        where,
+      }),
+    ]);
 
-            ...(method && {
-                method,
-            }),
+    const totalPages = Math.ceil(total / limit);
 
-            ...((fromDate || toDate) && {
-                paidAt: {
-                    ...(fromDate && {
-                        gte: new Date(fromDate),
-                    }),
-                    ...(toDate && {
-                        lte: new Date(toDate),
-                    }),
-                },
-            }),
+    return {
+      data: payments.map((payment) => ({
+        id: payment.id,
 
-            ...(search && {
-                family: {
-                    OR: [
-                        {
-                            familyNo: {
-                                contains: search,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            headName: {
-                                contains: search,
-                                mode: 'insensitive',
-                            },
-                        },
-                    ],
-                },
-            }),
+        familyId: payment.familyId,
+        familyNo: payment.family.familyNo,
+        headName: payment.family.headName,
 
-            ...((year || month) && {
-                monthlyCharge: {
-                    ...(year && {
-                        year,
-                    }),
-                    ...(month && {
-                        month,
-                    }),
-                },
-            }),
-        };
+        monthlyChargeId: payment.monthlyChargeId,
 
-        const [payments, total] = await Promise.all([
-            this.prisma.payment.findMany({
-                where,
-                skip,
-                take: limit,
-                orderBy: {
-                    paidAt: 'desc',
-                },
-                include: {
-                    family: {
-                        select: {
-                            familyNo: true,
-                            headName: true,
-                        },
-                    },
-                    monthlyCharge: {
-                        select: {
-                            year: true,
-                            month: true,
-                            amount: true,
-                            paidAmount: true,
-                        },
-                    },
-                },
-            }),
+        year: payment.monthlyCharge.year,
+        month: payment.monthlyCharge.month,
 
-            this.prisma.payment.count({
-                where,
-            }),
-        ]);
+        chargeAmount: Number(payment.monthlyCharge.amount),
 
-        const totalPages = Math.ceil(total / limit);
+        paymentAmount: Number(payment.amount),
 
-        return {
-            data: payments.map((payment) => ({
-                id: payment.id,
+        paidAmount: Number(payment.monthlyCharge.paidAmount),
 
-                familyId: payment.familyId,
-                familyNo: payment.family.familyNo,
-                headName: payment.family.headName,
+        status: getPaymentStatus(
+          Number(payment.monthlyCharge.amount),
+          Number(payment.monthlyCharge.paidAmount),
+        ),
 
-                monthlyChargeId: payment.monthlyChargeId,
+        method: payment.method,
 
-                year: payment.monthlyCharge.year,
-                month: payment.monthlyCharge.month,
+        reference: payment.reference,
+        note: payment.note,
 
-                chargeAmount: Number(payment.monthlyCharge.amount),
+        paidAt: payment.paidAt,
 
-                paymentAmount: Number(payment.amount),
+        createdBy: {
+          id: payment.createdBy?.id ?? '',
+          name: payment.createdBy?.name ?? '',
+        },
+        updatedBy: {
+          id: payment.updatedBy?.id ?? '',
+          name: payment.updatedBy?.name ?? '',
+        },
 
-                paidAmount: Number(payment.monthlyCharge.paidAmount),
+        createdAt: payment.createdAt,
+        updatedAt: payment.updatedAt,
+      })),
 
-                status: getPaymentStatus(
-                    Number(payment.monthlyCharge.amount),
-                    Number(payment.monthlyCharge.paidAmount),
-                ),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
 
-                method: payment.method,
-
-                reference: payment.reference,
-                note: payment.note,
-
-                paidAt: payment.paidAt,
-
-                createdAt: payment.createdAt,
-                updatedAt: payment.updatedAt,
-            })),
-
-            total,
-            page,
-            limit,
-            totalPages,
-
-            hasNextPage: page < totalPages,
-            hasPreviousPage: page > 1,
-        };
-    }
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
 }

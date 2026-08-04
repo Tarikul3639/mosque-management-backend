@@ -13,83 +13,83 @@ import { TokenService } from './token.service';
 
 @Injectable()
 export class LoginService {
-    private readonly logger = new Logger(LoginService.name);
+  private readonly logger = new Logger(LoginService.name);
 
-    constructor(
-        private readonly prismaService: PrismaService,
-        private readonly tokenService: TokenService,
-    ) { }
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly tokenService: TokenService,
+  ) {}
 
-    async execute(loginDto: LoginRequestDto): Promise<LoginResult> {
-        const { email, password } = loginDto;
+  async execute(loginDto: LoginRequestDto): Promise<LoginResult> {
+    const { email, password } = loginDto;
 
-        this.logger.log(`Attempting to log in user with email: ${email}`);
+    this.logger.log(`Attempting to log in user with email: ${email}`);
 
-        const user = await this.prismaService.user.findUnique({
-            where: { email },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                avatar: {
-                    select: {
-                        url: true,
-                    },
-                },
-                password: true,
-                status: true,
-                role: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
-        });
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        avatar: {
+          select: {
+            url: true,
+          },
+        },
+        password: true,
+        status: true,
+        role: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
 
-        if (!user) {
-            throw new UnauthorizedException('Invalid email or password.');
-        }
-
-        const isPasswordValid = await comparePassword(password, user.password);
-
-        if (!isPasswordValid) {
-            throw new UnauthorizedException('Invalid email or password.');
-        }
-
-        if (user.status !== UserStatus.ACTIVE) {
-            throw new UnauthorizedException('Your account is inactive.');
-        }
-
-        const payload: JwtPayload = {
-            sub: user.id,
-            email: user.email,
-            role: user.role.name,
-        };
-
-        const accessToken = await this.tokenService.generateAccessToken(payload);
-
-        await this.prismaService.user.update({
-            where: {
-                id: user.id,
-            },
-            data: {
-                lastLoginAt: new Date(),
-            },
-        });
-
-        this.logger.log(`User ${user.email} logged in.`);
-
-        return {
-            accessToken,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                avatar: user.avatar?.url || null,
-                role: user.role.name,
-            },
-        };
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password.');
     }
+
+    const isPasswordValid = await comparePassword(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or password.');
+    }
+
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new UnauthorizedException('Your account is inactive.');
+    }
+
+    const payload: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role.name,
+    };
+
+    const accessToken = await this.tokenService.generateAccessToken(payload);
+
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        lastLoginAt: new Date(),
+      },
+    });
+
+    this.logger.log(`User ${user.email} logged in.`);
+
+    return {
+      accessToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        avatar: user.avatar?.url || null,
+        role: user.role.name,
+      },
+    };
+  }
 }

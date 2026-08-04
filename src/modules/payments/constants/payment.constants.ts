@@ -14,7 +14,8 @@ export const PAYMENT_MESSAGES = {
 
   RECEIPT_GENERATED: 'Receipt generated successfully.',
   METHOD_NOT_SUPPORTED: 'Payment method not supported.',
-  MONTHLY_CHARGE_DOES_NOT_BELONG_TO_FAMILY: 'Monthly charge does not belong to this family.',
+  MONTHLY_CHARGE_DOES_NOT_BELONG_TO_FAMILY:
+    'Monthly charge does not belong to this family.',
 } as const;
 
 export const PAYMENT_DEFAULT_PAGE = 1;

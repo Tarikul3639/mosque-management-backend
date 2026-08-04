@@ -1,12 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 import { PaymentMethod } from '@/lib/prisma/client';
 
@@ -42,13 +36,13 @@ export class DonationQueryDto {
   paymentMethod!: PaymentMethod;
 
   @ApiPropertyOptional({
-    example: "2026-01-01",
+    example: '2026-01-01',
   })
   @IsOptional()
   fromDate!: string;
 
   @ApiPropertyOptional({
-    example: "2026-12-31",
+    example: '2026-12-31',
   })
   @IsOptional()
   toDate!: string;

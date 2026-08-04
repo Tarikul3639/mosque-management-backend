@@ -6,19 +6,13 @@ import { CloudinaryFolderType } from '@/common/cloudinary/cloudinary.types';
 
 @Injectable()
 export class ReplaceImageService {
-    constructor(
-        private readonly cloudinaryService: CloudinaryService,
-    ) { }
+  constructor(private readonly cloudinaryService: CloudinaryService) {}
 
-    async execute(
-        publicId: string,
-        filePath: string,
-        folder: CloudinaryFolderType,
-    ): Promise<UploadApiResponse> {
-        return this.cloudinaryService.replace(
-            publicId,
-            filePath,
-            folder,
-        );
-    }
+  async execute(
+    publicId: string,
+    filePath: string,
+    folder: CloudinaryFolderType,
+  ): Promise<UploadApiResponse> {
+    return this.cloudinaryService.replace(publicId, filePath, folder);
+  }
 }

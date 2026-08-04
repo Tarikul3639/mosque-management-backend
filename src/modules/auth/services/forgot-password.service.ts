@@ -14,7 +14,7 @@ export class ForgotPasswordService {
     private readonly prismaService: PrismaService,
     private readonly tokenService: TokenService,
     private readonly mailService: MailService,
-  ) { }
+  ) {}
 
   async execute(email: string): Promise<void> {
     this.logger.log(`Initiating password reset for email: ${email}`);
@@ -47,11 +47,7 @@ export class ForgotPasswordService {
 
     const token = await this.tokenService.generateResetPasswordToken(payload);
 
-    await this.mailService.sendResetPasswordEmail(
-      user.email,
-      user.name,
-      token,
-    );
+    await this.mailService.sendResetPasswordEmail(user.email, user.name, token);
 
     this.logger.log(`Password reset link sent to ${user.email}`);
 

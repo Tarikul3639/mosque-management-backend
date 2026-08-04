@@ -7,7 +7,6 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  IsUUID,
   MaxLength,
 } from 'class-validator';
 
@@ -17,14 +16,14 @@ export class CreatePaymentDto {
   @ApiProperty({
     example: '2c4b3b78-6d88-4c97-8af0-7b7b8b7a1d92',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   familyId!: string;
 
   @ApiProperty({
     example: '51d5dcdc-c2cb-41f2-97aa-1ef3d2dc3d84',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   monthlyChargeId!: string;
 

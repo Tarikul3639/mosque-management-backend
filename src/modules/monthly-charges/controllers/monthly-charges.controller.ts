@@ -44,7 +44,7 @@ export class MonthlyChargesController {
     private readonly listMonthlyChargesService: ListMonthlyChargesService,
     private readonly updateMonthlyChargeService: UpdateMonthlyChargeService,
     private readonly deleteMonthlyChargeService: DeleteMonthlyChargeService,
-  ) { }
+  ) {}
 
   // -----------------------------
   // Protected APIs
@@ -78,9 +78,7 @@ export class MonthlyChargesController {
     status: 200,
     type: MonthlyChargeResponseDto,
   })
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<MonthlyChargeResponseDto> {
+  async findOne(@Param('id') id: string): Promise<MonthlyChargeResponseDto> {
     return this.getMonthlyChargeService.execute(id);
   }
 
@@ -134,9 +132,7 @@ export class MonthlyChargesController {
       },
     },
   })
-  async delete(
-    @Param('id') id: string,
-  ): Promise<{ message: string }> {
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
     return this.deleteMonthlyChargeService.execute(id);
   }
 }

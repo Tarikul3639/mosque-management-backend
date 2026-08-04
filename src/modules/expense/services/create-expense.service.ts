@@ -8,39 +8,39 @@ import { ExpenseMapper } from '../mappers/expense.mapper';
 
 @Injectable()
 export class CreateExpenseService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(
-        dto: CreateExpenseDto,
-        userId: string,
-    ): Promise<ExpenseResponseDto> {
-        const expense = await this.prisma.expense.create({
-            data: {
-                category: dto.category,
-                title: dto.title,
-                amount: dto.amount,
-                note: dto.note,
-                expenseDate: new Date(dto.expenseDate),
+  async execute(
+    dto: CreateExpenseDto,
+    userId: string,
+  ): Promise<ExpenseResponseDto> {
+    const expense = await this.prisma.expense.create({
+      data: {
+        category: dto.category,
+        title: dto.title,
+        amount: dto.amount,
+        note: dto.note,
+        expenseDate: new Date(dto.expenseDate),
 
-                createdById: userId,
-                updatedById: userId,
-            },
-            include: {
-                createdBy: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
-                updatedBy: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
-            },
-        });
+        createdById: userId,
+        updatedById: userId,
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        updatedBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
-        return ExpenseMapper.toResponse(expense);
-    }
+    return ExpenseMapper.toResponse(expense);
+  }
 }

@@ -11,24 +11,26 @@ import {
   mailConfig,
   swaggerConfig,
   envValidationSchema,
-  cookieConfig
+  cookieConfig,
 } from './config';
 import { PrismaModule } from '@/common/prisma/prisma.module';
 import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
 import { MailModule } from '@/common/mail';
 import { AuthModule } from './modules/auth/auth.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FamiliesModule } from './modules/families/families.module';
-import { PaymentsModule } from './modules/payments/payments.module';
-import { DonationsModule } from './modules/donations/donations.module';
 import { DonorsModule } from './modules/donors/donors.module';
-import { CommitteeModule } from './modules/committee/committee.module'
+import { DonationsModule } from './modules/donations/donations.module';
 import { ExpensesModule } from './modules/expense/expenses.module';
-import { DevelopmentProjectsModule } from "./modules/development-project/development-projects.module"
+import { PaymentsModule } from './modules/payments/payments.module';
+import { CommitteeModule } from './modules/committee/committee.module';
+import { DevelopmentProjectsModule } from './modules/development-project/development-projects.module';
 import { GalleriesModule } from './modules/gallery/galleries.module';
 import { PrayerTimesModule } from './modules/prayer-times/prayer-times.module';
 import { UploadsModule } from './common/uploads/uploads.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FileModule } from './common/file/file.module';
+import { MonthlyChargesModule } from './modules/monthly-charges/families.module';
+import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
 
 @Module({
   imports: [
@@ -54,7 +56,7 @@ import { FileModule } from './common/file/file.module';
         loggerConfig,
         mailConfig,
         swaggerConfig,
-        cookieConfig
+        cookieConfig,
       ],
     }),
     MailModule,
@@ -63,19 +65,25 @@ import { FileModule } from './common/file/file.module';
     FileModule,
     // AuthModule is imported here to make its services available throughout the application
     AuthModule,
+    
+    // Sidebar Navigation Ordered Modules
+    DashboardModule,
     FamiliesModule,
-    PaymentsModule,
-    DonationsModule,
+    MonthlyFeesModule,
+    MonthlyChargesModule,
     DonorsModule,
-    CommitteeModule,
+    DonationsModule,
     ExpensesModule,
+    PaymentsModule,
+    CommitteeModule,
     DevelopmentProjectsModule,
     GalleriesModule,
+
+    // Other Utility/Feature Modules
     PrayerTimesModule,
     UploadsModule,
-    DashboardModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

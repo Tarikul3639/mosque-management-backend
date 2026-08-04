@@ -14,9 +14,7 @@ import {
 
 @Injectable()
 export class ListCommitteeMembersService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(
     query: CommitteeMemberQueryDto,
@@ -70,9 +68,7 @@ export class ListCommitteeMembersService {
     const totalPages = Math.ceil(total / limit);
 
     return {
-      data: CommitteeMemberMapper.toResponseList(
-        members,
-      ),
+      data: CommitteeMemberMapper.toResponseList(members),
       total,
       page,
       limit,

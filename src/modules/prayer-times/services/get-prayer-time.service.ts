@@ -4,26 +4,26 @@ import { PrayerTimeResponseDto } from '../dto/responses/prayer-time-response.dto
 
 @Injectable()
 export class GetPrayerTimeService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(): Promise<PrayerTimeResponseDto> {
-        const prayerTime = await this.prisma.prayerTime.findFirst();
+  async execute(): Promise<PrayerTimeResponseDto> {
+    const prayerTime = await this.prisma.prayerTime.findFirst();
 
-        if (!prayerTime) {
-            return {
-                id: '',
-                fajr: '',
-                sunrise: null,
-                dhuhr: '',
-                asr: '',
-                maghrib: '',
-                isha: '',
-                jummah: null,
-                createdAt: null,
-                updatedAt: null,
-            };
-        }
-
-        return prayerTime;
+    if (!prayerTime) {
+      return {
+        id: '',
+        fajr: '',
+        sunrise: null,
+        dhuhr: '',
+        asr: '',
+        maghrib: '',
+        isha: '',
+        jummah: null,
+        createdAt: null,
+        updatedAt: null,
+      };
     }
+
+    return prayerTime;
+  }
 }

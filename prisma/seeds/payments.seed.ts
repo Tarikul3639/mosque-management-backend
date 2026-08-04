@@ -11,6 +11,14 @@ export async function seedPayments(
 ): Promise<void> {
   console.log('💵 Seeding payments...');
 
+  // Fetch a default user to assign as the creator and updater
+  const adminUser = await prisma.user.findFirst();
+
+  if (!adminUser) {
+    console.log('⚠️ No user found. Skipping payment seeding.');
+    return;
+  }
+
   const charges = await prisma.monthlyCharge.findMany();
 
   for (const charge of charges) {
@@ -61,6 +69,9 @@ export async function seedPayments(
                 probability: 0.3,
               },
             ),
+            // Mandatory audit fields for Payment model
+            createdById: adminUser.id,
+            updatedById: adminUser.id,
           },
         })
         : null;

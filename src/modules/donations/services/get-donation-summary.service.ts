@@ -8,49 +8,49 @@ import { DonationSummaryResponseDto } from '../dto/responses/donation-summary-re
 
 @Injectable()
 export class GetDonationSummaryService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async execute(
-        query: DonationSummaryQueryDto,
-    ): Promise<DonationSummaryResponseDto> {
-        const where: Prisma.DonationWhereInput = {};
+  async execute(
+    query: DonationSummaryQueryDto,
+  ): Promise<DonationSummaryResponseDto> {
+    const where: Prisma.DonationWhereInput = {};
 
-        if (query.fromDate || query.toDate) {
-            where.donatedAt = {};
+    if (query.fromDate || query.toDate) {
+      where.donatedAt = {};
 
-            if (query.fromDate) {
-                where.donatedAt.gte = new Date(query.fromDate);
-            }
+      if (query.fromDate) {
+        where.donatedAt.gte = new Date(query.fromDate);
+      }
 
-            if (query.toDate) {
-                where.donatedAt.lte = new Date(query.toDate);
-            }
-        }
-
-        if (query.paymentMethod) {
-            where.paymentMethod = query.paymentMethod;
-        }
-
-        const [totalDonations, aggregate] = await Promise.all([
-            this.prisma.donation.count({
-                where,
-            }),
-
-            this.prisma.donation.aggregate({
-                where,
-                _sum: {
-                    amount: true,
-                },
-                _avg: {
-                    amount: true,
-                },
-            }),
-        ]);
-
-        return {
-            totalDonations,
-            totalAmount: Number(aggregate._sum.amount ?? 0),
-            averageAmount: Number(aggregate._avg.amount ?? 0),
-        };
+      if (query.toDate) {
+        where.donatedAt.lte = new Date(query.toDate);
+      }
     }
+
+    if (query.paymentMethod) {
+      where.paymentMethod = query.paymentMethod;
+    }
+
+    const [totalDonations, aggregate] = await Promise.all([
+      this.prisma.donation.count({
+        where,
+      }),
+
+      this.prisma.donation.aggregate({
+        where,
+        _sum: {
+          amount: true,
+        },
+        _avg: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    return {
+      totalDonations,
+      totalAmount: Number(aggregate._sum.amount ?? 0),
+      averageAmount: Number(aggregate._avg.amount ?? 0),
+    };
+  }
 }

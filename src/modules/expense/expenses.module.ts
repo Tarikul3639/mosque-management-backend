@@ -12,26 +12,26 @@ import { ListExpensesService } from './services/list-expenses.service';
 import { UpdateExpenseService } from './services/update-expense.service';
 
 @Module({
-    imports: [PrismaModule],
+  imports: [PrismaModule],
 
-    controllers: [ExpensesController],
+  controllers: [ExpensesController],
 
-    providers: [
-        CreateExpenseService,
-        UpdateExpenseService,
-        DeleteExpenseService,
-        GetExpenseService,
-        ListExpensesService,
-        GetExpenseSummaryService,
-    ],
+  providers: [
+    CreateExpenseService,
+    UpdateExpenseService,
+    DeleteExpenseService,
+    GetExpenseService,
+    ListExpensesService,
+    GetExpenseSummaryService,
+  ],
 
-    exports: [
-        CreateExpenseService,
-        UpdateExpenseService,
-        DeleteExpenseService,
-        GetExpenseService,
-        ListExpensesService,
-        GetExpenseSummaryService,
-    ],
+  exports: [
+    CreateExpenseService,
+    UpdateExpenseService,
+    DeleteExpenseService,
+    GetExpenseService,
+    ListExpensesService,
+    GetExpenseSummaryService,
+  ],
 })
-export class ExpensesModule { }
+export class ExpensesModule {}

@@ -2,9 +2,11 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
+  IsUUID,
   Max,
   Min,
 } from 'class-validator';
@@ -42,6 +44,14 @@ export class MonthlyChargeQueryDto {
   search?: string;
 
   @ApiPropertyOptional({
+    example: 'cmf7l3b0d0000family123456',
+    description: 'Filter by family ID',
+  })
+  @IsUUID()
+  @IsOptional()
+  familyId?: string;
+
+  @ApiPropertyOptional({
     example: 2026,
   })
   @Type(() => Number)
@@ -67,6 +77,7 @@ export class MonthlyChargeQueryDto {
     enum: PaymentStatus,
     example: PaymentStatus.DUE,
   })
+  @IsEnum(PaymentStatus)
   @IsOptional()
   status?: PaymentStatus;
 
@@ -78,4 +89,13 @@ export class MonthlyChargeQueryDto {
   @IsBoolean()
   @IsOptional()
   activeOnly?: boolean = true;
+
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Return only due or partially paid monthly charges',
+  })
+  @Type(() => Boolean)
+  @IsBoolean()
+  @IsOptional()
+  outstandingOnly?: boolean;
 }

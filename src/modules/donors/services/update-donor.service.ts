@@ -1,7 +1,7 @@
 import {
-    ConflictException,
-    Injectable,
-    NotFoundException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
@@ -15,81 +15,69 @@ import { FileService } from '@/common/file/file.service';
 
 @Injectable()
 export class UpdateDonorService {
-    constructor(
-        private readonly prisma: PrismaService,
-        private readonly fileService: FileService,
-    ) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly fileService: FileService,
+  ) {}
 
-    async execute(
-        id: string,
-        dto: UpdateDonorDto,
-    ): Promise<DonorResponseDto> {
-        const donor = await this.prisma.donor.findUnique({
-            where: { id },
-        });
+  async execute(id: string, dto: UpdateDonorDto): Promise<DonorResponseDto> {
+    const donor = await this.prisma.donor.findUnique({
+      where: { id },
+    });
 
-        if (!donor) {
-            throw new NotFoundException(
-                DONOR_MESSAGES.DONOR_NOT_FOUND,
-            );
-        }
-
-        const existingDonor =
-            await this.prisma.donor.findFirst({
-                where: {
-                    name: dto.name,
-                    phone: dto.phone,
-                    NOT: {
-                        id,
-                    },
-                },
-            });
-
-        if (existingDonor) {
-            throw new ConflictException(
-                DONOR_MESSAGES.DONOR_ALREADY_EXISTS,
-            );
-        }
-
-        const updatedDonor =
-            await this.prisma.donor.update({
-                where: {
-                    id,
-                },
-                data: {
-                    name: dto.name,
-                    phone: dto.phone,
-                    email: dto.email,
-                    address: dto.address,
-                    isActive: dto.isActive,
-
-                    ...(dto.avatarId !== undefined && {
-                        avatar: dto.avatarId
-                            ? {
-                                connect: {
-                                    id: dto.avatarId,
-                                },
-                            }
-                            : {
-                                disconnect: true,
-                            },
-                    }),
-                },
-                include: {
-                    avatar: {
-                        select: {
-                            id: true,
-                            url: true,
-                        },
-                    },
-                },
-            });
-
-        await this.fileService.replace(
-            donor.avatarId,
-            dto.avatarId,
-        );
-
-        return DonorMapper.toResponse(updatedDonor);
+    if (!donor) {
+      throw new NotFoundException(DONOR_MESSAGES.DONOR_NOT_FOUND);
     }
+
+    const existingDonor = await this.prisma.donor.findFirst({
+      where: {
+        name: dto.name,
+        phone: dto.phone,
+        NOT: {
+          id,
+        },
+      },
+    });
+
+    if (existingDonor) {
+      throw new ConflictException(DONOR_MESSAGES.DONOR_ALREADY_EXISTS);
+    }
+
+    const updatedDonor = await this.prisma.donor.update({
+      where: {
+        id,
+      },
+      data: {
+        name: dto.name,
+        phone: dto.phone,
+        email: dto.email,
+        address: dto.address,
+        isActive: dto.isActive,
+
+        ...(dto.avatarId !== undefined && {
+          avatar: dto.avatarId
+            ? {
+                connect: {
+                  id: dto.avatarId,
+                },
+              }
+            : {
+                disconnect: true,
+              },
+        }),
+      },
+      include: {
+        avatar: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+      },
+    });
+
+    await this.fileService.replace(donor.avatarId, dto.avatarId);
+
+    return DonorMapper.toResponse(updatedDonor);
+  }
 }
