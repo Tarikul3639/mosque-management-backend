@@ -72,6 +72,7 @@ export class CreateFamilyService {
       familyNo: family.familyNo,
       headName: family.headName,
       phone: family.phone,
+      email: family.email,
       address: family.address,
 
       avatar: family.avatar

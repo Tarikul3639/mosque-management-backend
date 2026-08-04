@@ -31,34 +31,31 @@ model User {
   lastLoginAt                DateTime?
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
-  
-  // Relations for tracking creators and updaters
+  createdCommitteeMembers    CommitteeMember[]    @relation("CommitteeMemberCreatedBy")
+  updatedCommitteeMembers    CommitteeMember[]    @relation("CommitteeMemberUpdatedBy")
   createdDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectCreatedBy")
   updatedDevelopmentProjects DevelopmentProject[] @relation("DevelopmentProjectUpdatedBy")
   createdDonations           Donation[]           @relation("DonationCreatedBy")
   updatedDonations           Donation[]           @relation("DonationUpdatedBy")
+  createdDonors              Donor[]              @relation("DonorCreatedBy")
+  updatedDonors              Donor[]              @relation("DonorUpdatedBy")
   createdExpenses            Expense[]            @relation("ExpenseCreatedBy")
   updatedExpenses            Expense[]            @relation("ExpenseUpdatedBy")
+  createdFamilies            Family[]             @relation("FamilyCreatedBy")
+  updatedFamilies            Family[]             @relation("FamilyUpdatedBy")
+  createdFamilyFees          FamilyFee[]          @relation("FamilyFeeCreatedBy")
+  updatedFamilyFees          FamilyFee[]          @relation("FamilyFeeUpdatedBy")
   createdFiles               File[]               @relation("FileCreatedBy")
   updatedFiles               File[]               @relation("FileUpdatedBy")
   uploadedFiles              File[]               @relation("FileUploadedBy")
   createdGalleries           Gallery[]            @relation("GalleryCreatedBy")
   updatedGalleries           Gallery[]            @relation("GalleryUpdatedBy")
-  createdPayments            Payment[]            @relation("PaymentCreatedBy")
-  updatedPayments            Payment[]            @relation("PaymentUpdatedBy")
-  createdFamilies            Family[]             @relation("FamilyCreatedBy")
-  updatedFamilies            Family[]             @relation("FamilyUpdatedBy")
-  createdCommitteeMembers    CommitteeMember[]    @relation("CommitteeMemberCreatedBy")
-  updatedCommitteeMembers    CommitteeMember[]    @relation("CommitteeMemberUpdatedBy")
-  createdFamilyFees          FamilyFee[]          @relation("FamilyFeeCreatedBy")
-  updatedFamilyFees          FamilyFee[]          @relation("FamilyFeeUpdatedBy")
   createdMonthlyCharges      MonthlyCharge[]      @relation("MonthlyChargeCreatedBy")
   updatedMonthlyCharges      MonthlyCharge[]      @relation("MonthlyChargeUpdatedBy")
-  createdDonors              Donor[]              @relation("DonorCreatedBy")
-  updatedDonors              Donor[]              @relation("DonorUpdatedBy")
+  createdPayments            Payment[]            @relation("PaymentCreatedBy")
+  updatedPayments            Payment[]            @relation("PaymentUpdatedBy")
   createdPrayerTimes         PrayerTime[]         @relation("PrayerTimeCreatedBy")
   updatedPrayerTimes         PrayerTime[]         @relation("PrayerTimeUpdatedBy")
-
   avatar                     File?                @relation(fields: [avatarId], references: [id])
   role                       Role                 @relation(fields: [roleId], references: [id])
 
@@ -82,7 +79,6 @@ model CommitteeMember {
   updatedById String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-
   avatar      File?         @relation(fields: [avatarId], references: [id])
   createdBy   User?         @relation("CommitteeMemberCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?         @relation("CommitteeMemberUpdatedBy", fields: [updatedById], references: [id])
@@ -100,19 +96,19 @@ model Family {
   headName    String
   avatarId    String?         @unique
   phone       String?
+  email       String?
   address     String?
   isActive    Boolean         @default(true)
   createdById String?
   updatedById String?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-
-  feeHistory  FamilyFee[]
-  charges     MonthlyCharge[]
-  payments    Payment[]
   avatar      File?           @relation(fields: [avatarId], references: [id])
   createdBy   User?           @relation("FamilyCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?           @relation("FamilyUpdatedBy", fields: [updatedById], references: [id])
+  feeHistory  FamilyFee[]
+  charges     MonthlyCharge[]
+  payments    Payment[]
 
   @@index([isActive])
   @@index([createdById])
@@ -121,19 +117,19 @@ model Family {
 }
 
 model FamilyFee {
-  id          String    @id @default(cuid())
+  id          String          @id @default(cuid())
   familyId    String
-  monthlyFee  Decimal   @db.Decimal(10, 2)
+  monthlyFee  Decimal         @db.Decimal(10, 2)
   startDate   DateTime
   endDate     DateTime?
   createdById String?
   updatedById String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  family      Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  createdBy   User?     @relation("FamilyFeeCreatedBy", fields: [createdById], references: [id])
-  updatedBy   User?     @relation("FamilyFeeUpdatedBy", fields: [updatedById], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  createdBy   User?           @relation("FamilyFeeCreatedBy", fields: [createdById], references: [id])
+  family      Family          @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  updatedBy   User?           @relation("FamilyFeeUpdatedBy", fields: [updatedById], references: [id])
+  charges     MonthlyCharge[]
 
   @@index([familyId])
   @@index([createdById])
@@ -154,10 +150,9 @@ model Payment {
   updatedById     String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-
+  createdBy       User?         @relation("PaymentCreatedBy", fields: [createdById], references: [id])
   family          Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   monthlyCharge   MonthlyCharge @relation(fields: [monthlyChargeId], references: [id], onDelete: Cascade)
-  createdBy       User?         @relation("PaymentCreatedBy", fields: [createdById], references: [id])
   updatedBy       User?         @relation("PaymentUpdatedBy", fields: [updatedById], references: [id])
 
   @@index([familyId])
@@ -170,6 +165,7 @@ model Payment {
 model MonthlyCharge {
   id          String    @id @default(cuid())
   familyId    String
+  familyFeeId String
   year        Int
   month       Int
   amount      Decimal   @db.Decimal(10, 2)
@@ -180,17 +176,18 @@ model MonthlyCharge {
   updatedById String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  family      Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  payments    Payment[]
   createdBy   User?     @relation("MonthlyChargeCreatedBy", fields: [createdById], references: [id])
+  familyFee   FamilyFee @relation(fields: [familyFeeId], references: [id])
+  family      Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
   updatedBy   User?     @relation("MonthlyChargeUpdatedBy", fields: [updatedById], references: [id])
+  payments    Payment[]
 
   @@unique([familyId, year, month])
   @@index([familyId])
   @@index([year, month])
   @@index([createdById])
   @@index([updatedById])
+  @@index([familyFeeId])
   @@map("monthly_charges")
 }
 
@@ -206,7 +203,6 @@ model Donor {
   updatedById String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-
   donations   Donation[]
   avatar      File?      @relation(fields: [avatarId], references: [id])
   createdBy   User?      @relation("DonorCreatedBy", fields: [createdById], references: [id])
@@ -235,7 +231,6 @@ model Donation {
   donatedAt            DateTime      @default(now())
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
-
   createdBy            User?         @relation("DonationCreatedBy", fields: [createdById], references: [id])
   donor                Donor         @relation(fields: [donorId], references: [id])
   updatedBy            User?         @relation("DonationUpdatedBy", fields: [updatedById], references: [id])
@@ -259,7 +254,6 @@ model Expense {
   updatedById String?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-
   createdBy   User?           @relation("ExpenseCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?           @relation("ExpenseUpdatedBy", fields: [updatedById], references: [id])
 
@@ -284,7 +278,6 @@ model DevelopmentProject {
   updatedById String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-
   createdBy   User?         @relation("DevelopmentProjectCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?         @relation("DevelopmentProjectUpdatedBy", fields: [updatedById], references: [id])
   images      File[]        @relation("DevelopmentProjectToFile")
@@ -305,7 +298,6 @@ model Gallery {
   updatedById String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   createdBy   User?    @relation("GalleryCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?    @relation("GalleryUpdatedBy", fields: [updatedById], references: [id])
   images      File[]   @relation("FileToGallery")
@@ -329,7 +321,6 @@ model PrayerTime {
   updatedById String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   createdBy   User?    @relation("PrayerTimeCreatedBy", fields: [createdById], references: [id])
   updatedBy   User?    @relation("PrayerTimeUpdatedBy", fields: [updatedById], references: [id])
 
@@ -353,7 +344,6 @@ model File {
   uploadedById    String?
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
-
   committeeAvatar CommitteeMember?
   donorAvatar     Donor?
   familyAvatar    Family?

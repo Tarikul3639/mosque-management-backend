@@ -36,7 +36,7 @@ export class FamilyQueryDto {
 
   @ApiPropertyOptional({
     example: 'Karim',
-    description: 'Search by family number, head name, phone or address',
+    description: 'Search by family number, head name, email, phone or address',
   })
   @IsOptional()
   @IsString()

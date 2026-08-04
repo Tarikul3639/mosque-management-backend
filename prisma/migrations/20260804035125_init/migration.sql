@@ -19,9 +19,6 @@ CREATE TYPE "ProjectStatus" AS ENUM ('PLANNING', 'RUNNING', 'COMPLETED', 'CANCEL
 -- CreateEnum
 CREATE TYPE "Month" AS ENUM ('JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER');
 
--- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('DUE', 'PAID', 'PARTIAL');
-
 -- CreateTable
 CREATE TABLE "roles" (
     "id" TEXT NOT NULL,
@@ -62,6 +59,8 @@ CREATE TABLE "committee_members" (
     "joiningDate" TIMESTAMP(3),
     "endDate" TIMESTAMP(3),
     "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -77,6 +76,8 @@ CREATE TABLE "families" (
     "phone" TEXT,
     "address" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -84,19 +85,22 @@ CREATE TABLE "families" (
 );
 
 -- CreateTable
-CREATE TABLE "FamilyFee" (
+CREATE TABLE "family_fees" (
     "id" TEXT NOT NULL,
     "familyId" TEXT NOT NULL,
     "monthlyFee" DECIMAL(10,2) NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "FamilyFee_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "family_fees_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Payment" (
+CREATE TABLE "payments" (
     "id" TEXT NOT NULL,
     "familyId" TEXT NOT NULL,
     "monthlyChargeId" TEXT NOT NULL,
@@ -105,27 +109,31 @@ CREATE TABLE "Payment" (
     "method" "PaymentMethod" NOT NULL DEFAULT 'CASH',
     "reference" TEXT,
     "note" TEXT,
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "payments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "MonthlyCharge" (
+CREATE TABLE "monthly_charges" (
     "id" TEXT NOT NULL,
     "familyId" TEXT NOT NULL,
+    "familyFeeId" TEXT NOT NULL,
     "year" INTEGER NOT NULL,
     "month" INTEGER NOT NULL,
     "amount" DECIMAL(10,2) NOT NULL,
     "paidAmount" DECIMAL(10,2) NOT NULL DEFAULT 0,
-    "status" "PaymentStatus" NOT NULL DEFAULT 'DUE',
     "dueDate" TIMESTAMP(3),
     "paidAt" TIMESTAMP(3),
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "MonthlyCharge_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "monthly_charges_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -137,6 +145,8 @@ CREATE TABLE "donors" (
     "address" TEXT,
     "avatarId" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -222,6 +232,8 @@ CREATE TABLE "prayer_times" (
     "maghrib" TEXT NOT NULL,
     "isha" TEXT NOT NULL,
     "jummah" TEXT,
+    "createdById" TEXT,
+    "updatedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -239,8 +251,9 @@ CREATE TABLE "files" (
     "size" INTEGER NOT NULL,
     "width" INTEGER,
     "height" INTEGER,
-    "uploadedById" TEXT,
+    "createdById" TEXT,
     "updatedById" TEXT,
+    "uploadedById" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -291,6 +304,12 @@ CREATE INDEX "committee_members_designation_idx" ON "committee_members"("designa
 CREATE INDEX "committee_members_isActive_idx" ON "committee_members"("isActive");
 
 -- CreateIndex
+CREATE INDEX "committee_members_createdById_idx" ON "committee_members"("createdById");
+
+-- CreateIndex
+CREATE INDEX "committee_members_updatedById_idx" ON "committee_members"("updatedById");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "families_familyNo_key" ON "families"("familyNo");
 
 -- CreateIndex
@@ -300,19 +319,49 @@ CREATE UNIQUE INDEX "families_avatarId_key" ON "families"("avatarId");
 CREATE INDEX "families_isActive_idx" ON "families"("isActive");
 
 -- CreateIndex
-CREATE INDEX "Payment_familyId_idx" ON "Payment"("familyId");
+CREATE INDEX "families_createdById_idx" ON "families"("createdById");
 
 -- CreateIndex
-CREATE INDEX "Payment_monthlyChargeId_idx" ON "Payment"("monthlyChargeId");
+CREATE INDEX "families_updatedById_idx" ON "families"("updatedById");
 
 -- CreateIndex
-CREATE INDEX "MonthlyCharge_familyId_idx" ON "MonthlyCharge"("familyId");
+CREATE INDEX "family_fees_familyId_idx" ON "family_fees"("familyId");
 
 -- CreateIndex
-CREATE INDEX "MonthlyCharge_year_month_idx" ON "MonthlyCharge"("year", "month");
+CREATE INDEX "family_fees_createdById_idx" ON "family_fees"("createdById");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "MonthlyCharge_familyId_year_month_key" ON "MonthlyCharge"("familyId", "year", "month");
+CREATE INDEX "family_fees_updatedById_idx" ON "family_fees"("updatedById");
+
+-- CreateIndex
+CREATE INDEX "payments_familyId_idx" ON "payments"("familyId");
+
+-- CreateIndex
+CREATE INDEX "payments_monthlyChargeId_idx" ON "payments"("monthlyChargeId");
+
+-- CreateIndex
+CREATE INDEX "payments_createdById_idx" ON "payments"("createdById");
+
+-- CreateIndex
+CREATE INDEX "payments_updatedById_idx" ON "payments"("updatedById");
+
+-- CreateIndex
+CREATE INDEX "monthly_charges_familyId_idx" ON "monthly_charges"("familyId");
+
+-- CreateIndex
+CREATE INDEX "monthly_charges_year_month_idx" ON "monthly_charges"("year", "month");
+
+-- CreateIndex
+CREATE INDEX "monthly_charges_createdById_idx" ON "monthly_charges"("createdById");
+
+-- CreateIndex
+CREATE INDEX "monthly_charges_updatedById_idx" ON "monthly_charges"("updatedById");
+
+-- CreateIndex
+CREATE INDEX "monthly_charges_familyFeeId_idx" ON "monthly_charges"("familyFeeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "monthly_charges_familyId_year_month_key" ON "monthly_charges"("familyId", "year", "month");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "donors_avatarId_key" ON "donors"("avatarId");
@@ -322,6 +371,12 @@ CREATE INDEX "donors_name_idx" ON "donors"("name");
 
 -- CreateIndex
 CREATE INDEX "donors_phone_idx" ON "donors"("phone");
+
+-- CreateIndex
+CREATE INDEX "donors_createdById_idx" ON "donors"("createdById");
+
+-- CreateIndex
+CREATE INDEX "donors_updatedById_idx" ON "donors"("updatedById");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "donors_name_phone_key" ON "donors"("name", "phone");
@@ -378,13 +433,22 @@ CREATE INDEX "galleries_createdById_idx" ON "galleries"("createdById");
 CREATE INDEX "galleries_updatedById_idx" ON "galleries"("updatedById");
 
 -- CreateIndex
+CREATE INDEX "prayer_times_createdById_idx" ON "prayer_times"("createdById");
+
+-- CreateIndex
+CREATE INDEX "prayer_times_updatedById_idx" ON "prayer_times"("updatedById");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "files_publicId_key" ON "files"("publicId");
 
 -- CreateIndex
-CREATE INDEX "files_uploadedById_idx" ON "files"("uploadedById");
+CREATE INDEX "files_createdById_idx" ON "files"("createdById");
 
 -- CreateIndex
 CREATE INDEX "files_updatedById_idx" ON "files"("updatedById");
+
+-- CreateIndex
+CREATE INDEX "files_uploadedById_idx" ON "files"("uploadedById");
 
 -- CreateIndex
 CREATE INDEX "_DevelopmentProjectToFile_B_index" ON "_DevelopmentProjectToFile"("B");
@@ -393,37 +457,76 @@ CREATE INDEX "_DevelopmentProjectToFile_B_index" ON "_DevelopmentProjectToFile"(
 CREATE INDEX "_FileToGallery_B_index" ON "_FileToGallery"("B");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "committee_members" ADD CONSTRAINT "committee_members_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "committee_members" ADD CONSTRAINT "committee_members_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "committee_members" ADD CONSTRAINT "committee_members_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "families" ADD CONSTRAINT "families_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FamilyFee" ADD CONSTRAINT "FamilyFee_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "families" ADD CONSTRAINT "families_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Payment" ADD CONSTRAINT "Payment_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "families" ADD CONSTRAINT "families_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Payment" ADD CONSTRAINT "Payment_monthlyChargeId_fkey" FOREIGN KEY ("monthlyChargeId") REFERENCES "MonthlyCharge"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MonthlyCharge" ADD CONSTRAINT "MonthlyCharge_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "family_fees" ADD CONSTRAINT "family_fees_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_monthlyChargeId_fkey" FOREIGN KEY ("monthlyChargeId") REFERENCES "monthly_charges"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_familyFeeId_fkey" FOREIGN KEY ("familyFeeId") REFERENCES "family_fees"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "families"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "monthly_charges" ADD CONSTRAINT "monthly_charges_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "donors" ADD CONSTRAINT "donors_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "donations" ADD CONSTRAINT "donations_donorId_fkey" FOREIGN KEY ("donorId") REFERENCES "donors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "donors" ADD CONSTRAINT "donors_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "donors" ADD CONSTRAINT "donors_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "donations" ADD CONSTRAINT "donations_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "donations" ADD CONSTRAINT "donations_donorId_fkey" FOREIGN KEY ("donorId") REFERENCES "donors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "donations" ADD CONSTRAINT "donations_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -447,10 +550,19 @@ ALTER TABLE "galleries" ADD CONSTRAINT "galleries_createdById_fkey" FOREIGN KEY 
 ALTER TABLE "galleries" ADD CONSTRAINT "galleries_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "files" ADD CONSTRAINT "files_uploadedById_fkey" FOREIGN KEY ("uploadedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "prayer_times" ADD CONSTRAINT "prayer_times_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "prayer_times" ADD CONSTRAINT "prayer_times_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "files" ADD CONSTRAINT "files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "files" ADD CONSTRAINT "files_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "files" ADD CONSTRAINT "files_uploadedById_fkey" FOREIGN KEY ("uploadedById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_DevelopmentProjectToFile" ADD CONSTRAINT "_DevelopmentProjectToFile_A_fkey" FOREIGN KEY ("A") REFERENCES "development_projects"("id") ON DELETE CASCADE ON UPDATE CASCADE;

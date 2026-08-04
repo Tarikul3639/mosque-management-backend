@@ -26,6 +26,15 @@ export class CreateFamilyDto {
   phone?: string;
 
   @ApiPropertyOptional({
+    example: 'tarikulislam3639@gmail.com',
+    description: 'Family email address',
+  })
+  @IsOptional()
+  @IsString()
+  @Length(5, 100)
+  email?: string;
+
+  @ApiPropertyOptional({
     example: '6b8b0d0b-0b7d-4d16-91c8-9b1d1d2e3f4a',
     description: 'Avatar File ID',
   })

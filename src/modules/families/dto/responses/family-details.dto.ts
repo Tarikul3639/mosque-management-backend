@@ -79,6 +79,12 @@ export class FamilyDetailsResponseDto {
   phone!: string | null;
 
   @ApiPropertyOptional({
+    example: 'tarikulislam3639@gmail.com',
+    nullable: true,
+  })
+  email!: string | null;
+
+  @ApiPropertyOptional({
     example: 'Village: Rathura, Kaliganj, Gazipur',
     nullable: true,
   })

@@ -19,12 +19,14 @@ export const FAMILY_SORTABLE_FIELDS = [
   'headName',
   'createdAt',
   'updatedAt',
+  'email',
 ] as const;
 
 export const FAMILY_MESSAGES = {
   CREATED: 'Family created successfully.',
   UPDATED: 'Family updated successfully.',
   DELETED: 'Family deleted successfully.',
+  EMAIL_EXISTS: 'Email address already exists.',
 
   NOT_FOUND: 'Family not found.',
   ALREADY_EXISTS: 'Family already exists.',
