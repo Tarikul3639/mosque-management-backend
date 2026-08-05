@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -35,6 +34,7 @@ import { GetProjectService } from '../services/get-project.service';
 import { GetProjectSummaryService } from '../services/get-project-summary.service';
 import { ListProjectsService } from '../services/list-projects.service';
 import { UpdateProjectService } from '../services/update-project.service';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -101,9 +101,9 @@ export class ProjectsController {
   })
   async create(
     @Body() dto: CreateProjectDto,
-    @Req() req: any,
+    @CurrentUser("sub") userId: string,
   ): Promise<ProjectResponseDto> {
-    return this.createProjectService.execute(dto, req.user.id);
+    return this.createProjectService.execute(dto, userId);
   }
 
   @Patch(':id')
@@ -120,13 +120,14 @@ export class ProjectsController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateProjectDto,
-    @Req() req: any,
+    @CurrentUser("sub") userId: string,
+    @CurrentUser("role") role: UserRole,
   ): Promise<ProjectResponseDto> {
     return this.updateProjectService.execute(
       id,
       dto,
-      req.user.id,
-      req.user.role,
+      userId,
+      role,
     );
   }
 
@@ -147,12 +148,12 @@ export class ProjectsController {
   })
   async remove(
     @Param('id') id: string,
-    @Req() req: any,
+    @CurrentUser() user: { sub: string; role: UserRole },
   ): Promise<{ message: string }> {
     return this.deleteProjectService.execute(
       id,
-      req.user.id,
-      req.user.role,
+      user.sub,
+      user.role,
     );
   }
 }

@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -142,8 +141,8 @@ export class ExpensesController {
   })
   async remove(
     @Param('id') id: string,
-    @Req() req: any,
+    @CurrentUser() user: { sub: string; role: UserRole },
   ): Promise<{ message: string }> {
-    return this.deleteExpenseService.execute(id, req.user.id, req.user.role);
+    return this.deleteExpenseService.execute(id, user.sub, user.role);
   }
 }

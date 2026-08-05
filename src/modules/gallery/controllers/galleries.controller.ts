@@ -36,6 +36,7 @@ import { GetGalleryService } from '../services/get-gallery.service';
 import { GetGallerySummaryService } from '../services/get-gallery-summary.service';
 import { ListGalleriesService } from '../services/list-galleries.service';
 import { UpdateGalleryService } from '../services/update-gallery.service';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
 
 @ApiTags('Galleries')
 @Controller('galleries')
@@ -100,9 +101,9 @@ export class GalleriesController {
   })
   async create(
     @Body() dto: CreateGalleryDto,
-    @Req() req: any,
+    @CurrentUser("sub") userId: string,
   ): Promise<GalleryResponseDto> {
-    return this.createGalleryService.execute(dto, req.user.id);
+    return this.createGalleryService.execute(dto, userId);
   }
 
   @Patch(':id')
@@ -119,13 +120,14 @@ export class GalleriesController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateGalleryDto,
-    @Req() req: any,
+    @CurrentUser("sub") userId: string,
+    @CurrentUser("role") role: UserRole,
   ): Promise<GalleryResponseDto> {
     return this.updateGalleryService.execute(
       id,
       dto,
-      req.user.id,
-      req.user.role,
+      userId,
+      role,
     );
   }
 
