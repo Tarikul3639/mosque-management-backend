@@ -36,7 +36,7 @@ import { GetProjectSummaryService } from '../services/get-project-summary.servic
 import { ListProjectsService } from '../services/list-projects.service';
 import { UpdateProjectService } from '../services/update-project.service';
 
-@ApiTags('Development Projects')
+@ApiTags('Projects')
 @Controller('projects')
 export class ProjectsController {
   constructor(
@@ -50,7 +50,7 @@ export class ProjectsController {
 
   @Get()
   @ApiOperation({
-    summary: 'List development projects',
+    summary: 'List projects',
   })
   @ApiResponse({
     status: 200,
@@ -64,7 +64,7 @@ export class ProjectsController {
 
   @Get('summary')
   @ApiOperation({
-    summary: 'Get development project summary',
+    summary: 'Get project summary',
   })
   @ApiResponse({
     status: 200,
@@ -76,7 +76,7 @@ export class ProjectsController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get development project by ID',
+    summary: 'Get project by ID',
   })
   @ApiResponse({
     status: 200,
@@ -93,7 +93,7 @@ export class ProjectsController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Create development project',
+    summary: 'Create project',
   })
   @ApiResponse({
     status: 201,
@@ -111,7 +111,7 @@ export class ProjectsController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Update development project',
+    summary: 'Update project',
   })
   @ApiResponse({
     status: 200,
@@ -135,13 +135,13 @@ export class ProjectsController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Delete development project',
+    summary: 'Delete project',
   })
   @ApiResponse({
     status: 200,
     schema: {
       example: {
-        message: 'Development project deleted successfully.',
+        message: 'Project deleted successfully.',
       },
     },
   })
