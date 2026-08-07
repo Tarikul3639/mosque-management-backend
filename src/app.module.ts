@@ -32,8 +32,9 @@ import { UploadsModule } from './common/uploads/uploads.module';
 import { FileModule } from './common/file/file.module';
 import { MonthlyChargesModule } from './modules/monthly-charges/families.module';
 import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
+import { SearchModule } from './modules/search/search.module';
 
-import { AppController } from './modules/app.controller';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { AppController } from './modules/app.controller';
     CommitteeModule,
     ProjectsModule,
     GalleriesModule,
+    SearchModule,
 
     // Other Utility/Feature Modules
     PrayerTimesModule,

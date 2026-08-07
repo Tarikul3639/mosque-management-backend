@@ -4,7 +4,6 @@ import type { Response } from 'express';
 
 @Controller()
 export class AppController {
-  
   @Get('favicon.ico')
   @ApiExcludeEndpoint()
   getFaviconIco(@Res() res: Response) {

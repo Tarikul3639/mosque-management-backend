@@ -1,6 +1,6 @@
 import { IsOptional, IsString, MinLength } from 'class-validator';
 
-export class GlobalSearchQueryDto {
+export class SearchQueryDto {
   @IsString()
   @IsOptional()
   @MinLength(1)
