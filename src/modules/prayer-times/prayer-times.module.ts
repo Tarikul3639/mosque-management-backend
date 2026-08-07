@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { PrismaModule } from '@/common/prisma/prisma.module';
+import { PrismaModule } from '../../common/prisma/prisma.module';
 import { PrayerTimesController } from './controllers/prayer-times.controller';
 
 import { GetPrayerTimeService } from './services/get-prayer-time.service';

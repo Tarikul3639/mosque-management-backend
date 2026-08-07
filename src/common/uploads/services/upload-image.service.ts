@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
-import { CloudinaryService } from '@/common/cloudinary/cloudinary.service';
-import { CloudinaryFolderType } from '@/common/cloudinary/cloudinary.types';
+import { CloudinaryService } from '../../../common/cloudinary/cloudinary.service';
+import { CloudinaryFolderType } from '../../../common/cloudinary/cloudinary.types';
 
 import { UploadResponseDto } from '../dto/responses/upload-response.dto';
 

@@ -1,6 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 
-import { PrismaClient } from '@/lib/prisma/client';
+import { PrismaClient } from '../src/lib/prisma/client';
 import { seedPrayerTime } from './seeds/prayer-time.seed';
 
 import { seedFamilyFees } from './seeds/family-fees.seed';

@@ -15,7 +15,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { ProjectStatus } from '@/lib/prisma/client';
+import { ProjectStatus } from '../../../../lib/prisma/client';
 
 export class CreateProjectDto {
   @ApiProperty({

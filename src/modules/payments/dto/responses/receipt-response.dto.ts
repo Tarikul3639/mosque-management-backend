@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { PaymentMethod } from '@/lib/prisma/client';
-import { PaymentStatus } from '@/common/enums/payment-status.enum';
+import { PaymentMethod } from '../../../../lib/prisma/client';
+import { PaymentStatus } from '../../../../common/enums/payment-status.enum';
 
 export class ReceiptResponseDto {
   @ApiProperty({

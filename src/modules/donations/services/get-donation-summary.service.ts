@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma } from '@/lib/prisma/client';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { Prisma } from '../../../lib/prisma/client';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { DonationSummaryQueryDto } from '../dto/requests/donation-summary-query.dto';
 import { DonationSummaryResponseDto } from '../dto/responses/donation-summary-response.dto';

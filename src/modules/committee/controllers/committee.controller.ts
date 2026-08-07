@@ -16,10 +16,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
-import { UserRole } from '@/lib/prisma/client';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { CreateCommitteeMemberDto } from '../dto/requests/create-committee-member.dto';
 import { UpdateCommitteeMemberDto } from '../dto/requests/update-committee-member.dto';

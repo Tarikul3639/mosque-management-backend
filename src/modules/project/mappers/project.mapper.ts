@@ -1,4 +1,4 @@
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 import { ProjectResponseDto } from '../dto/responses/project-response.dto';
 
 type ProjectWithUsers = Prisma.ProjectGetPayload<{

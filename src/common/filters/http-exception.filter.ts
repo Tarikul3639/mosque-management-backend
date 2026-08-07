@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { ApiErrorResponse } from '@/common/interfaces/api-error.interface';
-import { FieldError } from '@/common/interfaces/field-error.interface';
+import { ApiErrorResponse } from '../../common/interfaces/api-error.interface';
+import { FieldError } from '../../common/interfaces/field-error.interface';
 
 interface ExceptionResponse {
   message?: string | string[];

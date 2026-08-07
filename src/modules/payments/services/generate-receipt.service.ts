@@ -2,9 +2,9 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { ReceiptNoGenerator } from '@/common/utils/receipt';
-import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { ReceiptNoGenerator } from '../../../common/utils/receipt';
+import { getPaymentStatus } from '../../../common/utils/get-payment-status.util';
 
 import { PAYMENT_MESSAGES } from '../constants/payment.constants';
 import { ReceiptResponseDto } from '../dto/responses/receipt-response.dto';

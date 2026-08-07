@@ -1,6 +1,6 @@
-import type { PrismaClient } from '@/lib/prisma/client';
-import { hashPassword } from '@/common/utils/hash';
-import { UserRole } from '@/lib/prisma/client';
+import type { PrismaClient } from '../../src/lib/prisma/client';
+import { UserRole } from '../../src/lib/prisma/client';
+import { hashPassword } from '../../src/common/utils/hash';
 
 export async function seedUsers(
     prisma: PrismaClient,

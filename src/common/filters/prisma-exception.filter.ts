@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../lib/prisma/client';
 
-import { ApiErrorResponse } from '@/common/interfaces/api-error.interface';
-import { FieldError } from '@/common/interfaces/field-error.interface';
+import { ApiErrorResponse } from '../../common/interfaces/api-error.interface';
+import { FieldError } from '../../common/interfaces/field-error.interface';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {

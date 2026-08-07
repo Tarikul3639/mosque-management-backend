@@ -19,12 +19,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 
-import { UserRole } from '@/lib/prisma/client';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { CreateDonationDto } from '../dto/requests/create-donation.dto';
 import { DonationQueryDto } from '../dto/requests/donation-query.dto';

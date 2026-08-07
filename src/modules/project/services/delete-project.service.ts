@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { UserRole } from '@/lib/prisma/client';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { DEVELOPMENT_PROJECT_MESSAGES } from '../constants/project.constants';
 

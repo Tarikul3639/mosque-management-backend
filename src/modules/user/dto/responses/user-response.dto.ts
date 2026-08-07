@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserRole, UserStatus } from '@/lib/prisma/client';
+import { UserRole, UserStatus } from '../../../../lib/prisma/client';
 
 class AvatarResponseDto {
   @ApiProperty({

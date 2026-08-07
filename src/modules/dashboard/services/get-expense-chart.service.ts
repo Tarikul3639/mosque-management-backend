@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ExpenseCategory } from '@/lib/prisma/client';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { ExpenseCategory } from '../../../lib/prisma/client';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { DashboardQueryDto } from '../dto/requests/dashboard-query.dto';
 import { ExpenseChartDto } from '../dto/responses/expense-chart.dto';
 

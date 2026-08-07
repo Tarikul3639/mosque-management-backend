@@ -12,8 +12,8 @@ import {
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-import { PaymentMethod } from '@/lib/prisma/client';
-import { PaymentStatus } from '@/common/enums/payment-status.enum';
+import { PaymentMethod } from '../../../../lib/prisma/client';
+import { PaymentStatus } from '../../../../common/enums/payment-status.enum';
 
 export class PaymentQueryDto {
   @ApiPropertyOptional({

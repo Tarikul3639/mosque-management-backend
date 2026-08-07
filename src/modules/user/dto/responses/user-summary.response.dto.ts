@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole, UserStatus } from '@/lib/prisma/client';
+import { UserRole, UserStatus } from '../../../../lib/prisma/client';
 
 export class RoleCountDto {
   @ApiProperty({ enum: UserRole, example: UserRole.ADMIN })

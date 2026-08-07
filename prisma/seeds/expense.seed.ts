@@ -1,6 +1,6 @@
-import type { PrismaClient } from '@/lib/prisma/client';
+import type { PrismaClient } from '../../src/lib/prisma/client';
 
-import { ExpenseCategory } from '@/lib/prisma/client';
+import { ExpenseCategory } from '../../src/lib/prisma/client';
 
 import { faker } from '@faker-js/faker';
 

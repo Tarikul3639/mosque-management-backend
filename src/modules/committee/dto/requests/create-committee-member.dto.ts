@@ -12,7 +12,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { CommitteeRole } from '@/lib/prisma/client';
+import { CommitteeRole } from '../../../../lib/prisma/client';
 
 export class CreateCommitteeMemberDto {
   @ApiProperty({

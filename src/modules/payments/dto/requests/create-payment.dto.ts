@@ -10,7 +10,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { PaymentMethod } from '@/lib/prisma/client';
+import { PaymentMethod } from '../../../../lib/prisma/client';
 
 export class CreatePaymentDto {
   @ApiProperty({

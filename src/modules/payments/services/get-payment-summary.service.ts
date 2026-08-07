@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { PaymentSummaryQueryDto } from '../dto/requests/payment-summary-query.dto';
 import { PaymentSummaryResponseDto } from '../dto/responses/payment-summary-response.dto';

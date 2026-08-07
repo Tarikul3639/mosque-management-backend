@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { PaymentStatus } from '@/common/enums/payment-status.enum';
+import { PaymentStatus } from '../../../../common/enums/payment-status.enum';
 
 export class MonthlyChargeQueryDto {
   @ApiPropertyOptional({

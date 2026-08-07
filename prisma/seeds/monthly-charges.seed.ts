@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/lib/prisma/client';
+import type { PrismaClient } from '../../src/lib/prisma/client';
 
 export async function seedMonthlyCharges(
   prisma: PrismaClient,

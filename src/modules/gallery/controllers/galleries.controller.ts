@@ -17,10 +17,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
-import { UserRole } from '@/lib/prisma/client';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { CreateGalleryDto } from '../dto/requests/create-gallery.dto';
 import { GalleryQueryDto } from '../dto/requests/gallery-query.dto';
@@ -36,7 +36,7 @@ import { GetGalleryService } from '../services/get-gallery.service';
 import { GetGallerySummaryService } from '../services/get-gallery-summary.service';
 import { ListGalleriesService } from '../services/list-galleries.service';
 import { UpdateGalleryService } from '../services/update-gallery.service';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 
 @ApiTags('Galleries')
 @Controller('galleries')

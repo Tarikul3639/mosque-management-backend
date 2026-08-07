@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { CreateGalleryDto } from '../dto/requests/create-gallery.dto';
 import { GalleryResponseDto } from '../dto/responses/gallery-response.dto';

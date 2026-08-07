@@ -1,4 +1,4 @@
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 import { ExpenseResponseDto } from '../dto/responses/expense-response.dto';
 
 type ExpenseWithUsers = Prisma.ExpenseGetPayload<{

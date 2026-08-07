@@ -34,8 +34,8 @@ import { GetPaymentService } from '../services/get-payment.service';
 import { GetPaymentSummaryService } from '../services/get-payment-summary.service';
 import { ListPaymentsService } from '../services/list-payments.service';
 import { UpdatePaymentService } from '../services/update-payment.service';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 
 @ApiTags('Payments')
 @Controller('payments')

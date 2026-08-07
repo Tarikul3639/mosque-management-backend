@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { DashboardMapper } from '../mappers/dashboard.mapper';
 import { RecentExpenseDto } from '../dto/responses/recent-expense.dto';
 

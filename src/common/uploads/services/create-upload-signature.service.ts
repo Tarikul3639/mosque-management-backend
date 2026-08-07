@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 
-import { CloudinaryFolderType } from '@/common/cloudinary/cloudinary.types';
+import { CloudinaryFolderType } from '../../../common/cloudinary/cloudinary.types';
 import { UploadSignatureResponseDto } from '../dto/responses/upload-signature-response.dto';
 
 @Injectable()

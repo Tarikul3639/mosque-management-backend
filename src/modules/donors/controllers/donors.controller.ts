@@ -17,11 +17,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
 
-import { UserRole } from '@/lib/prisma/client';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { CreateDonorDto } from '../dto/requests/create-donor.dto';
 import { UpdateDonorDto } from '../dto/requests/update-donor.dto';

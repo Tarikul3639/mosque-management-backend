@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { GenerateMonthlyChargesDto } from '../dto/requests/generate-monthly-charges.dto';
 import { GenerateMonthlyChargesResponseDto } from '../dto/responses/generate-monthly-charges-response.dto';

@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { MONTHLY_CHARGE_MESSAGES } from '../constants/family.constants';
 import { UpdateMonthlyChargeDto } from '../dto/requests/update-monthly-charge.dto';
 import { MonthlyChargeResponseDto } from '../dto/responses/monthly-charge-response.dto';
-import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
+import { getPaymentStatus } from '../../../common/utils/get-payment-status.util';
 
 @Injectable()
 export class UpdateMonthlyChargeService {

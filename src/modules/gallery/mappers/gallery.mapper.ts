@@ -1,4 +1,4 @@
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 
 import { GalleryResponseDto } from '../dto/responses/gallery-response.dto';
 

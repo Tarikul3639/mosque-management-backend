@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { DonationMapper } from '../mappers/donation.mapper';
 
 import { DONATION_MESSAGES } from '../constants/donation.constants';

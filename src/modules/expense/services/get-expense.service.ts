@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { EXPENSE_MESSAGES } from '../constants/expense.constants';
 import { ExpenseResponseDto } from '../dto/responses/expense-response.dto';

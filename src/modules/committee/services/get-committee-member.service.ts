@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { COMMITTEE_MESSAGES } from '../constants/committee.constants';
 import { CommitteeMemberMapper } from '../mappers/committee-member.mapper';

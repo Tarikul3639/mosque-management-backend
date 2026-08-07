@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CloudinaryService } from '@/common/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../../../common/cloudinary/cloudinary.service';
 import { UPLOAD_MESSAGES } from '../constants/upload.constants';
 
 @Injectable()

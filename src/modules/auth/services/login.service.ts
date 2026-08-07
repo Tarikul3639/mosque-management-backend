@@ -1,10 +1,10 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 
-import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { comparePassword } from '@/common/utils/hash';
+import { JwtPayload } from '../../../common/interfaces/jwt-payload.interface';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { comparePassword } from '../../../common/utils/hash';
 
-import { UserStatus } from '@/lib/prisma/client';
+import { UserStatus } from '../../../lib/prisma/client';
 
 import { LoginRequestDto } from '../dto/requests/login-request.dto';
 import { LoginResult } from '../interfaces/login-result.interface';

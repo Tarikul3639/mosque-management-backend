@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-import { PrismaModule } from '@/common/prisma/prisma.module';
-import { JwtStrategy } from '@/common/strategies/jwt.strategy';
-import { MailModule } from '@/common/mail';
+import { PrismaModule } from '../../common/prisma/prisma.module';
+import { JwtStrategy } from '../../common/strategies/jwt.strategy';
+import { MailModule } from '../../common/mail';
 import type { StringValue } from 'ms';
 
 import { AuthController } from './controllers/auth.controller';

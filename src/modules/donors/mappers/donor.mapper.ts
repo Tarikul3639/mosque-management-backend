@@ -1,4 +1,4 @@
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 
 import { DonorResponseDto } from '../dto/responses/donor-response.dto';
 

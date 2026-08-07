@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service'; // Adjust your prisma service path
+import { PrismaService } from '../../../common/prisma/prisma.service'; // Adjust your prisma service path
 
 @Injectable()
 export class DeleteUserService {

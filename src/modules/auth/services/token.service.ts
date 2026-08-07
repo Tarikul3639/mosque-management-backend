@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { type StringValue } from 'ms';
 
-import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
+import { JwtPayload } from '../../../common/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class TokenService {

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { ExpenseCategory } from '@/lib/prisma/client';
+import { ExpenseCategory } from '../../../../lib/prisma/client';
 
 class ExpenseUserDto {
   @ApiProperty()

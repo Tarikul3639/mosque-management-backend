@@ -16,11 +16,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
-import { Roles } from '@/common/decorators/roles.decorator';
-import { UserRole } from '@/lib/prisma/client';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { UserRole } from '../../../lib/prisma/client';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 
 import { CreateExpenseService } from '../services/create-expense.service';
 import { DeleteExpenseService } from '../services/delete-expense.service';

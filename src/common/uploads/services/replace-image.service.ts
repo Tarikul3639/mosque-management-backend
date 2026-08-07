@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UploadApiResponse } from 'cloudinary';
 
-import { CloudinaryService } from '@/common/cloudinary/cloudinary.service';
-import { CloudinaryFolderType } from '@/common/cloudinary/cloudinary.types';
+import { CloudinaryService } from '../../../common/cloudinary/cloudinary.service';
+import { CloudinaryFolderType } from '../../../common/cloudinary/cloudinary.types';
 
 @Injectable()
 export class ReplaceImageService {

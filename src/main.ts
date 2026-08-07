@@ -5,11 +5,11 @@ import cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 // Filter
-import { PrismaExceptionFilter } from '@/common/filters/prisma-exception.filter';
-import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 // Pipe
-import { GlobalValidationPipe } from '@/common/pipes/validation.pipe';
+import { GlobalValidationPipe } from './common/pipes/validation.pipe';
 
 // Module
 import { AppModule } from './app.module';

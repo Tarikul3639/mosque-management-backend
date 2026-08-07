@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { calculateGrowth } from '@/common/utils/calculate-growth';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { calculateGrowth } from '../../../common/utils/calculate-growth';
 
 import { DashboardQueryDto } from '../dto/requests/dashboard-query.dto';
 import { DashboardOverviewDto } from '../dto/responses/dashboard-overview.dto';

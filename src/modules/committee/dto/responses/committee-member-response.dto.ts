@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CommitteeRole } from '@/lib/prisma/client';
+import { CommitteeRole } from '../../../../lib/prisma/client';
 
 class CommitteeMemberAvatarDto {
   @ApiProperty({

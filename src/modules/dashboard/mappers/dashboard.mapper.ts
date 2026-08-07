@@ -1,4 +1,4 @@
-import { Expense } from '@/lib/prisma/client';
+import { Expense } from '../../../lib/prisma/client';
 
 import {
   DashboardMetricDto,

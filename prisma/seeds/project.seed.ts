@@ -1,8 +1,6 @@
-import type { PrismaClient } from '@/lib/prisma/client';
-
+import type { PrismaClient } from '../../src/lib/prisma/client';
 import { faker } from '@faker-js/faker';
-
-import { ProjectStatus } from '@/lib/prisma/client';
+import { ProjectStatus } from '../../src/lib/prisma/client';
 
 export async function seedProjects(
   prisma: PrismaClient,

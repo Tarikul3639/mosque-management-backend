@@ -11,7 +11,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { UserRole } from '@/lib/prisma/client';
+import { UserRole } from '../../../../lib/prisma/client';
 
 export class CreateUserDto {
   @ApiProperty({

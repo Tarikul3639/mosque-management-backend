@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { COMMITTEE_MESSAGES } from '../constants/committee.constants';
 import { CreateCommitteeMemberDto } from '../dto/requests/create-committee-member.dto';

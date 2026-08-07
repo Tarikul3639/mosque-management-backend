@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { GALLERY_MESSAGES } from '../constants/gallery.constants';
 import { GalleryResponseDto } from '../dto/responses/gallery-response.dto';

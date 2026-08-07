@@ -10,7 +10,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { ExpenseCategory } from '@/lib/prisma/client';
+import { ExpenseCategory } from '../../../../lib/prisma/client';
 
 export class CreateExpenseDto {
   @ApiProperty({

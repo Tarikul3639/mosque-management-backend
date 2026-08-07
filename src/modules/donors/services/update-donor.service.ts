@@ -4,14 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { DONOR_MESSAGES } from '../constants/donor.constants';
 import { DonorMapper } from '../mappers/donor.mapper';
 
 import { UpdateDonorDto } from '../dto/requests/update-donor.dto';
 import { DonorResponseDto } from '../dto/responses/donor-response.dto';
-import { FileService } from '@/common/file/file.service';
+import { FileService } from '../../../common/file/file.service';
 
 @Injectable()
 export class UpdateDonorService {

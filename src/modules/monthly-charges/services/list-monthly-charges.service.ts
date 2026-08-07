@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
-import { PaymentStatus } from '@/common/enums/payment-status.enum';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { getPaymentStatus } from '../../../common/utils/get-payment-status.util';
+import { PaymentStatus } from '../../../common/enums/payment-status.enum';
 
 import { MonthlyChargeQueryDto } from '../dto/requests/monthly-charge-query.dto';
 import { MonthlyChargeListResponseDto } from '../dto/responses/monthly-charge-list-response.dto';

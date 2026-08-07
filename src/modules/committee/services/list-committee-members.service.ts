@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma } from '@/lib/prisma/client';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { Prisma } from '../../../lib/prisma/client';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { CommitteeMemberQueryDto } from '../dto/requests/committee-member-query.dto';
 import { CommitteeMemberListResponseDto } from '../dto/responses/committee-member-list-response.dto';

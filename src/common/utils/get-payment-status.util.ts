@@ -1,4 +1,4 @@
-import { PaymentStatus } from '@/common/enums/payment-status.enum';
+import { PaymentStatus } from '../../common/enums/payment-status.enum';
 
 export function getPaymentStatus(
   amount: number,

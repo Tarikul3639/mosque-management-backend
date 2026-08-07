@@ -1,9 +1,9 @@
-import type { PrismaClient } from '@/lib/prisma/client';
+import type { PrismaClient } from '../../src/lib/prisma/client';
 
 import {
     PaymentMethod,
     Prisma,
-} from '@/lib/prisma/client';
+} from '../../src/lib/prisma/client';
 
 import { faker } from '@faker-js/faker';
 

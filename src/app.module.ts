@@ -13,9 +13,9 @@ import {
   envValidationSchema,
   cookieConfig,
 } from './config';
-import { PrismaModule } from '@/common/prisma/prisma.module';
-import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
-import { MailModule } from '@/common/mail';
+import { PrismaModule } from './common/prisma/prisma.module';
+import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
+import { MailModule } from './common/mail';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';

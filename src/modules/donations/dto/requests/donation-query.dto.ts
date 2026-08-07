@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
-import { PaymentMethod } from '@/lib/prisma/client';
+import { PaymentMethod } from '../../../../lib/prisma/client';
 
 export class DonationQueryDto {
   @ApiPropertyOptional({

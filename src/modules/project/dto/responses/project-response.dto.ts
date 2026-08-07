@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { ProjectStatus } from '@/lib/prisma/client';
+import { ProjectStatus } from '../../../../lib/prisma/client';
 
 class ProjectUserDto {
   @ApiProperty()

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma } from '@/lib/prisma/client';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { Prisma } from '../../../lib/prisma/client';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { PaymentQueryDto } from '../dto/requests/payment-query.dto';
 import { PaymentListResponseDto } from '../dto/responses/payment-list-response.dto';
-import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
+import { getPaymentStatus } from '../../../common/utils/get-payment-status.util';
 
 @Injectable()
 export class ListPaymentsService {

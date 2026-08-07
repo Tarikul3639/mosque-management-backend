@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { CloudinaryService } from '@/common/cloudinary/cloudinary.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { CloudinaryService } from '../../../common/cloudinary/cloudinary.service';
 
 import { DONOR_MESSAGES } from '../constants/donor.constants';
 

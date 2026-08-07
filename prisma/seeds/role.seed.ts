@@ -1,5 +1,5 @@
-import type { PrismaClient } from '@/lib/prisma/client';
-import { UserRole } from '@/lib/prisma/client';
+import type { PrismaClient } from '../../src/lib/prisma/client';
+import { UserRole } from '../../src/lib/prisma/client';
 
 export async function seedRoles(
     prisma: PrismaClient,

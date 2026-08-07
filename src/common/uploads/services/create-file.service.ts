@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { CreateFileDto } from '../dto/requests/create-file.dto';
 import { FileResponseDto } from '../dto/responses/file-response.dto';

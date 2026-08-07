@@ -27,10 +27,10 @@ import { UserResponseDto } from '../dto/responses/user-response.dto';
 import { UserListResponseDto } from '../dto/responses/user-list-response.dto';
 import { UserSummaryResponseDto } from '../dto/responses/user-summary.response.dto';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
-import { UserRole } from '@/lib/prisma/client';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
+import { UserRole } from '../../../lib/prisma/client';
 
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard, RolesGuard)

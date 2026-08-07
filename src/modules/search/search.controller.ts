@@ -1,7 +1,7 @@
 // import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-// import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 // import { SearchService } from './search.service';
-// import { GlobalSearchQueryDto } from '@/common/dto/global-search-query.dto';
+// import { GlobalSearchQueryDto } from '../../../common/dto/global-search-query.dto';
 
 // @UseGuards(JwtAuthGuard)
 // @Controller('search')

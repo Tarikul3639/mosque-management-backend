@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import { MailService } from '@/common/mail/mail.service';
-import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { MailService } from '../../../common/mail/mail.service';
+import { JwtPayload } from '../../../common/interfaces/jwt-payload.interface';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { TokenService } from './token.service';
 

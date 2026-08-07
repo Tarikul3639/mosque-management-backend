@@ -1,4 +1,4 @@
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 import { CommitteeMemberResponseDto } from '../dto/responses/committee-member-response.dto';
 
 type CommitteeMemberWithAvatar = Prisma.CommitteeMemberGetPayload<{

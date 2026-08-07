@@ -4,7 +4,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { FieldError } from '@/common/interfaces/field-error.interface';
+import { FieldError } from '../../common/interfaces/field-error.interface';
 
 export const GlobalValidationPipe = new ValidationPipe({
   whitelist: true,

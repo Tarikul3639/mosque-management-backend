@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 
-import { ProjectStatus } from '@/lib/prisma/client';
+import { ProjectStatus } from '../../../../lib/prisma/client';
 
 export class ProjectQueryDto {
   @ApiPropertyOptional({

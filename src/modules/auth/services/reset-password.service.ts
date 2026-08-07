@@ -10,8 +10,8 @@ import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 import { TokenService } from './token.service';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { comparePassword, hashPassword } from '@/common/utils/hash';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { comparePassword, hashPassword } from '../../../common/utils/hash';
 
 import { ResetPasswordDto } from '../dto/requests/reset-password.dto';
 

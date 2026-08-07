@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaymentStatus } from '@/common/enums/payment-status.enum';
+import { PaymentStatus } from '../../../../common/enums/payment-status.enum';
 
 class FamilyLedgerItemResponseDto {
   @ApiProperty({

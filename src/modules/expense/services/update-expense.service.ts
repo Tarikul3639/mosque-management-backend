@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { UserRole } from '@/lib/prisma/client';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { EXPENSE_MESSAGES } from '../constants/expense.constants';
 import { UpdateExpenseDto } from '../dto/requests/update-expense.dto';

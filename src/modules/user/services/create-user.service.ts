@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { hashPassword } from '@/common/utils/hash';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { hashPassword } from '../../../common/utils/hash';
 import { CreateUserDto } from '../dto/requests/create-user.dto';
 import { UserResponseDto } from '../dto/responses/user-response.dto';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { PrayerTimeResponseDto } from '../dto/responses/prayer-time-response.dto';
 
 @Injectable()

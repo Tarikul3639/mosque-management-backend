@@ -1,4 +1,4 @@
-import { PaymentMethod } from '@/lib/prisma/client';
+import { PaymentMethod } from '../../../lib/prisma/client';
 
 export interface PaymentSearchResult {
   id: string;

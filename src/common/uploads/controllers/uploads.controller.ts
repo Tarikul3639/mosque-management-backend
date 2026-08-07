@@ -27,16 +27,16 @@ import {
 } from '@nestjs/swagger';
 import { UploadApiResponse } from 'cloudinary';
 
-import { UserRole } from '@/lib/prisma/client';
+import { UserRole } from '../../../lib/prisma/client';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
 
 import {
   CloudinaryFolder,
   type CloudinaryFolderType,
-} from '@/common/cloudinary/cloudinary.types';
+} from '../../../common/cloudinary/cloudinary.types';
 
 import { UploadResponseDto } from '../dto/responses/upload-response.dto';
 import { FileResponseDto } from '../dto/responses/file-response.dto';

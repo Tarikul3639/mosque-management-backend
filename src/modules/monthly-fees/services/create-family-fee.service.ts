@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 
 import { CreateFamilyFeeDto } from '../dto/requests/create-family-fee.dto';
 import { FamilyFeeResponseDto } from '../dto/responses/family-fee-response.dto';

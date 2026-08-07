@@ -16,10 +16,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/guards/roles.guard';
-import { UserRole } from '@/lib/prisma/client';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../common/guards/roles.guard';
+import { UserRole } from '../../../lib/prisma/client';
 
 import { CreateProjectDto } from '../dto/requests/create-project.dto';
 import { ProjectQueryDto } from '../dto/requests/project-query.dto';
@@ -34,7 +34,7 @@ import { GetProjectService } from '../services/get-project.service';
 import { GetProjectSummaryService } from '../services/get-project-summary.service';
 import { ListProjectsService } from '../services/list-projects.service';
 import { UpdateProjectService } from '../services/update-project.service';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 
 @ApiTags('Projects')
 @Controller('projects')

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { PrismaModule } from '@/common/prisma/prisma.module';
+import { PrismaModule } from '../../common/prisma/prisma.module';
 // Controllers
 import { MonthlyChargesController } from './controllers/monthly-charges.controller';
 // Monthly Charges Services

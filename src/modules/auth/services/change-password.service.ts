@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 
-import { comparePassword, hashPassword } from '@/common/utils/hash';
+import { comparePassword, hashPassword } from '../../../common/utils/hash';
 
 @Injectable()
 export class ChangePasswordService {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaymentMethod } from '@/lib/prisma/client';
+import { PaymentMethod } from '../../../../lib/prisma/client';
 
 class DonationHistoryItemDto {
   @ApiProperty()

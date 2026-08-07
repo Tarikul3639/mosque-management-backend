@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserResponseDto } from './user-response.dto';
-import { MetaDto } from '@/common/dto/meta.dto';
+import { MetaDto } from '../../../../common/dto/meta.dto';
 
 export class UserListResponseDto {
   @ApiProperty({

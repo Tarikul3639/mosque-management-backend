@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-import { ExpenseCategory } from '@/lib/prisma/client';
+import { ExpenseCategory } from '../../../../lib/prisma/client';
 
 export class ExpenseQueryDto {
   @ApiPropertyOptional({

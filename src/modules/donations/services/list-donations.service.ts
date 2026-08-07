@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@/lib/prisma/client';
+import { Prisma } from '../../../lib/prisma/client';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { DonationMapper } from '../mappers/donation.mapper';
 
 import { DonationQueryDto } from '../dto/requests/donation-query.dto';

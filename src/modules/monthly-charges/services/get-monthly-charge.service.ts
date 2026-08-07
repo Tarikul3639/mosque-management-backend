@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { getPaymentStatus } from '@/common/utils/get-payment-status.util';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { getPaymentStatus } from '../../../common/utils/get-payment-status.util';
 
 import { MONTHLY_CHARGE_MESSAGES } from '../constants/family.constants';
 import { MonthlyChargeResponseDto } from '../dto/responses/monthly-charge-response.dto';

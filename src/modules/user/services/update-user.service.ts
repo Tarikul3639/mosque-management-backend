@@ -5,11 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { hashPassword } from '@/common/utils/hash';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { hashPassword } from '../../../common/utils/hash';
 import { UpdateUserDto } from '../dto/requests/update-user.dto';
 import { UserResponseDto } from '../dto/responses/user-response.dto';
-import { UserRole } from '@/lib/prisma/client';
+import { UserRole } from '../../../lib/prisma/client';
 
 @Injectable()
 export class UpdateUserService {
