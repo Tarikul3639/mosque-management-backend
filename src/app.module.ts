@@ -33,6 +33,8 @@ import { FileModule } from './common/file/file.module';
 import { MonthlyChargesModule } from './modules/monthly-charges/families.module';
 import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
 
+import { AppController } from './modules/app.controller';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -85,7 +87,7 @@ import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
     PrayerTimesModule,
     UploadsModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
