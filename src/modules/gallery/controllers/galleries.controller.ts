@@ -101,7 +101,7 @@ export class GalleriesController {
   })
   async create(
     @Body() dto: CreateGalleryDto,
-    @CurrentUser("sub") userId: string,
+    @CurrentUser('sub') userId: string,
   ): Promise<GalleryResponseDto> {
     return this.createGalleryService.execute(dto, userId);
   }
@@ -120,15 +120,10 @@ export class GalleriesController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateGalleryDto,
-    @CurrentUser("sub") userId: string,
-    @CurrentUser("role") role: UserRole,
+    @CurrentUser('sub') userId: string,
+    @CurrentUser('role') role: UserRole,
   ): Promise<GalleryResponseDto> {
-    return this.updateGalleryService.execute(
-      id,
-      dto,
-      userId,
-      role,
-    );
+    return this.updateGalleryService.execute(id, dto, userId, role);
   }
 
   @Delete(':id')

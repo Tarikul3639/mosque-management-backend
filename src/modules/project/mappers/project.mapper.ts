@@ -25,9 +25,7 @@ type ProjectWithUsers = Prisma.ProjectGetPayload<{
 }>;
 
 export class ProjectMapper {
-  static toResponse(
-    project: ProjectWithUsers,
-  ): ProjectResponseDto {
+  static toResponse(project: ProjectWithUsers): ProjectResponseDto {
     return {
       id: project.id,
       title: project.title,
@@ -61,11 +59,7 @@ export class ProjectMapper {
     };
   }
 
-  static toResponseList(
-    projects: ProjectWithUsers[],
-  ): ProjectResponseDto[] {
-    return projects.map((project) =>
-      ProjectMapper.toResponse(project),
-    );
+  static toResponseList(projects: ProjectWithUsers[]): ProjectResponseDto[] {
+    return projects.map((project) => ProjectMapper.toResponse(project));
   }
 }

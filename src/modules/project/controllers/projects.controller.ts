@@ -82,9 +82,7 @@ export class ProjectsController {
     status: 200,
     type: ProjectResponseDto,
   })
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<ProjectResponseDto> {
+  async findOne(@Param('id') id: string): Promise<ProjectResponseDto> {
     return this.getProjectService.execute(id);
   }
 
@@ -101,7 +99,7 @@ export class ProjectsController {
   })
   async create(
     @Body() dto: CreateProjectDto,
-    @CurrentUser("sub") userId: string,
+    @CurrentUser('sub') userId: string,
   ): Promise<ProjectResponseDto> {
     return this.createProjectService.execute(dto, userId);
   }
@@ -120,15 +118,10 @@ export class ProjectsController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateProjectDto,
-    @CurrentUser("sub") userId: string,
-    @CurrentUser("role") role: UserRole,
+    @CurrentUser('sub') userId: string,
+    @CurrentUser('role') role: UserRole,
   ): Promise<ProjectResponseDto> {
-    return this.updateProjectService.execute(
-      id,
-      dto,
-      userId,
-      role,
-    );
+    return this.updateProjectService.execute(id, dto, userId, role);
   }
 
   @Delete(':id')
@@ -150,10 +143,6 @@ export class ProjectsController {
     @Param('id') id: string,
     @CurrentUser() user: { sub: string; role: UserRole },
   ): Promise<{ message: string }> {
-    return this.deleteProjectService.execute(
-      id,
-      user.sub,
-      user.role,
-    );
+    return this.deleteProjectService.execute(id, user.sub, user.role);
   }
 }

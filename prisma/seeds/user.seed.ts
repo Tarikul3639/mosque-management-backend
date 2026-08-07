@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@/lib/prisma/client';
-import { hashPassword } from '@/common/utils/password.util';
+import { hashPassword } from '@/common/utils/hash';
 import { UserRole } from '@/lib/prisma/client';
 
 export async function seedUsers(

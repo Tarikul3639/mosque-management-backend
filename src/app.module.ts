@@ -16,6 +16,7 @@ import {
 import { PrismaModule } from '@/common/prisma/prisma.module';
 import { CloudinaryModule } from '@/common/cloudinary/cloudinary.module';
 import { MailModule } from '@/common/mail';
+import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FamiliesModule } from './modules/families/families.module';
@@ -64,6 +65,7 @@ import { MonthlyFeesModule } from './modules/monthly-fees/families.module';
     CloudinaryModule,
     FileModule,
     // AuthModule is imported here to make its services available throughout the application
+    UserModule,
     AuthModule,
 
     // Sidebar Navigation Ordered Modules

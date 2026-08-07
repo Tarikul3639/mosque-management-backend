@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { CommitteeMemberResponseDto } from './committee-member-response.dto';
 import { CommitteeSummaryResponseDto } from './committee-summary-response.dto';
-import { MetaData } from '@/common/interfaces/meta-data.interface';
+import { MetaDto } from '@/common/dto/meta.dto';
 
 export class CommitteeMemberListResponseDto {
   @ApiProperty({
@@ -16,7 +16,7 @@ export class CommitteeMemberListResponseDto {
   summary!: CommitteeSummaryResponseDto;
 
   @ApiProperty({
-    type: MetaData,
+    type: MetaDto,
   })
-  meta!: MetaData;
+  meta!: MetaDto;
 }

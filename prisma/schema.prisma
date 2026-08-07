@@ -363,11 +363,13 @@ model File {
 enum UserRole {
   SUPER_ADMIN
   ADMIN
+  USER
 }
 
 enum UserStatus {
   ACTIVE
   INACTIVE
+  SUSPENDED
 }
 
 enum CommitteeRole {

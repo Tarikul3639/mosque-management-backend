@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 
-import { comparePassword, hashPassword } from '@/common/utils/password.util';
+import { comparePassword, hashPassword } from '@/common/utils/hash';
 
 @Injectable()
 export class ChangePasswordService {

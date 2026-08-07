@@ -1,8 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   Matches,
@@ -36,6 +37,7 @@ export class CreateUserDto {
     example: '+8801712345678',
   })
   @IsPhoneNumber()
+  @IsNotEmpty()
   phone!: string;
 
   @ApiProperty({
@@ -60,5 +62,14 @@ export class CreateUserDto {
     example: UserRole.ADMIN,
   })
   @IsEnum(UserRole)
+  @IsNotEmpty()
   role!: UserRole;
+
+  @ApiPropertyOptional({
+    description: 'Avatar File ID (UUID)',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsString()
+  @IsOptional()
+  avatarId?: string;
 }

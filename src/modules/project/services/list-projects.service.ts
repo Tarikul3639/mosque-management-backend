@@ -13,9 +13,7 @@ import { ProjectMapper } from '../mappers/project.mapper';
 export class ListProjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(
-    query: ProjectQueryDto,
-  ): Promise<ProjectListResponseDto> {
+  async execute(query: ProjectQueryDto): Promise<ProjectListResponseDto> {
     const page = query.page ?? DEVELOPMENT_PROJECT_DEFAULT_PAGE;
 
     const limit = query.limit ?? DEVELOPMENT_PROJECT_DEFAULT_LIMIT;
