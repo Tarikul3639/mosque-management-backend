@@ -64,15 +64,16 @@ async function bootstrap() {
     SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
   }
 
-  await app.listen(port);
-
-  console.log(`
-  🚀 ${appName} v${appVersion}
-  🌍 Environment : ${nodeEnv}
-  📡 Server      : http://localhost:${port}
-  🔗 API Base    : http://localhost:${port}/${apiPrefix}/v${apiVersion}
-  📚 API Docs    : http://localhost:${port}/${apiPrefix}/docs
-  `);
+  if (nodeEnv !== 'production' && !process.env.VERCEL) {
+    await app.listen(port);
+    console.log(`
+    🚀 ${appName} v${appVersion}
+    🌍 Environment : ${nodeEnv}
+    📡 Server      : http://localhost:${port}
+    🔗 API Base    : http://localhost:${port}/${apiPrefix}/v${apiVersion}
+    📚 API Docs    : http://localhost:${port}/${apiPrefix}/docs
+    `);
+  }
 }
 
 void bootstrap();
