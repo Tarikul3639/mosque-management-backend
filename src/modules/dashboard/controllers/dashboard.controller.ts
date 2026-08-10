@@ -46,8 +46,8 @@ export class DashboardController {
   // -----------------------------
 
   @Get('overview')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   @ApiOperation({
     summary: 'Get dashboard overview',
@@ -63,8 +63,8 @@ export class DashboardController {
   }
 
   @Get('summary')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   @ApiOperation({
     summary: 'Get dashboard summary',
