@@ -37,21 +37,27 @@ class CurrentFeeDto {
 
 class PaymentSummaryDto {
   @ApiProperty({
+    example: 5000,
+    description: "Total amount charged to the family.",
+  })
+  totalCharge!: number;
+
+  @ApiProperty({
     example: 4500,
-    description: 'Total amount paid by the family.',
+    description: "Total amount paid by the family.",
   })
   totalPaid!: number;
 
   @ApiProperty({
     example: 500,
-    description: 'Current total due amount.',
+    description: "Current outstanding due amount.",
   })
   totalDue!: number;
 
   @ApiPropertyOptional({
-    example: '2026-07-18T10:30:00.000Z',
+    example: "2026-07-18T10:30:00.000Z",
     nullable: true,
-    description: 'Last payment date.',
+    description: "Last payment date.",
   })
   lastPaymentAt!: Date | null;
 }

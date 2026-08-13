@@ -6,7 +6,7 @@ import { FamilyDetailsResponseDto } from '../dto/responses/family-details.dto';
 
 @Injectable()
 export class GetFamilyDetailsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async execute(id: string): Promise<FamilyDetailsResponseDto> {
     const family = await this.prisma.family.findUnique({
@@ -60,6 +60,11 @@ export class GetFamilyDetailsService {
       throw new NotFoundException(FAMILY_MESSAGES.NOT_FOUND);
     }
 
+    const totalCharge = family.charges.reduce(
+      (sum, charge) => sum + Number(charge.amount),
+      0,
+    );
+
     const currentFee = family.feeHistory[0] ?? null;
 
     const totalPaid = family.payments.reduce(
@@ -87,14 +92,15 @@ export class GetFamilyDetailsService {
 
       currentFee: currentFee
         ? {
-            id: currentFee.id,
-            monthlyFee: Number(currentFee.monthlyFee),
-            startDate: currentFee.startDate,
-            endDate: currentFee.endDate,
-          }
+          id: currentFee.id,
+          monthlyFee: Number(currentFee.monthlyFee),
+          startDate: currentFee.startDate,
+          endDate: currentFee.endDate,
+        }
         : null,
 
       paymentSummary: {
+        totalCharge,
         totalPaid,
         totalDue,
         lastPaymentAt: lastPayment?.paidAt ?? null,
