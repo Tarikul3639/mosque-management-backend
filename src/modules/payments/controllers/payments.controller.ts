@@ -36,6 +36,8 @@ import { ListPaymentsService } from '../services/list-payments.service';
 import { UpdatePaymentService } from '../services/update-payment.service';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { UserRole } from '../../../lib/prisma/client';
 
 @ApiTags('Payments')
 @Controller('payments')
@@ -49,7 +51,7 @@ export class PaymentsController {
     private readonly getPaymentSummaryService: GetPaymentSummaryService,
     private readonly generateReceiptService: GenerateReceiptService,
     private readonly getFamilyLedgerService: GetFamilyLedgerService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -113,6 +115,7 @@ export class PaymentsController {
   @ApiParam({
     name: 'id',
     description: 'Payment ID',
+    example: 'cmf6m9o7j0001w8z8t2b0r7j4',
   })
   @ApiResponse({
     status: 200,
@@ -135,6 +138,7 @@ export class PaymentsController {
   @ApiParam({
     name: 'familyId',
     description: 'Family ID',
+    example: 'cmf6m9o7j0001w8z8t2b0r7j4',
   })
   @ApiResponse({
     status: 200,
@@ -149,10 +153,13 @@ export class PaymentsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiOperation({ summary: 'Update a payment' })
   @ApiParam({
     name: 'id',
     description: 'Payment ID',
+    example: 'cmf6m9o7j0001w8z8t2b0r7j4',
   })
   @ApiResponse({
     status: 200,
@@ -168,10 +175,13 @@ export class PaymentsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiOperation({ summary: 'Delete a payment' })
   @ApiParam({
     name: 'id',
     description: 'Payment ID',
+    example: 'cmf6m9o7j0001w8z8t2b0r7j4',
   })
   @ApiResponse({ status: 200, description: 'Payment deleted successfully.' })
   remove(@Param('id') id: string): Promise<void> {
